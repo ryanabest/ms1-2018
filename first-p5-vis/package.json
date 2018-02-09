@@ -1,0 +1,22 @@
+{
+  "name": "barebones",
+  "version": "1.0.0",
+  "description": "bareones project starter dev environment using BrowserSync and Gulp",
+  "main": "index.js",
+  "repository": "https://github.com/ryanabest/barebones",
+  "scripts": {
+    "dev": "gulp watch",
+    "bs": "browser-sync start --server --files '*.html, css/*.css'"
+  },
+  "author": "ryan",
+  "license": "ISC",
+  "dependencies": {
+    "browser-sync": "^2.23.6",
+    "gulp": "^3.9.1"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.23.6",
+    "gulp": "^3.9.1",
+    "gulp-sass": "^3.1.0"
+  }
+}

@@ -1,0 +1,42 @@
+Sketch #1: Interactive Timeline
+
+This project would explore the volume of the Met's collection over time, either looking at time of acquisition or time the piece was created or in use.
+By stacking each piece (or number of pieces) on a simple timeline and allowing users to filter or highlight for specific variables of interest, this visualization would provide
+a basis of understanding how the Met's collection represents history, and which types of pieces rose and fell in prominence over time. Users will be able to see how the
+collection as a whole has changed over time and see the collection narrow to a specific subset of interest (such as classification, place of origin, etc).
+Ideally, if the grain size doesn't end up being too large or messy, once users filter down to a subset, each block will represent one individual piece, allowing users to see
+how that piece is part of the whole collection, while also navigating to that piece's landing page on the Met collection website. This project should use only data from the
+csv file provided, generating a new dom element for each piece (or x pieces), maintaining detail about the piece for the specific columns I'd use for filtering/highlighting.
+
+
+Sketch #2: Burdick Collection Network
+
+In this sketch, I aim to provide an overview and exploration of the Met's Burdick collection, specifically highlighting connections between items in this collection, taking
+into account the collection's diversity and range of material. I would have to establish what dictates the strength of a "connection" between different pieces in this collection
+(e.g. shared artist, classification, descriptors? listed as a related piece?). I could then color each piece by a chosen variable (likely classification) and show the
+interconnectedness (or lack of interconnectedness) of pieces in this collection through links between each point of varying thickness. Ideally, users would be able to see
+more information when they hover or click on a specific data point, and then be able to navigate to that piece's page in the museum's online collection. This project will most likely
+only require data from the csv - for each row I would need to loop through the rest of the Burdick collection, determining strength of connection based on my defined parameters,
+then use d3 to construct a network diagram.
+
+Inspiration:
+https://bl.ocks.org/mbostock/4062045
+https://pudding.cool/2017/03/hamilton/
+
+
+Sketch #3: Geographic Distribution Across Time (Acquisition Date)
+
+This sketch would show a living, breathing timeline of the geographic distribution of the Met's collection. Ideally the 'current' year would be controlled by user scrolling,
+showing re-calibrated distributions of pieces in the Met's collection organized by country of origin and colored by classification. Thus, the user could watch the collection change
+in real time, as we advance through years to see how the composition of pieces the met was acquiring changed from year to year. The cadence of how years advance will ideally be
+controlled as the user scrolls, and bars, orders, and legends would change in real time as this scroll happens. I would also like to explore the possibility of this timeline advancing
+automatically, as the visualization plays through each year and we see changes in real time, with one piece collected in that year shown.
+
+Inspiration:
+https://pudding.cool/2017/03/music-history/
+https://pudding.cool/2017/03/comeback/
+
+
+Other exciting ideas to consider that are not currently incorporated:
+- Life span of one piece of art (provenance)
+- Distribution of artists across nationalities
