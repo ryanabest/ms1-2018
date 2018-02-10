@@ -3,22 +3,41 @@
 <head>
   <title>ms1-2018</title>
   <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Lora" rel="stylesheet">
   <style>
   * {
-    text-align: center;
     font-family: 'Nunito', sans-serif;
   }
 
-  a, p {
-    font-family: 'Lora', serif;
+  h1 {
+    font-size: 300%;
+    text-align: center;
+    color: #545454;
+  }
+
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .flex-link {
+    /* width: 33.33%; */
+    font-size: 700%;
+    color: #D9D9D9;
+    text-decoration: none;
+  }
+
+  .flex-link:hover {
+    color: #ff0317;
   }
 
   </style>
 </head>
 <body>
-  <h2>Major Studio I</h2>
-  <a href = 'https://slides.com/ryanbest/moma/fullscreen'>MoMA</a><br><br>
-  <a href = 'first-p5-vis/index.html'>Test Scroll for p5 Vis</a><br><br>
+  <h1>ms1-2018</h1>
+  <div class = "container">
+    <a class = "flex-link" href = 'https://slides.com/ryanbest/moma/fullscreen'>MoMA</a><br><br>
+    <a class = "flex-link" href = 'first-p5-vis/index.html'>Test p5 Scroll</a><br><br>
+  </div>
 </body>
 </html>
