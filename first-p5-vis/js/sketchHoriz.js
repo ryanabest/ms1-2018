@@ -11,12 +11,12 @@ let y2 = cnvH-(cnvH*margin);
 let autoPlay = true;
 
 function preload() {
-  aY =   loadJSON('../first-p5-vis/assets/aggYear.json');
-  aC =   loadJSON('../first-p5-vis/assets/aggCountry.json');
-  aYC =  loadJSON('../first-p5-vis/assets/aggYearCountry.json');
-  aYL =  loadJSON('../first-p5-vis/assets/aggYearClassification.json');
-  aYCL = loadJSON('../first-p5-vis/assets/aggYearCountryClassification.json');
-  robotoFont = loadFont('../first-p5-vis/typeface/RobotoCondensed-Bold.ttf')
+  aY =   loadJSON('/assets/aggYear.json');
+  aC =   loadJSON('/assets/aggCountry.json');
+  aYC =  loadJSON('/assets/aggYearCountry.json');
+  aYL =  loadJSON('/assets/aggYearClassification.json');
+  aYCL = loadJSON('/assets/aggYearCountryClassification.json');
+  robotoFont = loadFont('/typeface/RobotoCondensed-Bold.ttf')
 }
 
 function setup() {
@@ -55,13 +55,13 @@ function draw() {
 
 function drawYear() {
   background(0);
-  fill(255,10);
+  fill(255,50);
   textAlign(CENTER,CENTER);
   textSize(txt);
   text(floor(x),cnvW/2,cnvH/2-50);
   if (ceil(x) <= maxYear) {
     if (autoPlay) {
-      x += 0.5;
+      x += 0.3;
     }
   }
 }
