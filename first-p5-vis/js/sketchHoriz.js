@@ -11,12 +11,12 @@ let y2 = cnvH-(cnvH*margin);
 let autoPlay = true;
 
 function preload() {
-  aY =   loadJSON('../first-p5-vis/assets/aggYear.json');
-  aC =   loadJSON('../first-p5-vis/assets/aggCountry.json');
-  aYC =  loadJSON('../first-p5-vis/assets/aggYearCountry.json');
-  aYL =  loadJSON('../first-p5-vis/assets/aggYearClassification.json');
-  aYCL = loadJSON('../first-p5-vis/assets/aggYearCountryClassification.json');
-  robotoFont = loadFont('../first-p5-vis/typeface/RobotoCondensed-Bold.ttf')
+  aY =   loadJSON('/assets/aggYear.json');
+  aC =   loadJSON('/assets/aggCountry.json');
+  aYC =  loadJSON('/assets/aggYearCountry.json');
+  aYL =  loadJSON('/assets/aggYearClassification.json');
+  aYCL = loadJSON('/assets/aggYearCountryClassification.json');
+  robotoFont = loadFont('/typeface/RobotoCondensed-Bold.ttf')
 }
 
 function setup() {
