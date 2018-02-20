@@ -274,13 +274,13 @@ metObjectsExport = metObjects[['acq_year','classification','country']]
 ### Nulls ###
 
 # replace null acqusition_year, classification, and country with 'unknown' values
-metObjectsExport.loc[metObjectsExport['classification']=='',    'classification'] = 'Unknown'
-metObjectsExport.loc[metObjectsExport['classification'].isna(), 'classification'] = 'Unknown'
+metObjectsExport.loc[metObjectsExport['classification']=='',    'classification'] = 'Unknown/Other'
+metObjectsExport.loc[metObjectsExport['classification'].isna(), 'classification'] = 'Unknown/Other'
 # print(metObjects['classification'].value_counts())
 metObjectsExport.loc[metObjectsExport['acq_year'].isna(), 'acq_year'] = 10000
 # print(metObjects['acq_year'].value_counts())
-metObjectsExport.loc[metObjectsExport['country']=='',    'country'] = 'Unknown'
-metObjectsExport.loc[metObjectsExport['country'].isna(), 'country'] = 'Unknown'
+metObjectsExport.loc[metObjectsExport['country']=='',    'country'] = 'Unknown/Other'
+metObjectsExport.loc[metObjectsExport['country'].isna(), 'country'] = 'Unknown/Other'
 # print(metObjects['country'].value_counts())
 '''
 # limit individual classifications labels to only those with above 5k works in the collection

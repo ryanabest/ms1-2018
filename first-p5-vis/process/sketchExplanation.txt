@@ -1,3 +1,9 @@
+Final project inspo:
+
+http://builtbyassociativedata.com/#
+
+
+
 Sketch #1: Interactive Timeline
 
 This project would explore the volume of the Met's collection over time, either looking at time of acquisition or time the piece was created or in use.

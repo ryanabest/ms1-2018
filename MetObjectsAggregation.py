@@ -16,7 +16,7 @@ classificationNumber = 5 # How many classifications do we want to break out with
 
 # Load JSON from data cleaning script
 metObjects = pd.read_json(metObjectsJSON)
-metObjects = metObjects.loc[metObjects['country']!='Unknown']
+# metObjects = metObjects.loc[metObjects['country']!='Unknown']
 
 ### Aggregation ###
 
@@ -31,16 +31,16 @@ aggYear['object_cum_count'] = aggYear['object_count'].cumsum()
 aggCountry = metObjects.groupby(['country']).size().reset_index()
 aggCountry.columns = ['country','object_count']
 aggCountry = aggCountry.sort_values(['object_count'],ascending=[False])
-aggCountry['object_count_rank'] = aggCountry['object_count'].rank(ascending=False,method='dense')
-aggCountry.loc[aggCountry['object_count_rank']>countryNumber,'country'] = 'Other'
-aggCountry = pd.DataFrame(aggCountry.groupby(['country'])['object_count'].sum()).sort_values('object_count',ascending=False)
-aggCountry['object_count_rank'] = aggCountry['object_count'].rank(ascending=False,method='dense')
+aggCountry['object_count_rank'] = aggCountry.loc[aggCountry['country']!='Unknown/Other','object_count'].rank(ascending=False,method='dense')
+aggCountry.loc[aggCountry['object_count_rank']>countryNumber,'country'] = 'Unknown/Other'
+aggCountry = pd.DataFrame(aggCountry.groupby(['country'])['object_count'].sum()).sort_values('object_count',ascending=False).reset_index()
+aggCountry.loc[aggCountry['country']!='Unknown/Other','object_count_rank'] = aggCountry.loc[aggCountry['country']!='Unknown/Other','object_count'].rank(ascending=False,method='dense')
 
 ## Year and Country ##
 aggYearCountryFull = metObjects.groupby(['acq_year','country']).size().reset_index()
 aggYearCountryFull.columns = ['acq_year','country','object_count']
-topCountryList = metObjects.loc[metObjects['country']!='Unknown','country'].value_counts().head(countryNumber).index.tolist()
-aggYearCountryFull.loc[~aggYearCountryFull['country'].isin(topCountryList),'country'] = 'Other'
+topCountryList = metObjects.loc[metObjects['country']!='Unknown/Other','country'].value_counts().head(countryNumber).index.tolist()
+aggYearCountryFull.loc[~aggYearCountryFull['country'].isin(topCountryList),'country'] = 'Unknown/Other'
 aggYearCountryFull = pd.DataFrame(aggYearCountryFull.groupby(['acq_year','country'])['object_count'].sum().reset_index())
 
 aggYearCountryFull['object_cum_count'] = aggYearCountryFull.sort_values(['acq_year'], ascending=[True]) \
@@ -58,19 +58,21 @@ for x in aggYearCountryFull.loc[:,:]['acq_year'].unique():
         })
 aggYearCountry = pd.DataFrame(aggYearCountry)
 
-aggYearCountry['object_count_rank'] = aggYearCountry.sort_values(['object_count'], ascending=[False]) \
-                                                    .groupby(['acq_year']) \
-                                                    .cumcount() + 1
+aggYearCountry.loc[aggYearCountry['country']!='Unknown/Other','object_count_rank'] = aggYearCountry.loc[aggYearCountry['country']!='Unknown/Other',:] \
+                                                                                                   .sort_values(['object_count'], ascending=[False]) \
+                                                                                                   .groupby(['acq_year']) \
+                                                                                                   .cumcount() + 1
 
-aggYearCountry['object_cum_count_rank'] = aggYearCountry.sort_values(['object_cum_count'], ascending=[False]) \
-                                                        .groupby(['acq_year']) \
-                                                        .cumcount() + 1
+aggYearCountry.loc[aggYearCountry['country']!='Unknown/Other','object_cum_count_rank'] = aggYearCountry.loc[aggYearCountry['country']!='Unknown/Other',:] \
+                                                                                                       .sort_values(['object_cum_count'], ascending=[False]) \
+                                                                                                       .groupby(['acq_year']) \
+                                                                                                       .cumcount() + 1
 
 ## Year and Classification ##
 aggYearClassificationFull = metObjects.groupby(['acq_year','classification']).size().reset_index()
 aggYearClassificationFull.columns = ['acq_year','classification','object_count']
-topClassificationList = metObjects.loc[metObjects['classification']!='Unknown','classification'].value_counts().head(classificationNumber).index.tolist()
-aggYearClassificationFull.loc[~aggYearClassificationFull['classification'].isin(topClassificationList),'classification'] = 'Other'
+topClassificationList = metObjects.loc[metObjects['classification']!='Unknown/Other','classification'].value_counts().head(classificationNumber).index.tolist()
+aggYearClassificationFull.loc[~aggYearClassificationFull['classification'].isin(topClassificationList),'classification'] = 'Unknown/Other'
 aggYearClassificationFull = pd.DataFrame(aggYearClassificationFull.groupby(['acq_year','classification'])['object_count'].sum().reset_index())
 
 aggYearClassificationFull['object_cum_count'] = aggYearClassificationFull.sort_values(['acq_year'], ascending=[True]) \
@@ -88,35 +90,37 @@ for x in aggYearClassificationFull.loc[:,:]['acq_year'].unique():
         })
 aggYearClassification = pd.DataFrame(aggYearClassification)
 
-aggYearClassification['object_count_rank'] = aggYearClassification.sort_values(['object_count'], ascending=[False]) \
-                                                                  .groupby(['acq_year']) \
-                                                                  .cumcount() + 1
+aggYearClassification.loc[aggYearClassification['classification']!='Unknown/Other','object_count_rank'] = aggYearClassification.loc[aggYearClassification['classification']!='Unknown/Other',:] \
+                                                                                                                               .sort_values(['object_count'], ascending=[False]) \
+                                                                                                                               .groupby(['acq_year']) \
+                                                                                                                               .cumcount() + 1
 
-aggYearClassification['object_cum_count_rank'] = aggYearClassification.sort_values(['object_cum_count'], ascending=[False]) \
-                                                                      .groupby(['acq_year']) \
-                                                                      .cumcount() + 1
-
+aggYearClassification.loc[aggYearClassification['classification']!='Unknown/Other','object_cum_count_rank'] = aggYearClassification.loc[aggYearClassification['classification']!='Unknown/Other',:] \
+                                                                                                                                   .sort_values(['object_cum_count'], ascending=[False]) \
+                                                                                                                                   .groupby(['acq_year']) \
+                                                                                                                                   .cumcount() + 1
+'''
 ## Year, Country, and Classification ##
 aggYearCountryClassificationFull = metObjects.groupby(['acq_year','country','classification']).size().reset_index()
 aggYearCountryClassificationFull.columns = ['acq_year','country','classification','object_count']
-aggYearCountryClassificationFull.loc[~aggYearCountryClassificationFull['country'].isin(topCountryList),'country'] = 'Other'
-aggYearCountryClassificationFull.loc[~aggYearCountryClassificationFull['classification'].isin(topClassificationList),'classification'] = 'Other'
+aggYearCountryClassificationFull.loc[~aggYearCountryClassificationFull['country'].isin(topCountryList),'country'] = 'Unknown/Other'
+# aggYearCountryClassificationFull.loc[~aggYearCountryClassificationFull['classification'].isin(topClassificationList),'classification'] = 'Unknown/Other'
 aggYearCountryClassificationFull = pd.DataFrame(aggYearCountryClassificationFull.groupby(['acq_year','country','classification'])['object_count'].sum().reset_index())
 
-aggYearCountryClassificationFull['country_count'] = aggYearCountryClassificationFull.groupby(['acq_year','country'])['object_count'].transform(np.sum)
-aggYearCountryClassificationFull['classification_count'] = aggYearCountryClassificationFull.groupby(['acq_year','classification'])['object_count'].transform(np.sum)
+# aggYearCountryClassificationFull['country_count'] = aggYearCountryClassificationFull.groupby(['acq_year','country'])['object_count'].transform(np.sum)
+# aggYearCountryClassificationFull['classification_count'] = aggYearCountryClassificationFull.groupby(['acq_year','classification'])['object_count'].transform(np.sum)
 
 aggYearCountryClassificationFull['object_cum_count'] = aggYearCountryClassificationFull.sort_values(['acq_year'],ascending=[True]) \
                                                                                        .groupby(['country','classification']) \
                                                                                        ['object_count'].apply(lambda x: x.cumsum())
 
-aggYearCountryClassificationFull['country_cum_count'] = aggYearCountryClassificationFull.sort_values(['acq_year'],ascending=[True]) \
-                                                                                        .groupby(['country']) \
-                                                                                        ['object_count'].apply(lambda x: x.cumsum())
-
-aggYearCountryClassificationFull['classification_cum_count'] = aggYearCountryClassificationFull.sort_values(['acq_year'],ascending=[True]) \
-                                                                                               .groupby(['classification']) \
-                                                                                               ['object_count'].apply(lambda x: x.cumsum())
+# aggYearCountryClassificationFull['country_cum_count'] = aggYearCountryClassificationFull.sort_values(['acq_year'],ascending=[True]) \
+#                                                                                         .groupby(['country']) \
+#                                                                                         ['object_count'].apply(lambda x: x.cumsum())
+#
+# aggYearCountryClassificationFull['classification_cum_count'] = aggYearCountryClassificationFull.sort_values(['acq_year'],ascending=[True]) \
+#                                                                                                .groupby(['classification']) \
+#                                                                                                ['object_count'].apply(lambda x: x.cumsum())
 
 aggYearCountryClassification = []
 for x in aggYearCountryClassificationFull.loc[:,:]['acq_year'].unique():
@@ -128,44 +132,64 @@ for x in aggYearCountryClassificationFull.loc[:,:]['acq_year'].unique():
                 ,'classification'          :l
                 ,'object_count'            :aggYearCountryClassificationFull.loc[(aggYearCountryClassificationFull['acq_year']==x) & (aggYearCountryClassificationFull['country']==c) & (aggYearCountryClassificationFull['classification']==l),'object_count'].sum()
                 ,'object_cum_count'        :aggYearCountryClassificationFull.loc[(aggYearCountryClassificationFull['acq_year']<=x) & (aggYearCountryClassificationFull['country']==c) & (aggYearCountryClassificationFull['classification']==l),'object_cum_count'].values[-1]
-                ,'country_count'           :aggYearCountryClassificationFull.loc[(aggYearCountryClassificationFull['acq_year']==x) & (aggYearCountryClassificationFull['country']==c)]['country_count'].mean()
-                ,'country_cum_count'       :aggYearCountryClassificationFull.loc[(aggYearCountryClassificationFull['acq_year']<=x) & (aggYearCountryClassificationFull['country']==c)]['country_cum_count'].values[-1]
-                ,'classification_count'    :aggYearCountryClassificationFull.loc[(aggYearCountryClassificationFull['acq_year']==x) & (aggYearCountryClassificationFull['classification']==l)]['country_count'].mean()
-                ,'classification_cum_count':aggYearCountryClassificationFull.loc[(aggYearCountryClassificationFull['acq_year']<=x) & (aggYearCountryClassificationFull['classification']==l)]['country_cum_count'].values[-1]
+                # ,'country_count'           :aggYearCountryClassificationFull.loc[(aggYearCountryClassificationFull['acq_year']==x) & (aggYearCountryClassificationFull['country']==c)]['country_count'].mean()
+                # ,'country_cum_count'       :aggYearCountryClassificationFull.loc[(aggYearCountryClassificationFull['acq_year']<=x) & (aggYearCountryClassificationFull['country']==c)]['country_cum_count'].values[-1]
+                # ,'classification_count'    :aggYearCountryClassificationFull.loc[(aggYearCountryClassificationFull['acq_year']==x) & (aggYearCountryClassificationFull['classification']==l)]['country_count'].mean()
+                # ,'classification_cum_count':aggYearCountryClassificationFull.loc[(aggYearCountryClassificationFull['acq_year']<=x) & (aggYearCountryClassificationFull['classification']==l)]['country_cum_count'].values[-1]
             })
 aggYearCountryClassification = pd.DataFrame(aggYearCountryClassification)
 
-aggYearCountryClassification['object_count_rank'] = aggYearCountryClassification.sort_values(['object_count'], ascending=[False]) \
-                                                                                .groupby(['acq_year']) \
-                                                                                .cumcount() + 1
+# print(aggYearCountryClassificationFull.loc[(aggYearCountryClassificationFull['acq_year']==2017) & (aggYearCountryClassificationFull['country']=='United States'),:].sort_values('object_cum_count', ascending=False))
+# print(aggYearCountry.loc[(aggYearCountry['acq_year']==2017) & (aggYearCountry['country']=='United States'),'object_cum_count'])
+# print(aggYearCountry.loc[(aggYearCountry['acq_year']==2017) & (aggYearCountry['country']=='United States'),'object_cum_count'].sum())
+# print(aggYearCountryClassificationFull.loc[(aggYearCountryClassificationFull['acq_year']==2017) & (aggYearCountryClassificationFull['country']=='United States'),'object_cum_count'].sum())
 
-aggYearCountryClassification['object_cum_count_rank'] = aggYearCountryClassification.sort_values(['object_cum_count'], ascending=[False]) \
-                                                                                    .groupby(['acq_year']) \
-                                                                                    .cumcount() + 1
 
-aggYearCountryClassification['country_count_rank'] = aggYearCountryClassification.sort_values(['country_count'], ascending=[False]) \
-                                                                                .groupby(['acq_year']) \
-                                                                                .cumcount() + 1
+# aggYearCountryClassification['object_count_rank'] = aggYearCountryClassification.sort_values(['object_count'], ascending=[False]) \
+#                                                                                 .groupby(['acq_year']) \
+#                                                                                 .cumcount() + 1
+#
+# aggYearCountryClassification['object_cum_count_rank'] = aggYearCountryClassification.sort_values(['object_cum_count'], ascending=[False]) \
+#                                                                                     .groupby(['acq_year']) \
+#                                                                                     .cumcount() + 1
+#
+# aggYearCountryClassification['country_count_rank'] = aggYearCountryClassification.sort_values(['country_count'], ascending=[False]) \
+#                                                                                 .groupby(['acq_year']) \
+#                                                                                 .cumcount() + 1
+#
+# aggYearCountryClassification['country_cum_count_rank'] = aggYearCountryClassification.sort_values(['country_cum_count'], ascending=[False]) \
+#                                                                                     .groupby(['acq_year']) \
+#                                                                                     .cumcount() + 1
+#
+# aggYearCountryClassification['classification_count_rank'] = aggYearCountryClassification.sort_values(['classification_count'], ascending=[False]) \
+#                                                                                 .groupby(['acq_year']) \
+#                                                                                 .cumcount() + 1
+#
+# aggYearCountryClassification['classification_cum_count_rank'] = aggYearCountryClassification.sort_values(['classification_cum_count'], ascending=[False]) \
+#                                                                                     .groupby(['acq_year']) \
+#                                                                                     .cumcount() + 1
+'''
+'''
+# print(aggYearCountry.loc[(aggYearCountry['acq_year']==2017),:].sort_values('object_cum_count_rank',ascending=True))
+# print(aggYearClassification.loc[(aggYearClassification['acq_year']==2017),:].sort_values('object_cum_count_rank',ascending=True))
+# print(aggYearCountryClassification.loc[(aggYearCountryClassification['acq_year']==2017),:].sort_values('object_cum_count',ascending=False))
 
-aggYearCountryClassification['country_cum_count_rank'] = aggYearCountryClassification.sort_values(['country_cum_count'], ascending=[False]) \
-                                                                                    .groupby(['acq_year']) \
-                                                                                    .cumcount() + 1
-
-aggYearCountryClassification['classification_count_rank'] = aggYearCountryClassification.sort_values(['classification_count'], ascending=[False]) \
-                                                                                .groupby(['acq_year']) \
-                                                                                .cumcount() + 1
-
-aggYearCountryClassification['classification_cum_count_rank'] = aggYearCountryClassification.sort_values(['classification_cum_count'], ascending=[False]) \
-                                                                                    .groupby(['acq_year']) \
-                                                                                    .cumcount() + 1
+'''
+## Separate Unknown/Other into their own data frames ##
+aggYearCountryOther = pd.DataFrame(aggYearCountry.loc[aggYearCountry['country']=='Unknown/Other'].reset_index())
+aggYearCountry = pd.DataFrame(aggYearCountry.loc[aggYearCountry['country']!='Unknown/Other'].reset_index())
+aggYearClassificationOther = pd.DataFrame(aggYearClassification.loc[aggYearClassification['classification']=='Unknown/Other'].reset_index())
+aggYearClassification = pd.DataFrame(aggYearClassification.loc[aggYearClassification['classification']!='Unknown/Other'].reset_index())
 
 
 ## Export JSONs ##
 aggYear.to_json('/Users/ryanbest/Dropbox/GitHub/ms1-2018/first-p5-vis/assets/aggYear.json')
 aggCountry.to_json('/Users/ryanbest/Dropbox/GitHub/ms1-2018/first-p5-vis/assets/aggCountry.json')
 aggYearCountry.to_json('/Users/ryanbest/Dropbox/GitHub/ms1-2018/first-p5-vis/assets/aggYearCountry.json')
+aggYearCountryOther.to_json('/Users/ryanbest/Dropbox/GitHub/ms1-2018/first-p5-vis/assets/aggYearCountryOther.json')
 aggYearClassification.to_json('/Users/ryanbest/Dropbox/GitHub/ms1-2018/first-p5-vis/assets/aggYearClassification.json')
-aggYearCountryClassification.to_json('/Users/ryanbest/Dropbox/GitHub/ms1-2018/first-p5-vis/assets/aggYearCountryClassification.json')
+aggYearClassificationOther.to_json('/Users/ryanbest/Dropbox/GitHub/ms1-2018/first-p5-vis/assets/aggYearClassificationOther.json')
+# aggYearCountryClassification.to_json('/Users/ryanbest/Dropbox/GitHub/ms1-2018/first-p5-vis/assets/aggYearCountryClassification.json')
 
 '''
 ## Year and Classification ##
