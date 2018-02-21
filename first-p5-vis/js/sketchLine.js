@@ -61,13 +61,18 @@ function setup() {
 }
 
 function draw() {
-  background(35);
-  drawYear();
-  drawTitle();
-  drawAxes();
-  drawCountryLegends()
-  drawYearCountryDot();
-  // drawYearCountryLine();
+  if (floor(x)>maxYear) {
+    autoPlay = false;
+  }
+  if (autoPlay) {
+    background(35);
+    drawYear();
+    drawTitle();
+    drawAxes();
+    drawCountryLegends()
+    drawYearCountryDot();
+    // drawYearCountryLine();
+  }
 }
 
 function stopLoop() {
@@ -145,7 +150,6 @@ function drawYearCountryDot() {
       fill(col);
       noStroke();
       ellipse(ctX,ctY,20);
-
       drawYearCountryLine(yrCountry,col);
     }
   }
@@ -252,6 +256,7 @@ function drawCountryLegends() {
 function mousePressed() {
   if (x>maxYear) {
     x = aY['acq_year'][0];
+    autoPlay = true;
   } else {
     if (autoPlay) {
       autoPlay = false
