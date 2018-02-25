@@ -1,0 +1,53 @@
+* {
+  background-color: RGB(35,35,35);
+}
+
+.intro {
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+.description {
+  font-family: 'Lora', serif;
+  line-height: 1.25em;
+}
+
+.intro {
+  margin-right: 15%;
+  margin-left: 15%;
+}
+
+.intro h1 {
+  font-weight: normal;
+  color: RGB(35,35,35);
+  font-size: 90px;
+  text-align: center;
+  background-color: RGB(178,178,178);
+  font-weight: bold;
+  padding: 30px;
+  margin-top: 50px;
+  margin-bottom: 0px;
+}
+
+.intro h2 {
+  text-align: center;
+  font-size: 20px;
+  font-weight: normal;
+  margin-top: 15px;
+  color: RGB(178,178,178);
+}
+
+.description {
+  margin-right: 25%;
+  margin-left: 25%;
+}
+
+.description p,a {
+  text-align: center;
+  font-size: 16px;
+  color: RGB(178,178,178);
+  font-weight:100;
+}
+
+.description a:hover {
+  color: #db1121; 
+}

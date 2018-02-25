@@ -1,0 +1,11 @@
+* {
+  font-family: 'Lato', sans-serif !important;
+}
+
+.artist {
+  color: green;
+}
+
+.noArtist {
+  color: #cecece;
+}
