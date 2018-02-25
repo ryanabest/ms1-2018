@@ -1,6 +1,7 @@
 var canvas;
 let margin = 0.075;
-let marginTop = 0.15;
+// let marginTop = 0.15;
+let marginTop = margin;
 let cnvW  = window.innerWidth-10;
 let cnvH = window.innerHeight-35;
 let x1 = cnvW*margin;
@@ -8,7 +9,13 @@ let x2 = cnvW-(cnvW*margin);
 let y1 = cnvH*marginTop;
 let y2 = cnvH-(cnvH*margin);
 
-let autoPlay = true;
+let autoPlay = false;
+let isHighlight = false;
+let highlightRank = -1;
+let countryClick = false;
+let stackedRank = -1;
+
+let xPace = 0.2;
 
 function preload() {
   // GitHub Pages
@@ -18,10 +25,10 @@ function preload() {
   aYL =       loadJSON('/ms1-2018/first-p5-vis/assets/aggYearClassification.json');
   aYCL =      loadJSON('/ms1-2018/first-p5-vis/assets/aggYearCountryClassification.json');
   cColors =   loadJSON('/ms1-2018/first-p5-vis/assets/countryColors.json');
-  font =      loadFont('/ms1-2018/first-p5-vis/typeface/RobotoCondensed-Bold.ttf')
   montLight = loadFont('/ms1-2018/first-p5-vis/typeface/Montserrat-Light.ttf')
   montBold =  loadFont('/ms1-2018/first-p5-vis/typeface/Montserrat-Bold.ttf')
   montReg =   loadFont('/ms1-2018/first-p5-vis/typeface/Montserrat-Regular.ttf')
+  montItal =  loadFont('/ms1-2018/first-p5-vis/typeface/Montserrat-LightItalic.ttf')
   // Local testing
   // aY =        loadJSON('../assets/aggYear.json');
   // aC =        loadJSON('../assets/aggCountry.json');
@@ -29,16 +36,14 @@ function preload() {
   // aYL =       loadJSON('../assets/aggYearClassification.json');
   // aYCL =      loadJSON('../assets/aggYearCountryClassification.json');
   // cColors =   loadJSON('../assets/countryColors.json');
-  // font =      loadFont('../typeface/RobotoCondensed-Bold.ttf')
   // montLight = loadFont('../typeface/Montserrat-Light.ttf')
   // montBold =  loadFont('../typeface/Montserrat-Bold.ttf')
   // montReg =   loadFont('../typeface/Montserrat-Regular.ttf')
+  // montItal =  loadFont('../typeface/Montserrat-LightItalic.ttf')
 }
 
 function setup() {
   canvas = createCanvas(cnvW,cnvH);
-  background(35);
-  // countries
   countryNumber = Object.keys(aC['object_count_rank']).length;
   countries = Object.keys(aC['country'])
   // determine minimum and maximum year //
@@ -47,6 +52,7 @@ function setup() {
   maxYear = aY['acq_year'][Object.keys(aY['acq_year'])[Object.keys(aY['acq_year']).length-1]-1]
   // create variable that will control year //
   x = minYear;
+  // x = 2017;
   // determine maximum value for country + year //
   maxYearCountryCount = 0;
   for (yc in Object.keys(aYC['object_cum_count'])) {
@@ -55,56 +61,49 @@ function setup() {
       maxYearCountryIndex = yc;
     }
   }
-  // stopLoop();
-  // axes
-  fill(255);
 }
 
 function draw() {
-  if (floor(x)>maxYear) {
+  amHighlight();
+  // if (autoPlay) {
+  //   drawEverything();
+  // }
+  drawEverything();
+  if (floor(x)>=maxYear) {
     autoPlay = false;
   }
-  if (autoPlay) {
-    background(35);
-    drawYear();
-    drawTitle();
-    drawAxes();
-    drawCountryLegends()
-    drawYearCountryDot();
-    // drawYearCountryLine();
+  if (autoPlay === false & floor(x) === minYear) {
+    console.log("text");
+    fill(215);
+    textSize(75);
+    textFont(montLight);
+    text("Click to get started",cnvW/2,cnvH/2);
   }
 }
 
-function stopLoop() {
-  if (maxYear===floor(x)) {
-    noLoop();
-  } else {
-    loop();
-  }
-}
 
 function drawTitle() {
-  textFont(montLight);
-  fill(178);
-  noStroke();
-  textAlign(CENTER,CENTER);
-  textSize(60);
-  let titleText = 'A History of Collecting at The Met';
-  text(titleText,cnvW/2,cnvH/16);
-}
-
-function drawYear() {
   textFont(montBold);
   fill(178);
   noStroke();
   textAlign(CENTER,CENTER);
   textSize(60);
-  text(floor(x),cnvW/2,cnvH/16 + 50);
-  if (ceil(x) <= maxYear) {
+  let titleText = "How has the Met's collection evolved over time?";
+  text(titleText,cnvW/2,cnvH/16);
+}
+
+function drawYear() {
+  textFont(montLight);
+  fill(178);
+  noStroke();
+  textAlign(CENTER,CENTER);
+  textSize(100);
+  if (floor(x) <= maxYear) {
     if (autoPlay) {
-      x += 0.35;
+      x += xPace;
     }
   }
+  text(floor(x),cnvW/2,cnvH*marginTop);
 }
 
 function drawAxes() {
@@ -112,51 +111,109 @@ function drawAxes() {
   strokeWeight(3);
   line(x1,y1,x1,y2);
   line(x1,y2,x2,y2);
+  noStroke();
+  textSize(18);
+  // Object Count Axis Labels
+  textFont(montLight);
+  textAlign(CENTER,CENTER);
+  translate(15,cnvH/2);
+  rotate(-HALF_PI);
+  text("Cumulative Objects Acquired",0,0);
+  rotate(HALF_PI);
+  translate(-15,-cnvH/2);
   for (let y=0;y<maxYearCountryCount;y+=20000) {
     let objY = map(y,maxYearCountryCount,0,y1,y2);
     let objX = x1 * 0.9;
-    textSize(18);
+    let printY = y.toLocaleString();
     textAlign(RIGHT,CENTER);
-    text(y,objX,objY);
+    text(printY,objX,objY);
     stroke(255,50);
     strokeWeight(3);
     line(x1*0.92,objY,x1,objY);
     noStroke();
   }
+
+  // Year Axis Labels
+  textAlign(CENTER,CENTER);
+  text("Acqusition Year",cnvW/2,cnvH-15);
+  for (let yl=minYear;yl<=floor(x);yl+=10) {
+    let ylX = map(yl,minYear,maxYear,x1,x2);
+    let ylY = y2 + 20;
+    textAlign(CENTER,CENTER);
+    text(yl,ylX,ylY);
+    stroke(255,50);
+    strokeWeight(3);
+    line(ylX,y2,ylX,y2+10);
+    noStroke();
+  }
 }
 
-function drawYearCountryDot() {
-  for (y in aYC['acq_year']) {
-    let yr = aYC['acq_year'][y];
-    if (yr === floor(x)) {
-      let yrCountry = aYC['country'][y];
-      let cRank;
-      for (r in Object.keys(aC['country'])) {
-        if (aC['country'][r] === yrCountry) {
-          cRank = aC['object_count_rank'][r]
+function drawEverything() {
+  background(35);
+  drawYear();
+  // drawTitle();
+  drawAxes();
+  let currentYear = floor(x);
+  if (countryClick) {
+    drawCountryStackedBars()
+  }
+  for (r in Object.keys(aC['country'])) {
+    let country = aC['country'][r]
+    for (let a in aYC['country']) {
+      if (aYC['country'][a] === country && aYC['acq_year'][a] === currentYear) {
+        let col;
+        countryRank = aC['object_count_rank'][r];
+        for (s in Object.keys(cColors['country_rank'])) {
+          if (cColors['country_rank'][s] === countryRank) {
+            if (countryClick) {
+              if (s === stackedRank) {
+                col = color(cColors['r'][s],cColors['g'][s],cColors['b'][s]);
+                drawYearCountryTooltip(country,col,currentYear,aYC['object_cum_count'][a].toLocaleString());
+              } else {
+                col = color(cColors['dark-r'][s],cColors['dark-g'][s],cColors['dark-b'][s],0);
+              }
+            } else if (isHighlight) {
+              if (s === highlightRank) {
+                col = color(cColors['r'][s],cColors['g'][s],cColors['b'][s]);
+                drawYearCountryTooltip(country,col,currentYear,aYC['object_cum_count'][a].toLocaleString());
+                textAlign(LEFT,TOP);
+                textFont(montItal);
+                textSize(16);
+                text("Click to see classifications",mouseX+50,mouseY+15);
+              } else {
+                col = color(cColors['dark-r'][s],cColors['dark-g'][s],cColors['dark-b'][s],75);
+              }
+            } else {
+              col = color(cColors['r'][s],cColors['g'][s],cColors['b'][s]);
+            }
+          }
         }
+        drawCountryLegend(country,col,countryRank);
+        drawYearCountryDot(country,col,currentYear);
+        drawYearCountryLine(country,col);
       }
-      let col;
-      for (s in Object.keys(cColors['country_rank'])) {
-        if (cColors['country_rank'][s] === cRank) {
-          // console.log(cColors['r'][s]);
-          col = color(cColors['r'][s],cColors['g'][s],cColors['b'][s])
-        }
-      }
-      let countryRank = aC['object_count_rank'][yrCountry]
-      let ctX = map(yr,minYear,maxYear,(cnvW*margin),(cnvW-(cnvW*margin)))
-      let yrCountryCount = aYC['object_cum_count'][y]
-      let ctY = map(yrCountryCount,maxYearCountryCount,0,y1,y2);
-      fill(col);
-      noStroke();
-      ellipse(ctX,ctY,20);
-      drawYearCountryLine(yrCountry,col);
     }
   }
 }
 
-function drawYearCountryLine(c,color) {
-  let country = c;
+function drawYearCountryDot(country,color,year) {
+  let yr;
+  let yrCountryCount;
+  for (a in aYC['acq_year']) {
+    if (aYC['acq_year'][a] === floor(x) && aYC['country'][a] === country) {
+      yr = aYC['acq_year'][a]
+      yrCountryCount = aYC['object_cum_count'][a]
+    }
+  }
+  let rad = 20;
+  let ctX = map(yr,minYear,maxYear,(cnvW*margin),(cnvW-(cnvW*margin)));
+  let ctY = map(yrCountryCount,maxYearCountryCount,0,y1,y2);
+  fill(color);
+  noStroke();
+  ellipse(ctX,ctY,rad);
+}
+
+function drawYearCountryLine(country,color) {
   let prevYears = []
   for (y in aYC['acq_year']) {
     let yr = aYC['acq_year'][y];
@@ -181,48 +238,62 @@ function drawYearCountryLine(c,color) {
   }
 }
 
-// function drawAllYearCountryLines() {
-//   for (c in countries) {
-//     let country = aC['country'][c]
-//     // determine line color
-//     let col;
-//     let cRank;
-//     for (r in Object.keys(aC['country'])) {
-//       if (aC['country'][r] === country) {
-//         cRank = aC['object_count_rank'][r]
-//       }
-//     }
-//     for (s in Object.keys(cColors['country_rank'])) {
-//       if (cColors['country_rank'][s] === cRank) {
-//         // console.log(cColors['r'][s]);
-//         col = color(cColors['r'][s],cColors['g'][s],cColors['b'][s])
-//       }
-//     }
-//
-//     prevYears = []
-//     for (y in aYC['acq_year']) {
-//       let yr = aYC['acq_year'][y];
-//       if (yr <= floor(x) && aYC['country'][y] === country) {
-//         prevYears.push({
-//           year: yr,
-//           object_cum_count: aYC['object_cum_count'][y]
-//         })
-//       }
-//     }
-//     if (prevYears.length>1) {
-//       for (i=1;i<prevYears.length;i++) {
-//         // console.log(prevYears[i-1]['object_cum_count'])
-//         let linex1 = map(prevYears[i-1]['year'],minYear,maxYear,(cnvW*margin)+20,(cnvW-(cnvW*margin))-20);
-//         let linex2 = map(prevYears[i]['year'],minYear,maxYear,(cnvW*margin)+20,(cnvW-(cnvW*margin))-20);
-//         let liney1 = map(prevYears[i-1]['object_cum_count'],maxYearCountryCount,0,y1+10,y2-10);
-//         let liney2 = map(prevYears[i]['object_cum_count'],maxYearCountryCount,0,y1+10,y2-10);
-//         stroke(col);
-//         strokeWeight(2);
-//         line(linex1,liney1,linex2,liney2);
-//       }
-//     }
-//   }
-// }
+function drawYearCountryTooltip(country,color,year,n) {
+  let ttX = cnvW/2 + 250;
+  let ttY = cnvH*marginTop + 100;
+  let ttTxt1 = country + ' - ' + n + ' objects';
+  let ttTxt2 = n + ' objects';
+  textFont(montReg);
+  noStroke();
+  textAlign(RIGHT,TOP);
+  textSize(38);
+  // fill(255);
+  // text(ttTxt1,ttX+1,ttY+1);
+  fill(color);
+  text(ttTxt1,ttX,ttY);
+}
+
+function amHighlight() {
+  isHighlight = false;
+  highlightRank = -1;
+  let legW = 150;
+  let legH = 30;
+  let legX = x1 + 60;
+  let legY = y1;
+  let hoverList = [];
+
+  for (let s in Object.keys(cColors['country_rank'])) {
+    hoverList.push({
+      'rank':  s,
+      'legx1': legX,
+      'legy1': legY+(legH*s),
+      'legx2': legX+legW,
+      'legy2': legY+(legH*s)+legH
+    })
+  }
+  for (let h in hoverList) {
+    let pr;
+    if (mouseX >= hoverList[h]['legx1'] && mouseY >= hoverList[h]['legy1'] && mouseX <= hoverList[h]['legx2'] && mouseY <= hoverList[h]['legy2']) {
+      isHighlight = true
+      highlightRank = hoverList[h]['rank']
+      if (mouseIsPressed) {
+        stackedRank = highlightRank;
+      }
+    }
+  }
+}
+
+function drawCountryLegend(country,color,rank) {
+  let txtX = x1+60+75;
+  let txtY = y1 + (30*(rank-1));
+  noStroke();
+  textAlign(CENTER,TOP);
+  textFont(montReg);
+  textSize(20);
+  fill(color);
+  text(country,txtX,txtY);
+
+}
 
 function drawCountryLegends() {
   let legW = 250;
@@ -233,51 +304,137 @@ function drawCountryLegends() {
   let col;
   let cTxt;
   // rect(legX,legY,legW,legH,legR);
-  for (s in Object.keys(cColors['country_rank'])) {
+  for (let s in Object.keys(cColors['country_rank'])) {
     col = color(cColors['r'][s],cColors['g'][s],cColors['b'][s]);
     fill(col);
-    rect(legX,legY+(legH*s)+(5*s),legW,legH,legR);
-    for (r in Object.keys(aC['country'])) {
+    // rect(legX,legY+(legH*s)+(5*s),legW,legH,legR);
+    for (let r in Object.keys(aC['country'])) {
       if (aC['object_count_rank'][r] === cColors['country_rank'][s]) {
         cTxt = aC['country'][r];
       }
     }
-    textAlign(CENTER,CENTER);
+    textAlign(CENTER,TOP);
     let txtX = legX + (legW/2);
-    let txtY = legY+(legH*s)+(5*s)+(legH * 0.375);
+    let txtY = legY+(legH*s)+(legH * 0.375);
 
-    fill(0,200);
+    // fill(0,200);
     textFont(montReg);
-    textSize(28);
+    textSize(20);
     text(cTxt,txtX,txtY);
   }
 }
 
-function mousePressed() {
-  if (x>maxYear) {
-    x = aY['acq_year'][0];
-    autoPlay = true;
-  } else {
-    if (autoPlay) {
-      autoPlay = false
+function drawCountryStackedBars() {
+  let prevYears = [];
+  let col;
+  let yr;
+  for (let ycl in Object.keys(aYCL['acq_year'])) {
+    yr = aYCL['acq_year'][ycl];
+    if (parseInt(aYCL['country_total_object_count_rank'][ycl])-1 === parseInt(stackedRank) && yr <= floor(x)) {
+      let classificationRank = aYCL['country_classification_object_count_rank'][ycl];
+      for (let s in Object.keys(cColors['country_rank'])) {
+        if (stackedRank === s) {
+          if (classificationRank === 6) {
+            col = color(cColors['r-1'][s],cColors['g-1'][s],cColors['b-1'][s])
+          } else if (classificationRank === 5) {
+            col = color(cColors['r'][s],cColors['g'][s],cColors['b'][s])
+          } else if (classificationRank === 4) {
+            col = color(cColors['r+1'][s],cColors['g+1'][s],cColors['b+1'][s])
+          } else if (classificationRank === 3) {
+            col = color(cColors['r+2'][s],cColors['g+2'][s],cColors['b+2'][s])
+          } else if (classificationRank === 2) {
+            col = color(cColors['r+3'][s],cColors['g+3'][s],cColors['b+3'][s])
+          } else if (classificationRank === 1) {
+            col = color(cColors['r+4'][s],cColors['g+4'][s],cColors['b+4'][s])
+          }
+        }
+      }
+      prevYears.push({
+        year: yr,
+        classification: aYCL['classification'][ycl],
+        lRank: classificationRank,
+        lCount: aYCL['object_cum_count'][ycl],
+        color: col,
+        clCount: aYCL['country_year_object_cum_count'][ycl]
+      })
+    }
+  }
+  let runningTotal;
+  for (let p in prevYears) {
+    if (prevYears[p]['lRank'] === 1) {
+      runningTotal = prevYears[p]['lCount'];
     } else {
-      autoPlay = true
+      runningTotal += prevYears[p]['lCount']
+    }
+    let rectH = map(prevYears[p]['lCount'],0,maxYearCountryCount,0,cnvH-(cnvH*marginTop)-(cnvH*margin));
+    let rectW = 15;
+    let rectX = map(prevYears[p]['year'],minYear,maxYear,(cnvW*margin),(cnvW-(cnvW*margin))) - (rectW/2);
+    let rectY = map(runningTotal,maxYearCountryCount,0,y1,y2);
+    noStroke();
+    fill(prevYears[p]['color']);
+    rect(rectX,rectY,rectW,rectH);
+
+    if (prevYears[p]['year'] === floor(x)) {
+      let sbtX = cnvW/2+200;
+      let sbtY = (cnvH*marginTop) + 160 + (25*Math.abs((6-prevYears[p]['lRank'])));
+      let sbTxt = prevYears[p]['classification'] + ' - ' + prevYears[p]['lCount'].toLocaleString() + ' objects';
+      // stroke(255);
+      // strokeWeight(0.25);
+      textFont(montReg);
+      textSize(26);
+      textAlign(RIGHT,TOP);
+      // fill(255);
+      // text(sbTxt,sbtX+0.5,sbtY+0.5);
+      fill(178);
+      text(sbTxt,sbtX,sbtY);
+      fill(prevYears[p]['color']);
+      ellipse(sbtX+40,sbtY+18,25);
+    }
+  }
+}
+
+function mousePressed() {
+  if (isHighlight) {
+    if (countryClick) {
+      if (highlightRank === stackedRank) {
+        countryClick = false
+      }
+    } else {
+      countryClick = true
+    }
+  } else {
+    if (x>maxYear) {
+      x = aY['acq_year'][0];
+      autoPlay = true;
+    } else {
+      if (autoPlay) {
+        autoPlay = false
+      } else {
+        autoPlay = true
+      }
     }
   }
 }
 
 function keyPressed() {
-  if (autoPlay === false && keyCode === LEFT_ARROW) {
+  if (keyCode === UP_ARROW) {
+    xPace += 0.05;
+  } else if (keyCode === DOWN_ARROW) {
+    xPace -= 0.05;
+  }
+  if (autoPlay === false && (keyCode === LEFT_ARROW || keyCode === 37)) {
     x = floor(x) - 1
-  } else if (autoPlay === false && keyCode === RIGHT_ARROW && floor(x) < maxYear) {
+    drawEverything();
+  } else if (autoPlay === false && (keyCode === RIGHT_ARROW || keyCode === 39) && floor(x) < maxYear) {
     x = floor(x) + 1
+    drawEverything();
   }
 }
 
-window.onresize = function() {
-  let w = window.innerWidth;
-  let h = window.innerHeight;
-  canvas.size(w,h);
-  width = w;
-  height = h;
-}
+// window.onresize = function() {
+//   let w = window.innerWidth;
+//   let h = window.innerHeight;
+//   canvas.size(w,h);
+//   width = w;
+//   height = h;
+// }

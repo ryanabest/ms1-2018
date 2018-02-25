@@ -62,7 +62,6 @@ metObjects.loc[(metObjects['acq_year']>=70) & (metObjects['acq_year']<100), 'acq
 metObjects.loc[metObjects['acq_year']<1000, 'acq_year'] = pd.to_numeric(metObjects['credit_line'].str[-4:],errors='coerce')
 metObjects.loc[metObjects['acq_year']>now.year, 'acq_year'] = pd.to_numeric(metObjects['credit_line'].str[-4:],errors='coerce')
 
-
 ### Object Year ###
 
 # split between start and end year
@@ -269,13 +268,15 @@ metObjects['country'] = metObjects['country'].str.strip()
 # print(len(metObjects.loc[(metObjects['country'].notna()) & (metObjects['acq_year'].notna()) & (metObjects['classification'].notna()),:]))
 # print(len(metObjects.loc[(metObjects['country'].isna()) | (metObjects['acq_year'].isna()) | (metObjects['classification'].isna()),:]))
 
+# print(metObjects.loc[(metObjects['acq_year'].isna()) & (metObjects['country']=='United States') & (metObjects['classification']=='Prints-Burdick Collection'),:])
+
 metObjectsExport = metObjects[['acq_year','classification','country']]
 
 ### Nulls ###
 
 # replace null acqusition_year, classification, and country with 'unknown' values
-metObjectsExport.loc[metObjectsExport['classification']=='',    'classification'] = 'Unknown/Other'
-metObjectsExport.loc[metObjectsExport['classification'].isna(), 'classification'] = 'Unknown/Other'
+metObjectsExport.loc[metObjectsExport['classification']=='',    'classification'] = 'Unclassified'
+metObjectsExport.loc[metObjectsExport['classification'].isna(), 'classification'] = 'Unclassified'
 # print(metObjects['classification'].value_counts())
 metObjectsExport.loc[metObjectsExport['acq_year'].isna(), 'acq_year'] = 10000
 # print(metObjects['acq_year'].value_counts())
