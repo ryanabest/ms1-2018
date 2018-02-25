@@ -19,16 +19,16 @@ let xPace = 0.2;
 
 function preload() {
   // GitHub Pages
-  aY =        loadJSON('/ms1-2018/first-p5-vis/assets/aggYear.json');
-  aC =        loadJSON('/ms1-2018/first-p5-vis/assets/aggCountry.json');
-  aYC =       loadJSON('/ms1-2018/first-p5-vis/assets/aggYearCountry.json');
-  aYL =       loadJSON('/ms1-2018/first-p5-vis/assets/aggYearClassification.json');
-  aYCL =      loadJSON('/ms1-2018/first-p5-vis/assets/aggYearCountryClassification.json');
-  cColors =   loadJSON('/ms1-2018/first-p5-vis/assets/countryColors.json');
-  montLight = loadFont('/ms1-2018/first-p5-vis/typeface/Montserrat-Light.ttf')
-  montBold =  loadFont('/ms1-2018/first-p5-vis/typeface/Montserrat-Bold.ttf')
-  montReg =   loadFont('/ms1-2018/first-p5-vis/typeface/Montserrat-Regular.ttf')
-  montItal =  loadFont('/ms1-2018/first-p5-vis/typeface/Montserrat-LightItalic.ttf')
+  aY =        loadJSON('/ms1-2018/quant/assets/aggYear.json');
+  aC =        loadJSON('/ms1-2018/quant/assets/aggCountry.json');
+  aYC =       loadJSON('/ms1-2018/quant/assets/aggYearCountry.json');
+  aYL =       loadJSON('/ms1-2018/quant/assets/aggYearClassification.json');
+  aYCL =      loadJSON('/ms1-2018/quant/assets/aggYearCountryClassification.json');
+  cColors =   loadJSON('/ms1-2018/quant/assets/countryColors.json');
+  montLight = loadFont('/ms1-2018/quant/typeface/Montserrat-Light.ttf')
+  montBold =  loadFont('/ms1-2018/quant/typeface/Montserrat-Bold.ttf')
+  montReg =   loadFont('/ms1-2018/quant/typeface/Montserrat-Regular.ttf')
+  montItal =  loadFont('/ms1-2018/quant/typeface/Montserrat-LightItalic.ttf')
   // Local testing
   // aY =        loadJSON('../assets/aggYear.json');
   // aC =        loadJSON('../assets/aggCountry.json');
