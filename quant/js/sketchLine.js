@@ -77,7 +77,7 @@ function draw() {
     fill(215);
     textSize(75);
     textFont(montLight);
-    text("Click to get started",cnvW/2,cnvH/2);
+    text("Click to Start",cnvW/2,cnvH/2);
   }
 }
 
