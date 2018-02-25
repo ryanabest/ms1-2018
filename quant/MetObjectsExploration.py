@@ -13,9 +13,9 @@ warnings.filterwarnings('ignore')
 
 # Define data source variables
 metObjectsUrl = 'https://media.githubusercontent.com/media/metmuseum/openaccess/master/MetObjects.csv'
-metObjectsCSV =         '/Users/ryanbest/Dropbox/GitHub/ms1-2018/first-p5-vis/assets/MetObjects.csv'
-# metObjectsStatic5000 =  '/Users/ryanbest/Dropbox/GitHub/ms1-2018/first-p5-vis/assets/MetObjects5000.csv'
-# metObjectsImagesLinks = '/Users/ryanbest/Dropbox/GitHub/ms1-2018/first-p5-vis/assets/MMAImageURLS.xslx'
+metObjectsCSV =         os.path.join(dir, 'assets','metObjects.csv')
+# metObjectsStatic5000 =  os.path.join(dir, 'assets','MetObjects5000.csv')
+# metObjectsImagesLinks = os.path.join(dir, 'assets','MMAImageURLS.xslx')
 
 
 metObjectsFull = pd.read_csv(metObjectsCSV,index_col=3)
