@@ -73,7 +73,6 @@ function draw() {
     autoPlay = false;
   }
   if (autoPlay === false & floor(x) === minYear) {
-    console.log("text");
     fill(215);
     textSize(75);
     textFont(montLight);
