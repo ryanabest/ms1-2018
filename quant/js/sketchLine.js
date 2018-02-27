@@ -9,7 +9,7 @@ let x2 = cnvW-(cnvW*margin);
 let y1 = cnvH*marginTop;
 let y2 = cnvH-(cnvH*margin);
 
-let autoPlay = false;
+let autoPlay = true;
 let isHighlight = false;
 let highlightRank = -1;
 let countryClick = false;
@@ -51,8 +51,8 @@ function setup() {
   minYear = aY['acq_year'][0]
   maxYear = aY['acq_year'][Object.keys(aY['acq_year'])[Object.keys(aY['acq_year']).length-1]-1]
   // create variable that will control year //
-  x = minYear;
-  // x = 2017;
+  // x = minYear;
+  x = 2017;
   // determine maximum value for country + year //
   maxYearCountryCount = 0;
   for (yc in Object.keys(aYC['object_cum_count'])) {
@@ -240,7 +240,7 @@ function drawYearCountryLine(country,color) {
 
 function drawYearCountryTooltip(country,color,year,n) {
   let ttX = cnvW/2 + 250;
-  let ttY = cnvH*marginTop + 100;
+  let ttY = cnvH*marginTop + 80;
   let ttTxt1 = country + ' - ' + n + ' objects';
   let ttTxt2 = n + ' objects';
   textFont(montReg);
@@ -375,20 +375,23 @@ function drawCountryStackedBars() {
     rect(rectX,rectY,rectW,rectH);
 
     if (prevYears[p]['year'] === floor(x)) {
-      let sbtX = cnvW/2+200;
-      let sbtY = (cnvH*marginTop) + 160 + (25*Math.abs((6-prevYears[p]['lRank'])));
+      let sbtX = cnvW/2+150;
+      let sbtY = (cnvH*marginTop) + 135 + (25*Math.abs((6-prevYears[p]['lRank'])));
       let sbTxt = prevYears[p]['classification'] + ' - ' + prevYears[p]['lCount'].toLocaleString() + ' objects';
       // stroke(255);
       // strokeWeight(0.25);
       textFont(montReg);
-      textSize(26);
+      textSize(20);
       textAlign(RIGHT,TOP);
       // fill(255);
       // text(sbTxt,sbtX+0.5,sbtY+0.5);
       fill(178);
       text(sbTxt,sbtX,sbtY);
       fill(prevYears[p]['color']);
-      ellipse(sbtX+40,sbtY+18,25);
+      rectMode(CENTER);
+      // noStroke();
+      rect(sbtX+25,sbtY+12,26,26);
+      rectMode(CORNER);
     }
   }
 }
