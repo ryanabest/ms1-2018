@@ -56,8 +56,8 @@ function setup() {
   minYear = aY['acq_year'][0]
   maxYear = aY['acq_year'][Object.keys(aY['acq_year'])[Object.keys(aY['acq_year']).length-1]-1]
   // create variable that will control year //
-  // x = minYear;
-  x = 1963;
+  x = minYear;
+  // x = 1963;
   // determine maximum value for country + year //
   maxYearCountryCount = 0;
   for (yc in Object.keys(aYC['object_cum_count'])) {
