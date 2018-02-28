@@ -22,6 +22,9 @@ metObjects = pd.read_json(metObjectsJSON)
 
 ### Aggregation ###
 
+## Remove 'unknown' acq_year ##
+metObjects = metObjects.loc[metObjects['acq_year']!=10000]
+
 ## Year ##
 aggYear = metObjects.sort_values(['acq_year'], ascending=[True]) \
                     .groupby(['acq_year']).size().reset_index()

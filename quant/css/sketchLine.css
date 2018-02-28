@@ -19,7 +19,7 @@
 .intro h1 {
   font-weight: normal;
   color: RGB(35,35,35);
-  font-size: 90px;
+  font-size: 70px;
   text-align: center;
   background-color: RGB(178,178,178);
   font-weight: bold;
@@ -49,5 +49,5 @@
 }
 
 .description a:hover {
-  color: #db1121; 
+  color: #db1121;
 }

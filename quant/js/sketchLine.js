@@ -17,6 +17,9 @@ let stackedRank = -1;
 
 let xPace = 0.2;
 
+let removeButton = false;
+let removeList = [];
+
 function preload() {
   // GitHub Pages
   aY =        loadJSON('/ms1-2018/quant/assets/aggYear.json');
@@ -106,7 +109,7 @@ function drawYear() {
 }
 
 function drawAxes() {
-  stroke(255,50);
+  stroke(150);
   strokeWeight(3);
   line(x1,y1,x1,y2);
   line(x1,y2,x2,y2);
@@ -126,7 +129,7 @@ function drawAxes() {
     let printY = y.toLocaleString();
     textAlign(RIGHT,CENTER);
     text(printY,objX,objY);
-    stroke(255,50);
+    stroke(155);
     strokeWeight(3);
     line(x1*0.92,objY,x1,objY);
     noStroke();
@@ -140,7 +143,7 @@ function drawAxes() {
     let ylY = y2 + 20;
     textAlign(CENTER,CENTER);
     text(yl,ylX,ylY);
-    stroke(255,50);
+    stroke(155);
     strokeWeight(3);
     line(ylX,y2,ylX,y2+10);
     noStroke();
@@ -152,6 +155,7 @@ function drawEverything() {
   drawYear();
   // drawTitle();
   drawAxes();
+  let cntCount= 0;
   let currentYear = floor(x);
   if (countryClick) {
     drawCountryStackedBars()
@@ -161,19 +165,27 @@ function drawEverything() {
     for (let a in aYC['country']) {
       if (aYC['country'][a] === country && aYC['acq_year'][a] === currentYear) {
         let col;
+        let txtcol;
         countryRank = aC['object_count_rank'][r];
         for (s in Object.keys(cColors['country_rank'])) {
+          cntCount = cColors['country_rank'][s];
           if (cColors['country_rank'][s] === countryRank) {
             if (countryClick) {
               if (s === stackedRank) {
                 col = color(cColors['r'][s],cColors['g'][s],cColors['b'][s]);
+                txtcol = color(cColors['r'][s],cColors['g'][s],cColors['b'][s]);
                 drawYearCountryTooltip(country,col,currentYear,aYC['object_cum_count'][a].toLocaleString());
+              } else if (highlightRank === s) {
+                col = color(cColors['r'][s],cColors['g'][s],cColors['b'][s],95);
+                txtcol = color(cColors['r'][s],cColors['g'][s],cColors['b'][s]);
               } else {
                 col = color(cColors['dark-r'][s],cColors['dark-g'][s],cColors['dark-b'][s],0);
+                txtcol = color(cColors['dark-r'][s],cColors['dark-g'][s],cColors['dark-b'][s],99);
               }
             } else if (isHighlight) {
               if (s === highlightRank) {
                 col = color(cColors['r'][s],cColors['g'][s],cColors['b'][s]);
+                txtcol = color(cColors['r'][s],cColors['g'][s],cColors['b'][s]);
                 drawYearCountryTooltip(country,col,currentYear,aYC['object_cum_count'][a].toLocaleString());
                 textAlign(LEFT,TOP);
                 textFont(montItal);
@@ -181,17 +193,22 @@ function drawEverything() {
                 text("Click to see classifications",mouseX+50,mouseY+15);
               } else {
                 col = color(cColors['dark-r'][s],cColors['dark-g'][s],cColors['dark-b'][s],75);
+                txtcol = color(cColors['dark-r'][s],cColors['dark-g'][s],cColors['dark-b'][s],99);
               }
             } else {
               col = color(cColors['r'][s],cColors['g'][s],cColors['b'][s]);
+              txtcol = color(cColors['r'][s],cColors['g'][s],cColors['b'][s]);
             }
           }
         }
-        drawCountryLegend(country,col,countryRank);
+        drawCountryLegend(country,txtcol,countryRank);
         drawYearCountryDot(country,col,currentYear);
         drawYearCountryLine(country,col);
       }
     }
+  }
+  if (removeButton) {
+    drawCountryLegend("Remove",color(150,150,150),cntCount + 1);
   }
 }
 
@@ -260,6 +277,7 @@ function amHighlight() {
   let legX = x1 + 60;
   let legY = y1;
   let hoverList = [];
+  removeList = [];
 
   for (let s in Object.keys(cColors['country_rank'])) {
     hoverList.push({
@@ -270,6 +288,17 @@ function amHighlight() {
       'legy2': legY+(legH*s)+legH
     })
   }
+  // Remove button
+  if (removeButton) {
+    removeList.push ({
+      'rank': Object.keys(cColors['country_rank']).length,
+      'legx1': legX,
+      'legy1': legY+(legH*Object.keys(cColors['country_rank']).length),
+      'legx2': legX+legW,
+      'legy2': legY+(legH*Object.keys(cColors['country_rank']).length)+legH
+    })
+  }
+
   for (let h in hoverList) {
     let pr;
     if (mouseX >= hoverList[h]['legx1'] && mouseY >= hoverList[h]['legy1'] && mouseX <= hoverList[h]['legx2'] && mouseY <= hoverList[h]['legy2']) {
@@ -291,36 +320,6 @@ function drawCountryLegend(country,color,rank) {
   textSize(20);
   fill(color);
   text(country,txtX,txtY);
-
-}
-
-function drawCountryLegends() {
-  let legW = 250;
-  let legH = 40;
-  let legX = x1 + 60;
-  let legY = y1;
-  let legR = 10;
-  let col;
-  let cTxt;
-  // rect(legX,legY,legW,legH,legR);
-  for (let s in Object.keys(cColors['country_rank'])) {
-    col = color(cColors['r'][s],cColors['g'][s],cColors['b'][s]);
-    fill(col);
-    // rect(legX,legY+(legH*s)+(5*s),legW,legH,legR);
-    for (let r in Object.keys(aC['country'])) {
-      if (aC['object_count_rank'][r] === cColors['country_rank'][s]) {
-        cTxt = aC['country'][r];
-      }
-    }
-    textAlign(CENTER,TOP);
-    let txtX = legX + (legW/2);
-    let txtY = legY+(legH*s)+(legH * 0.375);
-
-    // fill(0,200);
-    textFont(montReg);
-    textSize(20);
-    text(cTxt,txtX,txtY);
-  }
 }
 
 function drawCountryStackedBars() {
@@ -358,6 +357,7 @@ function drawCountryStackedBars() {
       })
     }
   }
+
   let runningTotal;
   for (let p in prevYears) {
     if (prevYears[p]['lRank'] === 1) {
@@ -395,14 +395,35 @@ function drawCountryStackedBars() {
   }
 }
 
+
 function mousePressed() {
   if (isHighlight) {
     if (countryClick) {
       if (highlightRank === stackedRank) {
         countryClick = false
+        removeButton = false
       }
     } else {
       countryClick = true
+      removeButton = true
+    }
+  } else if (removeButton) {
+    for (let r in removeList) {
+      if (mouseX >= removeList[r]['legx1'] && mouseY >= removeList[r]['legy1'] && mouseX <= removeList[r]['legx2'] && mouseY <= removeList[r]['legy2']) {
+        countryClick = false
+        removeButton = false
+      } else {
+        if (x>maxYear) {
+          x = aY['acq_year'][0];
+          autoPlay = true;
+        } else {
+          if (autoPlay) {
+            autoPlay = false
+          } else {
+            autoPlay = true
+          }
+        }
+      }
     }
   } else {
     if (x>maxYear) {
