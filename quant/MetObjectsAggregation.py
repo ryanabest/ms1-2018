@@ -52,6 +52,7 @@ aggCountryClassificationFull = aggCountryClassificationFull.assign(object_count_
 aggCountryClassificationFull.loc[aggCountryClassificationFull['object_count_rank']>classificationNumber,'classification'] = 'Other'
 aggCountryClassification = pd.DataFrame(aggCountryClassificationFull.groupby(['country','classification'])['object_count'].sum().reset_index())
 aggCountryClassification = aggCountryClassification.assign(object_count_rank = aggCountryClassification.groupby(['country'])['object_count'].rank(method='min',ascending=False))
+aggCountryClassification = aggCountryClassification.sort_values(['country','object_count_rank'],ascending=[True,False])
 
 ## Year and Country ##
 aggYearCountryFull = metObjects.groupby(['acq_year','country']).size().reset_index()
@@ -151,7 +152,7 @@ aggYearCountryClassification = pd.merge(aggYearCountryClassification,aggYearCoun
 aggYearCountryClassification = pd.merge(aggYearCountryClassification,aggCountryClassification,on=['country','classification'],how='left')
 aggYearCountryClassification = aggYearCountryClassification[['acq_year','classification','country','object_cum_count_x','object_cum_count_rank_x','object_count_x','object_count_rank_x','object_cum_count_y','object_count_rank']]
 aggYearCountryClassification.columns = ['acq_year','classification','country','object_cum_count','object_cum_count_rank','country_total_object_count','country_total_object_count_rank','country_year_object_cum_count','country_classification_object_count_rank']
-aggYearCountryClassification = aggYearCountryClassification.sort_values(['acq_year','country','country_classification_object_count_rank'],ascending=[True,True,True])
+aggYearCountryClassification = aggYearCountryClassification.sort_values(['acq_year','country','country_classification_object_count_rank'],ascending=[True,True,False])
 
 # print(aggYearCountry.loc[(aggYearCountry['acq_year']==1963) & (aggYearCountry['country']=='United States'),'object_cum_count'].sum())
 # print(aggYearCountryClassification.loc[(aggYearCountryClassification['acq_year']==2017) & (aggYearCountryClassification['country']=='United States'),'object_cum_count'].sum())

@@ -25,6 +25,7 @@ function preload() {
   aY =        loadJSON('/ms1-2018/quant/assets/aggYear.json');
   aC =        loadJSON('/ms1-2018/quant/assets/aggCountry.json');
   aYC =       loadJSON('/ms1-2018/quant/assets/aggYearCountry.json');
+  aCL =       loadJSON('/ms1-2018/quant/assets/aggCountryClassification.json');
   aYL =       loadJSON('/ms1-2018/quant/assets/aggYearClassification.json');
   aYCL =      loadJSON('/ms1-2018/quant/assets/aggYearCountryClassification.json');
   cColors =   loadJSON('/ms1-2018/quant/assets/countryColors.json');
@@ -36,6 +37,7 @@ function preload() {
   // aY =        loadJSON('../assets/aggYear.json');
   // aC =        loadJSON('../assets/aggCountry.json');
   // aYC =       loadJSON('../assets/aggYearCountry.json');
+  // aCL =       loadJSON('../assets/aggCountryClassification.json');
   // aYL =       loadJSON('../assets/aggYearClassification.json');
   // aYCL =      loadJSON('../assets/aggYearCountryClassification.json');
   // cColors =   loadJSON('../assets/countryColors.json');
@@ -54,8 +56,8 @@ function setup() {
   minYear = aY['acq_year'][0]
   maxYear = aY['acq_year'][Object.keys(aY['acq_year'])[Object.keys(aY['acq_year']).length-1]-1]
   // create variable that will control year //
-  x = minYear;
-  // x = 2017;
+  // x = minYear;
+  x = 1963;
   // determine maximum value for country + year //
   maxYearCountryCount = 0;
   for (yc in Object.keys(aYC['object_cum_count'])) {
@@ -242,7 +244,6 @@ function drawYearCountryLine(country,color) {
   }
   if (prevYears.length>1) {
     for (i=1;i<prevYears.length;i++) {
-      // console.log(prevYears[i-1]['object_cum_count'])
       let linex1 = map(prevYears[i-1]['year'],minYear,maxYear,(cnvW*margin),(cnvW-(cnvW*margin)));
       let linex2 = map(prevYears[i]['year'],minYear,maxYear,(cnvW*margin),(cnvW-(cnvW*margin)));
       let liney1 = map(prevYears[i-1]['object_cum_count'],maxYearCountryCount,0,y1,y2);
@@ -333,7 +334,7 @@ function drawCountryStackedBars() {
       for (let s in Object.keys(cColors['country_rank'])) {
         if (stackedRank === s) {
           if (classificationRank === 6) {
-            col = color(cColors['r-1'][s],cColors['g-1'][s],cColors['b-1'][s])
+            col = color(cColors['r-1'][s],cColors['g-1'][s],cColors['b-1'][s]);
           } else if (classificationRank === 5) {
             col = color(cColors['r'][s],cColors['g'][s],cColors['b'][s])
           } else if (classificationRank === 4) {
@@ -348,31 +349,37 @@ function drawCountryStackedBars() {
         }
       }
       prevYears.push({
-        year: yr,
-        classification: aYCL['classification'][ycl],
-        lRank: classificationRank,
-        lCount: aYCL['object_cum_count'][ycl],
-        color: col,
-        clCount: aYCL['country_year_object_cum_count'][ycl]
+        'year': yr,
+        'classification': aYCL['classification'][ycl],
+        'lRank': classificationRank,
+        'lCount': aYCL['object_cum_count'][ycl],
+        'color': col,
+        'clCount': aYCL['country_year_object_cum_count'][ycl],
+        'country': aYCL['country'][ycl]
       })
     }
   }
 
-  let runningTotal;
+  let shapeList = [];
+  let runningTotal = 0;
   for (let p in prevYears) {
-    if (prevYears[p]['lRank'] === 1) {
-      runningTotal = prevYears[p]['lCount'];
+    if (p==0) {
+      runningTotal = prevYears[p]['clCount']
+    } else if (prevYears[p-1]['year'] !== prevYears[p]['year']) {
+      runningTotal = prevYears[p]['clCount']
     } else {
-      runningTotal += prevYears[p]['lCount']
+      runningTotal -= prevYears[p-1]['lCount']
     }
-    let rectH = map(prevYears[p]['lCount'],0,maxYearCountryCount,0,cnvH-(cnvH*marginTop)-(cnvH*margin));
-    let rectW = 15;
-    let rectX = map(prevYears[p]['year'],minYear,maxYear,(cnvW*margin),(cnvW-(cnvW*margin))) - (rectW/2);
-    let rectY = map(runningTotal,maxYearCountryCount,0,y1,y2);
-    noStroke();
-    fill(prevYears[p]['color']);
-    rect(rectX,rectY,rectW,rectH);
-
+    shapeList.push({
+      'year':           prevYears[p]['year'],
+      'classification': prevYears[p]['classification'],
+      'lRank':          prevYears[p]['lRank'],
+      'lCount':         prevYears[p]['lCount'],
+      'color':          prevYears[p]['color'],
+      'clCount':        prevYears[p]['clCount'],
+      'country':        prevYears[p]['country'],
+      'runningTotal':   runningTotal
+    })
     if (prevYears[p]['year'] === floor(x)) {
       let sbtX = cnvW/2+150;
       let sbtY = (cnvH*marginTop) + 135 + (25*Math.abs((6-prevYears[p]['lRank'])));
@@ -393,6 +400,54 @@ function drawCountryStackedBars() {
       rectMode(CORNER);
     }
   }
+  for (let cl in Object.keys(aCL['classification'])) {
+    let shapeDrawList = [];
+    let shapeDrawColor;
+    let classification = aCL['classification'][cl];
+    let country = aCL['country'][cl];
+    for (let s=0;s<shapeList.length;s++) {
+      if (shapeList[s]['country']===country && shapeList[s]['classification']===classification) {
+        shapeDrawColor = shapeList[s]['color']
+        shapeDrawList.push({
+          'year': shapeList[s]['year'],
+          'runningTotal': shapeList[s]['runningTotal'],
+          'count' : shapeList[s]['lCount'],
+          'x': map(shapeList[s]['year'],minYear,maxYear,(cnvW*margin),(cnvW-(cnvW*margin))),
+          'y': map(shapeList[s]['runningTotal'],maxYearCountryCount,0,y1,y2)
+        })
+      }
+    }
+    if (shapeDrawList.length>0) {
+      let shapeDrawY1 = map(shapeDrawList[0]['runningTotal']-shapeDrawList[0]['count'],maxYearCountryCount,0,y1,y2);
+      let shapeDrawX1 = map(shapeDrawList[0]['year']-0.5,minYear,maxYear,(cnvW*margin),(cnvW-(cnvW*margin)));
+      let shapeDrawY2 = map(0,maxYearCountryCount,0,y1,y2);
+      let shapeDrawX2 = map(floor(x),minYear,maxYear,(cnvW*margin),(cnvW-(cnvW*margin)));
+
+      noStroke();
+      fill(shapeDrawColor);
+      beginShape();
+      for (let sd=0;sd<shapeDrawList.length;sd++) {
+        vertex(shapeDrawList[sd]['x'],shapeDrawList[sd]['y']);
+      }
+      vertex(shapeDrawX2,shapeDrawY2);
+      vertex(shapeDrawX1,shapeDrawY2);
+      vertex(shapeDrawX1,shapeDrawY1);
+      endShape();
+    }
+  }
+  // console.log(shapeList);
+  // noLoop();
+  // console.log(shapeList);
+  // noLoop();
+  //   let rectH = map(prevYears[p]['lCount'],0,maxYearCountryCount,0,cnvH-(cnvH*marginTop)-(cnvH*margin));
+  //   let rectW = 15;
+  //   let rectX = map(prevYears[p]['year'],minYear,maxYear,(cnvW*margin),(cnvW-(cnvW*margin))) - (rectW/2);
+  //   let rectY = map(runningTotal,maxYearCountryCount,0,y1,y2);
+  //   noStroke();
+  //   fill(prevYears[p]['color']);
+  //   rect(rectX,rectY,rectW,rectH);
+  //
+  // }
 }
 
 
