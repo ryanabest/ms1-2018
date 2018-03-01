@@ -1,5 +1,5 @@
-var canvas;
-let margin = 0.075;
+let canvas;
+let margin = 0.1;
 // let marginTop = 0.15;
 let marginTop = margin;
 let cnvW  = window.innerWidth-10;
@@ -8,6 +8,10 @@ let x1 = cnvW*margin;
 let x2 = cnvW-(cnvW*margin);
 let y1 = cnvH*marginTop;
 let y2 = cnvH-(cnvH*margin);
+let baseCanvasArea = 1766750;
+let baseCanvasWidth = 1910;
+let canvasArea = cnvW * cnvH;
+
 
 let autoPlay = false;
 let isHighlight = false;
@@ -15,10 +19,13 @@ let highlightRank = -1;
 let countryClick = false;
 let stackedRank = -1;
 
-let xPace = 0.2;
+let xPace = 0.15;
 
-let removeButton = false;
+let showRemoveButton = false;
 let removeList = [];
+
+let showRestartButton;
+let restartList = [];
 
 function preload() {
   // GitHub Pages
@@ -54,10 +61,10 @@ function setup() {
   // determine minimum and maximum year //
   maxYearIndex = Object.keys(aY['acq_year']).length-1
   minYear = aY['acq_year'][0]
-  maxYear = aY['acq_year'][Object.keys(aY['acq_year'])[Object.keys(aY['acq_year']).length-1]-1]
+  maxYear = aY['acq_year'][Object.keys(aY['acq_year'])[Object.keys(aY['acq_year']).length-1]]
   // create variable that will control year //
-  x = minYear;
-  // x = 1963;
+  x = minYear-1;
+  // x = 2017;
   // determine maximum value for country + year //
   maxYearCountryCount = 0;
   for (yc in Object.keys(aYC['object_cum_count'])) {
@@ -70,18 +77,17 @@ function setup() {
 
 function draw() {
   amHighlight();
-  // if (autoPlay) {
-  //   drawEverything();
-  // }
+  amRestart();
   drawEverything();
   if (floor(x)>=maxYear) {
     autoPlay = false;
   }
-  if (autoPlay === false & floor(x) === minYear) {
+  if (autoPlay === false & floor(x) <= minYear) {
     fill(215);
-    textSize(75);
+    textSize((75/baseCanvasWidth) * (cnvW));
     textFont(montLight);
-    text("Click to Start",cnvW/2,cnvH/2);
+
+    text("Click Anywhere to Start",cnvW/2,cnvH/2);
   }
 }
 
@@ -101,53 +107,61 @@ function drawYear() {
   fill(178);
   noStroke();
   textAlign(CENTER,CENTER);
-  textSize(100);
+  let yearTxt = (100/baseCanvasWidth) * (cnvW);
+  textSize(yearTxt);
   if (floor(x) <= maxYear) {
+    if (floor(x) >= minYear) {
+      text(floor(x),cnvW/2,cnvH*marginTop);
+    }
     if (autoPlay) {
       x += xPace;
     }
   }
-  text(floor(x),cnvW/2,cnvH*marginTop);
 }
 
 function drawAxes() {
   stroke(150);
-  strokeWeight(3);
-  line(x1,y1,x1,y2);
+  let axisWeight = (2/baseCanvasWidth) * cnvW;
+  strokeWeight(axisWeight);
+  // line(x1,y1,x1,y2);
   line(x1,y2,x2,y2);
   noStroke();
-  textSize(18);
+  textSize((18/baseCanvasWidth) * cnvW);
   // Object Count Axis Labels
   textFont(montLight);
   textAlign(CENTER,CENTER);
-  translate(15,cnvH/2);
-  rotate(-HALF_PI);
-  text("Cumulative Objects Acquired",0,0);
-  rotate(HALF_PI);
-  translate(-15,-cnvH/2);
-  for (let y=0;y<maxYearCountryCount;y+=20000) {
+  // translate(15,cnvH/2);
+  // rotate(-HALF_PI);
+  let axisTextRowDiff = (17/baseCanvasWidth) * cnvW;
+  text("Cumulative",x1*0.5,map(50000,maxYearCountryCount,0,y1,y2)-axisTextRowDiff);
+  text("Objects",x1*0.5,map(50000,maxYearCountryCount,0,y1,y2));
+  text("Acquired",x1*0.5,map(50000,maxYearCountryCount,0,y1,y2)+axisTextRowDiff);
+  // rotate(HALF_PI);
+  // translate(-15,-cnvH/2);
+
+  // Draw y-Axis Tick Marks
+  for (let y=20000;y<maxYearCountryCount;y+=20000) {
     let objY = map(y,maxYearCountryCount,0,y1,y2);
-    let objX = x1 * 0.9;
     let printY = y.toLocaleString();
-    textAlign(RIGHT,CENTER);
-    text(printY,objX,objY);
-    stroke(155);
-    strokeWeight(3);
-    line(x1*0.92,objY,x1,objY);
+    textAlign(CENTER,CENTER);
+    text(printY,x1,objY);
+    // stroke(155);
+    // strokeWeight(3);
+    // line(x1*0.92,objY,x1,objY);
     noStroke();
   }
 
   // Year Axis Labels
   textAlign(CENTER,CENTER);
-  text("Acqusition Year",cnvW/2,cnvH-15);
+  text("Acqusition Year",cnvW/2,cnvH-(cnvH*margin*0.5));
   for (let yl=minYear;yl<=floor(x);yl+=10) {
     let ylX = map(yl,minYear,maxYear,x1,x2);
     let ylY = y2 + 20;
     textAlign(CENTER,CENTER);
     text(yl,ylX,ylY);
-    stroke(155);
-    strokeWeight(3);
-    line(ylX,y2,ylX,y2+10);
+    stroke(150);
+    strokeWeight(axisWeight);
+    line(ylX,y2,ylX,y2);
     noStroke();
   }
 }
@@ -162,43 +176,43 @@ function drawEverything() {
   if (countryClick) {
     drawCountryStackedBars()
   }
-  for (r in Object.keys(aC['country'])) {
+  for (r in Object.keys(aC['country'])) { // For each country
     let country = aC['country'][r]
-    for (let a in aYC['country']) {
-      if (aYC['country'][a] === country && aYC['acq_year'][a] === currentYear) {
-        let col;
-        let txtcol;
-        countryRank = aC['object_count_rank'][r];
+    for (let a in aYC['country']) { // In Each Year
+      if (aYC['country'][a] === country && aYC['acq_year'][a] === currentYear) { // Pull data only for this country and year
+        let col; // This will be the color of our country lines
+        let txtcol; // This will be the color of our country labels
+        countryRank = aC['object_count_rank'][r]; // Which rank is the country across all years? This will determing what color we assign it
         for (s in Object.keys(cColors['country_rank'])) {
           cntCount = cColors['country_rank'][s];
-          if (cColors['country_rank'][s] === countryRank) {
-            if (countryClick) {
-              if (s === stackedRank) {
-                col = color(cColors['r'][s],cColors['g'][s],cColors['b'][s]);
+          if (cntCount === countryRank) {
+            if (countryClick) { // Have clicked on any country?
+              if (s === stackedRank) { // Have we clicked on THIS country?
+                col = color(cColors['r'][s],cColors['g'][s],cColors['b'][s]); // Standard color
                 txtcol = color(cColors['r'][s],cColors['g'][s],cColors['b'][s]);
                 drawYearCountryTooltip(country,col,currentYear,aYC['object_cum_count'][a].toLocaleString());
-              } else if (highlightRank === s) {
-                col = color(cColors['r'][s],cColors['g'][s],cColors['b'][s],95);
+              } else if (highlightRank === s) { // Are we hovering over this country?
+                col = color(cColors['r'][s],cColors['g'][s],cColors['b'][s]); // Fade the country line a bit
                 txtcol = color(cColors['r'][s],cColors['g'][s],cColors['b'][s]);
-              } else {
-                col = color(cColors['dark-r'][s],cColors['dark-g'][s],cColors['dark-b'][s],0);
-                txtcol = color(cColors['dark-r'][s],cColors['dark-g'][s],cColors['dark-b'][s],99);
+              } else { // We aren't clicked on or hovering over this country, but a different country is clicked
+                col = color(cColors['dark-r'][s],cColors['dark-g'][s],cColors['dark-b'][s],0); // Remove the line
+                txtcol = color(cColors['dark-r'][s],cColors['dark-g'][s],cColors['dark-b'][s]); // Fade the country label
               }
-            } else if (isHighlight) {
-              if (s === highlightRank) {
-                col = color(cColors['r'][s],cColors['g'][s],cColors['b'][s]);
+            } else if (isHighlight) { // No country is clicked, but are we hovering over a country?
+              if (s === highlightRank) { // Are we hovering over THIS country?
+                col = color(cColors['r'][s],cColors['g'][s],cColors['b'][s]); // Full opacity standard color
                 txtcol = color(cColors['r'][s],cColors['g'][s],cColors['b'][s]);
                 drawYearCountryTooltip(country,col,currentYear,aYC['object_cum_count'][a].toLocaleString());
                 textAlign(LEFT,TOP);
                 textFont(montItal);
-                textSize(16);
+                textSize((16/baseCanvasWidth) * cnvW);
                 text("Click to see classifications",mouseX+50,mouseY+15);
-              } else {
-                col = color(cColors['dark-r'][s],cColors['dark-g'][s],cColors['dark-b'][s],75);
-                txtcol = color(cColors['dark-r'][s],cColors['dark-g'][s],cColors['dark-b'][s],99);
+              } else { // We are hovering over a country, but not this country
+                col = color(cColors['dark-r'][s],cColors['dark-g'][s],cColors['dark-b'][s],99); // Fade the country lines
+                txtcol = color(cColors['dark-r'][s],cColors['dark-g'][s],cColors['dark-b'][s]); // Fade the country label
               }
-            } else {
-              col = color(cColors['r'][s],cColors['g'][s],cColors['b'][s]);
+            } else { // We haven't clicked on or are hovering over any countries
+              col = color(cColors['r'][s],cColors['g'][s],cColors['b'][s]); // Full opacity standard color
               txtcol = color(cColors['r'][s],cColors['g'][s],cColors['b'][s]);
             }
           }
@@ -209,8 +223,18 @@ function drawEverything() {
       }
     }
   }
-  if (removeButton) {
-    drawCountryLegend("Remove",color(150,150,150),cntCount + 1);
+  // Draw our 'remove' button outside of our foor loop
+  if (showRemoveButton) {
+    for (let r in removeList) {
+      if (mouseX >= removeList[r]['legx1'] && mouseY >= removeList[r]['legy1'] && mouseX <= removeList[r]['legx2'] && mouseY <= removeList[r]['legy2']) {
+        drawCountryLegend("REMOVE",color(255,255,255),cntCount + 1);
+      } else {
+        drawCountryLegend("REMOVE",color(75,75,75),cntCount + 1);
+      }
+    }
+  }
+  if (showRestartButton) {
+    drawRestartButton();
   }
 }
 
@@ -223,7 +247,7 @@ function drawYearCountryDot(country,color,year) {
       yrCountryCount = aYC['object_cum_count'][a]
     }
   }
-  let rad = 20;
+  let rad = (20/baseCanvasWidth) * cnvW;
   let ctX = map(yr,minYear,maxYear,(cnvW*margin),(cnvW-(cnvW*margin)));
   let ctY = map(yrCountryCount,maxYearCountryCount,0,y1,y2);
   fill(color);
@@ -233,6 +257,7 @@ function drawYearCountryDot(country,color,year) {
 
 function drawYearCountryLine(country,color) {
   let prevYears = []
+  let lineWeight = (4/baseCanvasWidth) * cnvW;
   for (y in aYC['acq_year']) {
     let yr = aYC['acq_year'][y];
     if (yr <= floor(x) && aYC['country'][y] === country) {
@@ -249,33 +274,66 @@ function drawYearCountryLine(country,color) {
       let liney1 = map(prevYears[i-1]['object_cum_count'],maxYearCountryCount,0,y1,y2);
       let liney2 = map(prevYears[i]['object_cum_count'],maxYearCountryCount,0,y1,y2);
       stroke(color);
-      strokeWeight(2);
+      strokeWeight(lineWeight);
       line(linex1,liney1,linex2,liney2);
     }
   }
 }
 
 function drawYearCountryTooltip(country,color,year,n) {
-  let ttX = cnvW/2 + 250;
-  let ttY = cnvH*marginTop + 80;
+  let ttX = cnvW/2 + (250/baseCanvasWidth) * (cnvW);
+  let ttY = cnvH*marginTop + (80/baseCanvasWidth) * (cnvW);
   let ttTxt1 = country + ' - ' + n + ' objects';
   let ttTxt2 = n + ' objects';
+  let txtSize = (38/baseCanvasWidth) * (cnvW);
   textFont(montReg);
   noStroke();
   textAlign(RIGHT,TOP);
-  textSize(38);
+  textSize(txtSize);
   // fill(255);
   // text(ttTxt1,ttX+1,ttY+1);
   fill(color);
   text(ttTxt1,ttX,ttY);
 }
 
+function amRestart() {
+  if (floor(x) === maxYear && isHighlight == false && countryClick == false) {
+    showRestartButton = true;
+  } else {
+    showRestartButton = false;
+  }
+}
+
+function drawRestartButton() {
+  let restartX = cnvW/2;
+  let restartY = cnvH*marginTop + (150/baseCanvasWidth) * (cnvW);
+  let restartTxtSize = (40/baseCanvasWidth) * (cnvW);
+  let restartHoverWidth = (150/baseCanvasWidth) * (cnvW);
+  let restartHoverHeight = (40/baseCanvasWidth) * (cnvW)
+  textFont(montReg);
+  noStroke();
+  textAlign(CENTER,TOP);
+  textSize(restartTxtSize);
+  restartList.push({
+    'restartx1': restartX-(restartHoverWidth/2),
+    'restarty1': restartY,
+    'restartx2': restartX+(restartHoverWidth/2),
+    'restarty2': restartY+restartHoverHeight
+  })
+  if (mouseX >= (restartX-(restartHoverWidth/2)) && mouseY >= restartY && mouseX <= (restartX+(restartHoverWidth/2)) && mouseY <= (restartY+restartHoverHeight)) {
+    fill(255);
+  } else {
+    fill(75);
+  }
+  text("RESTART",restartX,restartY);
+}
+
 function amHighlight() {
   isHighlight = false;
   highlightRank = -1;
-  let legW = 150;
-  let legH = 30;
-  let legX = x1 + 60;
+  let legW = (120/baseCanvasWidth) * (cnvW);
+  let legH = (25/baseCanvasWidth) * (cnvW);
+  let legX = (x1*2) - (legW/2);
   let legY = y1;
   let hoverList = [];
   removeList = [];
@@ -290,7 +348,7 @@ function amHighlight() {
     })
   }
   // Remove button
-  if (removeButton) {
+  if (showRemoveButton) {
     removeList.push ({
       'rank': Object.keys(cColors['country_rank']).length,
       'legx1': legX,
@@ -313,12 +371,14 @@ function amHighlight() {
 }
 
 function drawCountryLegend(country,color,rank) {
-  let txtX = x1+60+75;
-  let txtY = y1 + (30*(rank-1));
+  let txtX = x1*2;
+  let yDiff = (25/baseCanvasWidth) * (cnvW);
+  let txtY = y1 + (yDiff*(rank-1));
+  let txtSize = (20/baseCanvasWidth) * (cnvW);
   noStroke();
   textAlign(CENTER,TOP);
   textFont(montReg);
-  textSize(20);
+  textSize(txtSize);
   fill(color);
   text(country,txtX,txtY);
 }
@@ -381,13 +441,14 @@ function drawCountryStackedBars() {
       'runningTotal':   runningTotal
     })
     if (prevYears[p]['year'] === floor(x)) {
-      let sbtX = cnvW/2+150;
-      let sbtY = (cnvH*marginTop) + 135 + (25*Math.abs((6-prevYears[p]['lRank'])));
+      let sbtX = cnvW/2 + (150/baseCanvasWidth) * cnvW;
+      let sbtY = (cnvH*marginTop) + ((135/baseCanvasWidth) * cnvW) + ((25/baseCanvasWidth) * cnvW*Math.abs((6-prevYears[p]['lRank'])));
       let sbTxt = prevYears[p]['classification'] + ' - ' + prevYears[p]['lCount'].toLocaleString() + ' objects';
+      let sbTxtSize = (20/baseCanvasWidth) * cnvW
       // stroke(255);
       // strokeWeight(0.25);
       textFont(montReg);
-      textSize(20);
+      textSize(sbTxtSize);
       textAlign(RIGHT,TOP);
       // fill(255);
       // text(sbTxt,sbtX+0.5,sbtY+0.5);
@@ -396,7 +457,10 @@ function drawCountryStackedBars() {
       fill(prevYears[p]['color']);
       rectMode(CENTER);
       // noStroke();
-      rect(sbtX+25,sbtY+12,26,26);
+      let sbColX = (25/baseCanvasWidth) * cnvW;
+      let sbColY = (12/baseCanvasWidth) * cnvW;
+      let sbColSize = (26/baseCanvasWidth) * cnvW;
+      rect(sbtX+sbColX,sbtY+sbColY,sbColSize,sbColSize);
       rectMode(CORNER);
     }
   }
@@ -456,17 +520,17 @@ function mousePressed() {
     if (countryClick) {
       if (highlightRank === stackedRank) {
         countryClick = false
-        removeButton = false
+        showRemoveButton = false
       }
     } else {
       countryClick = true
-      removeButton = true
+      showRemoveButton = true
     }
-  } else if (removeButton) {
+  } else if (showRemoveButton) {
     for (let r in removeList) {
       if (mouseX >= removeList[r]['legx1'] && mouseY >= removeList[r]['legy1'] && mouseX <= removeList[r]['legx2'] && mouseY <= removeList[r]['legy2']) {
         countryClick = false
-        removeButton = false
+        showRemoveButton = false
       } else {
         if (x>maxYear) {
           x = aY['acq_year'][0];
@@ -480,16 +544,18 @@ function mousePressed() {
         }
       }
     }
-  } else {
-    if (x>maxYear) {
-      x = aY['acq_year'][0];
-      autoPlay = true;
-    } else {
-      if (autoPlay) {
-        autoPlay = false
-      } else {
-        autoPlay = true
+  } else if (showRestartButton) {
+    for (let r in restartList) {
+      if (mouseX >= restartList[r]['restartx1'] && mouseY >= restartList[r]['restarty1'] && mouseX <= restartList[r]['restartx2'] && mouseY <= restartList[r]['restarty2']) {
+        x = aY['acq_year'][0];
+        autoPlay = true;
       }
+    }
+  } else {
+    if (autoPlay) {
+      autoPlay = false
+    } else {
+      autoPlay = true
     }
   }
 }
