@@ -1,0 +1,111 @@
+{"objects":
+  [
+  {"line":
+    {"year":1894,
+      "coordinates":[[48.8588377,2.2770206]],
+      "cities":["Paris"],
+      "owner": ["Artist"]
+    }},
+  {"line":
+    {"year":1899,
+      "coordinates":[[48.8588377,2.2770206],[48.8588377,2.2770206]],
+      "cities":["Paris","Paris"],
+      "owner": ["Artist","Ambroise Vollard"]
+    }},
+  {"line":
+    {"year":1900,
+      "coordinates":[[48.8588377,2.2770206],[48.8588377,2.2770206]],
+      "cities":["Paris","Paris"],
+      "owner": ["Ambroise Vollard","Auguste Pellerin"]
+    }},
+  {"line":
+    {"year":1911,
+      "coordinates":[[48.8588377,2.2770206],[48.8588377,2.2770206]],
+      "cities":["Paris","Paris"],
+      "owner": ["August Pellerin","Bernheim-Jeune"]
+    }},
+  {"line":
+    {"year":1912,
+      "coordinates":[[48.8588377,2.2770206],[52.5067614,13.2846509],[51.07675,13.6325046]],
+      "cities":["Paris","Berlin","Dresden"],
+      "owner": ["Bernheim-Jeune","Paul Cassirer","Adolph Rothermundt"]
+    }},
+  {"line":
+    {"year":1914,
+      "coordinates":[[52.5067614,13.2846509],[52.5067614,13.2846509]],
+      "cities":["Dresden","Berlin"],
+      "owner":["Adolph Rothermundt","Hugo Perls and Georg Caspari"]
+    }},
+  {"line":
+    {"year":1920,
+      "coordinates":[[52.5067614,13.2846509],[48.8588377,2.2770206],[52.5067614,13.2846509]],
+      "cities":["Berlin","Paris","Berlin"],
+      "owner":["Hugo Perls and Georg Caspari","French Government","Hugo Perls and Georg Caspari"]
+    }},
+  {"line":
+    {"year":1921,
+      "coordinates":[[52.5067614,13.2846509],[52.5067614,13.2846509],[34.694295,135.1556806]],
+      "cities":["Berlin","Berlin","Kobe"],
+      "owner": ["Hugo Perls and Georg Caspari","Paul Cassirer","Kojiro Matsukata"]
+    }},
+  {"line":
+    {"year":1922,
+      "coordinates":[[34.694295,135.1556806],[34.678395,135.4601306],[34.694295,135.1556806]],
+      "cities":["Kobe","Osaka","Kobe"],
+      "owner": ["Kojiro Matsukata","Masterpieces of the Matsukata Collection","Kojiro Matsukata"]
+    }},
+  {"line":
+    {"year":1930,
+      "coordinates":[[34.694295,135.1556806],[35.6732619,139.5703052],[34.678395,135.4601306]],
+      "cities":["Kobe","Tokyo","Osaka"],
+      "owner": ["Kojiro Matsukata","Tokyo Prefectural Museum, 'Third Exhibition of the Matsukata Collection'","Kyuzaemon Wada"]
+    }},
+  {"line":
+    {"year":1951,
+      "coordinates":[[34.678395,135.4601306],[40.7352037,-73.9586868]],
+      "cities":["Osaka","New York"],
+      "owner": ["Kyuzaemon Wada","Wildenstein"]
+    }},
+  {"line":
+    {"year":1959,
+      "coordinates":[[40.7352037,-73.9586868],[38.8935755,-77.0846155],[40.7352037,-73.9586868]],
+      "cities":["New York","Washington, DC","New York"],
+      "owner": ["Wildenstein","Washington. National Gallery of Art. 'Masterpieces of Impressionist and Post-Impressionist Painting,'","Wildenstein"]
+    }},
+  {"line":
+    {"year":1963,
+      "coordinates":[[40.7352037,-73.9586868],[40.7352037,-73.9586868]],
+      "cities":["New York","New York"],
+      "owner": ["Wildenstein","Mrs. Enid A. Haput"]
+    }},
+    {"line":
+      {"year":1971,
+        "coordinates":[[40.7352037,-73.9586868],[38.8935755,-77.0846155],[40.7352037,-73.9586868]],
+        "cities":["New York","Washington, DC","New York"],
+        "owner": ["Mrs. Enid A. Haput","Phillips Collection. 'Cézanne'","Mrs. Enid A. Haput"]
+      }},
+  {"line":
+    {"year":1983,
+      "coordinates":[[40.7352037,-73.9586868],[33.769852,-116.4680504]],
+      "cities":["New York","Rancho Mirage"],
+      "owner": ["Mrs. Enid A. Haput","Walter H. and Leonore Annenberg"]
+    }},
+  {"line":
+    {"year":1989,
+      "coordinates":[[33.769852,-116.4680504],[40.0024137,-75.2581153],[33.769852,-116.4680504]],
+      "cities":["Rancho Mirage","Philadelphia","Rancho Mirage"],
+      "owner": ["Walter H. and Leonore Annenberg","Philadelphia Museum of Art. 'Masterpieces of Impressionism & Post-Impressionism: The Annenberg Collection,'","Walter H. and Leonore Annenberg"]
+    }},
+  {"line":
+    {"year":1990,
+      "coordinates":[[33.769852,-116.4680504],[38.8935755,-77.0846155],[34.0201613,-118.691913],[33.769852,-116.4680504]],
+      "cities":["Rancho Mirage","Washington, DC","Los Angeles","Rancho Mirage"],
+      "owner": ["Walter H. and Leonore Annenberg","Washington. National Gallery of Art. 'Masterpieces of Impressionism & Post-Impressionism: The Annenberg Collection'","Los Angeles County Museum of Art. 'Masterpieces of Impressionism & Post-Impressionism: The Annenberg Collection'","Walter H. and Leonore Annenberg"]
+    }},
+  {"line":
+    {"year":1991,
+      "coordinates":[[34.0201613,-118.691913],[40.7352037,-73.9586868]],
+      "cities":["Los Angeles","New York"],
+      "owner": ["Los Angeles County Museum of Art. 'Masterpieces of Impressionism & Post-Impressionism: The Annenberg Collection'","The Metropolitan Museum of Art. 'Masterpieces of Impressionism & Post-Impressionism: The Annenberg Collection'"]
+    }}
+]}
