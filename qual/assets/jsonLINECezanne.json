@@ -148,20 +148,6 @@
       ,"changeFlag":1
     }},
   {"line":
-    { "year":1913
-      ,"coordinates":[[52.5067614,13.2846509]]
-      ,"cities":["Berlin"]
-      ,"owner": ["Hugo Perls and Georg Caspari"]
-      ,"changeFlag":0
-    }},
-  {"line":
-    { "year":1914
-      ,"coordinates":[[52.5067614,13.2846509]]
-      ,"cities":["Berlin"]
-      ,"owner": ["Hugo Perls and Georg Caspari"]
-      ,"changeFlag":0
-    }},
-  {"line":
     { "year":1915
       ,"coordinates":[[52.5067614,13.2846509]]
       ,"cities":["Berlin"]
@@ -272,27 +258,6 @@
       ,"cities":["Kobe","Tokyo","Osaka"]
       ,"owner": ["Kojiro Matsukata","Tokyo Prefectural Museum, 'Third Exhibition of the Matsukata Collection'","Kyuzaemon Wada"]
       ,"changeFlag":1
-    }},
-  {"line":
-    { "year":1928
-      ,"coordinates":[[34.678395,135.4601306]]
-      ,"cities":["Osaka"]
-      ,"owner": ["Kyuzaemon Wada"]
-      ,"changeFlag":0
-    }},
-  {"line":
-    { "year":1929
-      ,"coordinates":[[34.678395,135.4601306]]
-      ,"cities":["Osaka"]
-      ,"owner": ["Kyuzaemon Wada"]
-      ,"changeFlag":0
-    }},
-  {"line":
-    { "year":1930
-      ,"coordinates":[[34.678395,135.4601306]]
-      ,"cities":["Osaka"]
-      ,"owner": ["Kyuzaemon Wada"]
-      ,"changeFlag":0
     }},
   {"line":
     { "year":1931
@@ -440,6 +405,13 @@
       ,"cities":["Osaka","New York"]
       ,"owner": ["Kyuzaemon Wada","Wildenstein"]
       ,"changeFlag":1
+    }},
+  {"line":
+    { "year":1952
+      ,"coordinates":[[40.7352037,-73.9586868]]
+      ,"cities":["New York"]
+      ,"owner": ["Wildenstein"]
+      ,"changeFlag":0
     }},
   {"line":
     { "year":1953
@@ -590,13 +562,6 @@
       }},
     {"line":
       { "year":1974
-        ,"coordinates":[[40.7352037,-73.9586868]]
-        ,"cities":["New York"]
-        ,"owner": ["Mrs. Enid A. Haput"]
-        ,"changeFlag":0
-      }},
-    {"line":
-      { "year":1975
         ,"coordinates":[[40.7352037,-73.9586868]]
         ,"cities":["New York"]
         ,"owner": ["Mrs. Enid A. Haput"]
@@ -800,13 +765,6 @@
       }},
     {"line":
       { "year":2003
-        ,"coordinates":[[40.7352037,-73.9586868]]
-        ,"cities":["New York"]
-        ,"owner": ["MMA"]
-        ,"changeFlag":0
-      }},
-    {"line":
-      { "year":2004
         ,"coordinates":[[40.7352037,-73.9586868]]
         ,"cities":["New York"]
         ,"owner": ["MMA"]
