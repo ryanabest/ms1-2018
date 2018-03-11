@@ -1,4 +1,6 @@
-let pace = 750;
+let pace = 50;
+// let filePath = '../assets/' // Local Testing
+let filePath = '/ms1-2018/qual/assets/' // GitHub Pages
 
 
 
@@ -39,16 +41,17 @@ function drawPath(painting) {
        ,g = svg.append("g").attr("class", "leaflet-zoom-hide")
        ,defs = svg.append("svg:defs");
 
+  /* Remove all previous paths from the map */
   svg.selectAll('.path').remove();
 
   // Add svg pattern to fill circle with painting and color the tail with the primary color in that painting
-  $.getJSON('../assets/metObjectsVanGogh.json', function(data) {
+  $.getJSON(filePath + 'metObjectsVanGogh.json', function(data) {
     let circleRadius = 50;
     let imageThumbnail;
     for (let i=0;i<Object.keys(data['image']).length;i++) {
       let image = data['image'][i]
       if (image === painting) {
-        imageThumbnail = 'assets/Thumbnails/'+image
+        imageThumbnail = filePath+'Thumbnails/'+image
       }
     }
     let img = document.createElement('img');
@@ -70,9 +73,14 @@ function drawPath(painting) {
                         // .attr("x",0)
                         // .attr("y",0)
       let paintingPath = painting.split('.')[0]
-      let jsonData = 'assets/jsonLINE' + paintingPath + '.json'
+
+      let jsonData = filePath + 'jsonLINE' + paintingPath + '.json'
       d3.json(jsonData, function(provenance) {
         console.log(paintingPath);
+
+        /* First let's reset our timeline svg */
+        d3.selectAll('.timeline-circle').remove()
+
         /* Add a LatLng object to each item in the dataset */
         provenance.objects.forEach(function(d) {
            d.year = d.line.year
@@ -137,12 +145,29 @@ function drawPath(painting) {
                 mmLatLngList.push(provenance.objects[mm].latLng[ll]);
               }
             }
+            // console.log(mmLatLngList)
             let finalBounds = new L.LatLngBounds(mmLatLngList);
-            map.fitBounds(finalBounds);
+            map.flyToBounds(finalBounds);
             map.doubleClickZoom.enable();
             map.dragging.enable();
             // let zoom = L.control.zoom();
             // zoom.addTo(map);
+            let timelineSVG = d3.select("#timeline-svg")
+            timelineSVG.selectAll(".timeline-circle")
+                       .on("mouseover",function(d) {
+                         let divData = d3.select(this).datum();
+                         let thisPath = parseInt(d3.select(this).attr('id').split("-").slice(-1)[0]);
+                         d3.select(this).attr("r",10)
+                                        .attr("fill","red")
+                         // $('#map-and-text').append(divData)
+                         drawOne(thisPath,divData);
+                       })
+                       .on("mouseout",function(d) {
+                         d3.select(this).attr("r",5)
+                                        .attr("fill","white")
+                        drawAllPaths();
+                       })
+
           },pace*(allData.length+1))
         },1000);
 
@@ -150,6 +175,88 @@ function drawPath(painting) {
         map.on("viewreset", reset);
         map.on("zoomend", reset);
         reset();
+
+        function drawOne(thisPath,divData) {
+          $('.flex-div').remove()
+          d3.selectAll('.path').attr("style","opacity:0");
+
+          for (let i=0;i<provenance.objects.length;i++) {
+            if (i === thisPath) {
+              // First we zoom into the map for this path
+              let drawOneLatLngList = []
+              for (let ll=0;ll<provenance.objects[i].latLng.length;ll++) {
+                drawOneLatLngList.push(provenance.objects[i].latLng[ll])
+              }
+              let drawOneBounds = new L.LatLngBounds(drawOneLatLngList);
+              map.fitBounds(drawOneBounds,{maxZoom:8});
+
+              map.on("zoomend",function(d) {
+              })
+
+              let startingLatLng = drawOneLatLngList[0]
+              let markerStartPoint = map.latLngToLayerPoint(startingLatLng)
+              d3.select('#marker').attr("transform", "translate(" + markerStartPoint.x + "," + markerStartPoint.y + ")")
+
+              function transition(path) {
+                path.transition()
+                    .delay(1000)
+                    .duration(1000)
+                    .attr("style","opacity:.5")
+                    .attrTween('stroke-dasharray',tweenDash)
+
+                    function tweenDash(d) {
+                      let l = path.node().getTotalLength();
+                      let s = d3.interpolateString("0," + l, l + "," + l); // interpolation of stroke-dasharray style attr
+                      return function (t) {
+                        let marker = d3.select("#marker");
+                        let p = path.node().getPointAtLength(t * l);
+                        markerLatLng = map.layerPointToLatLng(L.point(p));
+                        marker.attr("opacity","1");
+                        marker.attr("transform", "translate(" + p.x + "," + p.y + ")"); //move marker
+                        return s(t);
+                        }
+                    }
+                }
+
+              let path = d3.select("#path"+i).call(transition)
+
+              $('#map-and-text').append(divData)
+
+            // let path = d3.select('#path'+i) //.call(transition);
+            // console.log(path.node().getTotalLength())
+          }
+        }
+      }
+
+      function drawAllPaths() {
+        $('.flex-div').remove()
+        let drawAllLatLngList = []
+        for (let i=0;i<provenance.objects.length;i++) {
+          for (let ll=0;ll<provenance.objects[i].latLng.length;ll++) {
+            drawAllLatLngList.push(provenance.objects[i].latLng[ll])
+          }
+        }
+        let drawAllBounds = new L.LatLngBounds(drawAllLatLngList);
+        map.flyToBounds(drawAllBounds,{maxZoom:8,padding:[20,20]});
+
+
+        for (let i=0;i<provenance.objects.length;i++) {
+          let path = d3.select("#path"+i)
+          let l =path.node().getTotalLength()
+          path.attr("style","opacity:.5")
+              .attr("stroke-dasharray",l)
+        }
+        // console.log(drawAllBounds.getNorthWest())
+        map.on('moveend',function(d) {
+          let endingLatLng = drawAllLatLngList.slice(-1)[0]
+          let markerEndPoint = map.latLngToLayerPoint(endingLatLng)
+          d3.select('#marker').attr("transform", "translate(" + markerEndPoint.x + "," + markerEndPoint.y + ")")
+        })
+
+
+
+
+      }
 
         function iterate(painting) {
           // for (let i=21;i<22;i++) {
@@ -170,13 +277,33 @@ function drawPath(painting) {
                     let minYear = provenance.objects[0].year;
                     let currentYearDiff = maxYear - currentYear;
                     let totalYearDiff = maxYear - minYear;
-                    $("#current-year").text(currentYear);
-                    $("#current-year").css('opacity','1');
+                    let yearChangePercent = ((((totalYearDiff-currentYearDiff)/totalYearDiff)*88)+6)+'%';
+                    let yearChangeTextPercent = ((((totalYearDiff-currentYearDiff)/totalYearDiff)*88)+5.5)+'%';
+
+                    // d3.select('#timeline-line').attr("x2",yearChangePercent) // advance timeline svg
+                    d3.select('#currentYear-line').attr("x1",yearChangePercent)
+                                                  .attr("x2",yearChangePercent)
+                    d3.select('#currentYear-text').text(currentYear)
+                                                  .attr("x",yearChangeTextPercent)
 
                     if (provenance.objects[i].changeFlag === 1) {
+
+                      // let divID = 'year-' + provenance.objects[i].year;
+                      // let divText = "";
+                      // divText += "<br><div class=flex-div id="+divID+">"
+                      // divText += "<h1>"+provenance.objects[i].year+"</h1>";
+                      // divText += "<ol>"
+                      // let olItems = '';
+                      // for (let x=0;x<provenance.objects[i].cities.length;x++) {
+                      //   olItems += "<li>" + provenance.objects[i].owner[x] + " (" + provenance.objects[i].cities[x] + ")</li>"
+                      // }
+                      // divText += olItems
+                      // divText += "</ol></div>"
+                      // $('.container').append(divText)
+
                       let divID = 'year-' + provenance.objects[i].year;
                       let divText = "";
-                      divText += "<br><div class=flex-div id="+divID+">"
+                      divText += "<div class=flex-div id="+divID+">"
                       divText += "<h1>"+provenance.objects[i].year+"</h1>";
                       divText += "<ol>"
                       let olItems = '';
@@ -185,7 +312,26 @@ function drawPath(painting) {
                       }
                       divText += olItems
                       divText += "</ol></div>"
-                      $('.container').append(divText)
+
+                      let timelineSVG = d3.select("#timeline-svg")
+                      timelineSVG.append("circle")
+                                 .attr("cx",yearChangePercent)
+                                 .attr("cy",'50%')
+                                 .attr("r",5)
+                                 .attr("fill","white")
+                                 .attr("id","circle-"+currentYear+"-"+i)
+                                 .attr("class","timeline-circle")
+                                 .datum(divText)
+                                 // .on("mouseover",function(d) {
+                                 //   d3.select(this).attr("r",10)
+                                 //                  .attr("fill","red")
+                                 //   $('#map-and-text').append(divText)
+                                 // })
+                                 // .on("mouseout",function(d) {
+                                 //   d3.select(this).attr("r",5)
+                                 //                  .attr("fill","white")
+                                 //  $('.flex-div').remove()
+                                 // })
                     }
                   })
 

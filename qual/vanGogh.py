@@ -67,6 +67,7 @@ for index in vanGoghProvenance.index.values:
     else:
         splitProvList = prov.split(');')
 
+
     for p in range(len(splitProvList)):
         pid = str(objectNumber) + '_' + str(p)
         provItem = splitProvList[p]
@@ -80,6 +81,9 @@ for index in vanGoghProvenance.index.values:
         else :
             provItemMain = provItem.split(';')[0]
         provItemMainSplit = provItemMain.split(',')
+
+        if objectNumber == 436530:
+            print(provItem)
 
         ## if there are three items in the first chunk of each provenance, it is usually organized as owner, location, year
         if len(provItemMainSplit) == 3 :
@@ -175,10 +179,15 @@ for index in vanGoghProvenance.index.values:
 
         # so, none are missing the owner, most are missing year, and around half as many are missing location
         else :
-            ## if we're missing year, then it's unknown how long this person had the piece, and we will exclude this data point
+            ## if we're missing year, then we will pull the last date from the previous year
             ### that means the next person will take ownership of the painting when the previous owner gave it up
             if re.sub('\D','', provItemMainSplit[1]) == '':
-                pass
+                if (objectNumber in ([436525,436526,436531])):
+                    provYear = re.sub('\D','', splitProvList[p-1])[-4:]
+                    provOwner = provItemMainSplit[0].strip()
+                    provLocation = provItemMainSplit[1].split('and')[0].strip()
+                else:
+                    pass
 
             ## we know the year, but don't have the location in this data point
             else :
@@ -204,6 +213,29 @@ for index in vanGoghProvenance.index.values:
             ,'location': provLocation
             ,'owner': provOwner
         })
+
+        ## add item if we know when it was transferred to MMA
+        if (p==len(splitProvList)-1):
+            if objectNumber not in ([459123]):
+                mmaOwner = 'Metropolitan Museum of Art'
+                mmaLocation = 'Metropolitan Museum of Art'
+                mmaProvItem = provItem.replace('; on loan to MMA, 1936','on loan to MMA')
+                if re.sub('\D','', mmaProvItem.split(';')[-1]) == '':
+                    mmaYearDec = re.sub('\D','', mmaProvItem.split(';')[-2])[-2:]
+                else :
+                    mmaYearDec = re.sub('\D','', mmaProvItem.split(';')[-1])[-2:]
+                if int(mmaYearDec) < 20:
+                    mmaYearCen = 20
+                else :
+                    mmaYearCen = 19
+                mmaYear = int(str(mmaYearCen) + str(mmaYearDec))
+                provenanceList.append({
+                     'pid':str(objectNumber)+'_999'
+                    ,'object_number':int(objectNumber)
+                    ,'year':mmaYear
+                    ,'location':mmaLocation
+                    ,'owner':mmaOwner
+                })
 
 
 
@@ -298,10 +330,6 @@ for index in vanGoghProvenance.index.values:
                     'location': exhibitionLocation,
                     'exhibition': exhibitionHistory[eh]
                 })
-            # print(eh)
-            # print(exhibitionYear)
-
-            # print(exhibitionHistory[eh].split(',')[-2])
 
 exhibitionHistoryList = pd.DataFrame(exhibitionHistoryList)
 
@@ -310,9 +338,7 @@ provenanceList['year'] = provenanceList['year'].astype(int)
 for index in vanGoghProvenance.index.values:
     objectNumber = vanGoghProvenance['object_number'][index]
     objectYear = vanGoghProvenance['object_year'][index]
-    # print(vanGoghProvenance['object_number'][index])
     if len(provenanceList.loc[(provenanceList['object_number']==objectNumber) & (provenanceList['year']==objectYear),:]) == 0:
-        # print("error!")
         firstDataPoint = pd.DataFrame({
             'pid' : str(objectNumber)+'_-1'
             ,'object_number' : int(objectNumber)
@@ -321,16 +347,23 @@ for index in vanGoghProvenance.index.values:
             ,'owner' : 'the artist'
             # ,columns = [['pid'],['object_number'],['year'],['location'],['owner']]
         }, index=[0])
-        # print(firstDataPoint);
-        # print(firstDataPoint)
         provenanceList = provenanceList.append(firstDataPoint,ignore_index=True)
 
 provenanceList = provenanceList.sort_values(by=['object_number','year'])
+
+
+## Little bit of manual location clean-up
+exhibitionHistoryList.loc[exhibitionHistoryList['location']=='Washington','location'] = 'Washington D.C.'
+exhibitionHistoryList.loc[exhibitionHistoryList['location']=='Zurich','location'] = 'Zürich'
+exhibitionHistoryList.loc[exhibitionHistoryList['location']=='Oxford Arts Club','location'] = 'Oxford'
+provenanceList.loc[provenanceList['location']=='Zurich','location'] = 'Zürich'
+
 
 ### Pull Lat Lng coordinates for all locations from Google Geocoding API once, which I will then join back into Prov and ExhibHistory data
 '''
 locationsList = list(provenanceList['location'].unique()) + list(exhibitionHistoryList['location'].unique())
 locationsList = list(set(locationsList))
+# print(locationsList)
 locationsGeo = []
 for l in range(len(locationsList)):
     time.sleep(0.5) # Do two requests per second to avoid issues with Google API Usage Limits - https://developers.google.com/maps/documentation/geocoding/usage-limits
@@ -367,8 +400,6 @@ locationsGeoJSON = os.path.join(dir,'assets','locationsGeo.json')
 locationsGeo = pd.read_json(locationsGeoJSON)
 exhibitionHistoryList = pd.merge(exhibitionHistoryList,locationsGeo,on='location',how='left')
 provenanceList = pd.merge(provenanceList,locationsGeo,on='location',how='left')
-
-# print(exhibitionHistoryList.loc[exhibitionHistoryList['object_number']==436533,'ehid'])
 
 currentYear = now.year
 
@@ -423,19 +454,19 @@ for index in vanGoghProvenance.index.values:
                     ## no examples of this, but adding just in case for the future ##
                     ### Add all ownership changing hands, then all exhibitions ###
                     coordinates = []
-                    addExhibition('coordinates',coordinates)
                     addPrevProvenance('coordinates',coordinates)
                     addProvenance('coordinates',coordinates)
+                    addExhibition('coordinates',coordinates)
 
                     cities = []
-                    addExhibition('location',cities)
                     addPrevProvenance('location',cities)
                     addProvenance('location',cities)
+                    addExhibition('location',cities)
 
                     owners = []
-                    addExhibition('exhibition',owners)
                     addPrevProvenance('owner',owners)
                     addProvenance('owner',owners)
+                    addExhibition('exhibition',owners)
 
                     changeFlag = []
                     changeFlag.append(1)
@@ -638,6 +669,7 @@ for index in vanGoghProvenance.index.values:
         'objects': jsonLINE
     }
 
+    '''
     ## Export a JSON for each painting ###
     jsonExportName = 'jsonLINE' + vanGoghProvenance['image'][index].split('.')[0] + '.json'
     jsonExportPath = os.path.join(dir,'assets/'+jsonExportName)
@@ -647,32 +679,4 @@ for index in vanGoghProvenance.index.values:
     fp.close()
     print("added " + jsonExportName)
     print("--- %s seconds ---" % (time.time() - start_time))
-
-
     '''
-    coordinates = []
-    coordinates.append(provenanceList.loc[(provenanceList['object_number']==vanGoghProvenance['object_number'][0]) & (provenanceList['year']==y),'coordinates'][0])
-    for cd in range(len(exhibitionHistoryList.loc[(exhibitionHistoryList['object_number']==vanGoghProvenance['object_number'][0]) & (exhibitionHistoryList['year']==y),'coordinates'])):
-        coordinates.append(exhibitionHistoryList.loc[(exhibitionHistoryList['object_number']==vanGoghProvenance['object_number'][0]) & (exhibitionHistoryList['year']==y),'coordinates'][cd])
-    coordinates.append(provenanceList.loc[(provenanceList['object_number']==vanGoghProvenance['object_number'][0]) & (provenanceList['year']==y),'coordinates'][0])
-    cities = []
-    owners = []
-    changeFlag = []
-    dataType = []
-    print(coordinates)
-    # print(y)
-    # print(provenanceList.loc[(provenanceList['object_number']==vanGoghProvenance['object_number'][0]) & (provenanceList['year']==y)])
-    '''
-
-
-# for cd in range(len(provenanceList.loc[(provenanceList['object_number']==vanGoghProvenance['object_number'][0]) & (provenanceList['year']==y),'coordinates'])):
-#     coordinates.append(provenanceList.loc[(provenanceList['object_number']==vanGoghProvenance['object_number'][0]) & (provenanceList['year']==y),'coordinates'][cd])
-
-    # if (len(provenanceList.loc[(provenanceList['object_number']==vanGoghProvenance['object_number'][0]) & (provenanceList['year']==y)]) > 0):
-    #     print(y)
-    #     print(provenanceList.loc[(provenanceList['object_number']==vanGoghProvenance['object_number'][0]) & (provenanceList['year']==y)])
-    # if (len(exhibitionHistoryList.loc[(exhibitionHistoryList['object_number']==vanGoghProvenance['object_number'][0]) & (exhibitionHistoryList['year']==y)]) > 0):
-    #     print(y)
-    #     print(exhibitionHistoryList.loc[(exhibitionHistoryList['object_number']==vanGoghProvenance['object_number'][0]) & (exhibitionHistoryList['year']==y)])
-
-# print(provenanceList.loc[(provenanceList['object_number']==436524) & (provenanceList['year']=='1887'),:])
