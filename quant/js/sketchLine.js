@@ -86,7 +86,8 @@ function draw() {
     fill(215);
     textSize((75/baseCanvasWidth) * (cnvW));
     textFont(montLight);
-
+    textAlign(CENTER,CENTER);
+    background(35);
     text("Click Anywhere to Start",cnvW/2,cnvH/2);
   }
 }
@@ -170,7 +171,11 @@ function drawEverything() {
   background(35);
   drawYear();
   // drawTitle();
-  drawAxes();
+  if (autoPlay === false & floor(x) <= minYear) {
+  } else {
+    drawAxes();
+  }
+  // drawAxes();
   let cntCount= 0;
   let currentYear = floor(x);
   if (countryClick) {
@@ -499,19 +504,6 @@ function drawCountryStackedBars() {
       endShape();
     }
   }
-  // console.log(shapeList);
-  // noLoop();
-  // console.log(shapeList);
-  // noLoop();
-  //   let rectH = map(prevYears[p]['lCount'],0,maxYearCountryCount,0,cnvH-(cnvH*marginTop)-(cnvH*margin));
-  //   let rectW = 15;
-  //   let rectX = map(prevYears[p]['year'],minYear,maxYear,(cnvW*margin),(cnvW-(cnvW*margin))) - (rectW/2);
-  //   let rectY = map(runningTotal,maxYearCountryCount,0,y1,y2);
-  //   noStroke();
-  //   fill(prevYears[p]['color']);
-  //   rect(rectX,rectY,rectW,rectH);
-  //
-  // }
 }
 
 
