@@ -12,7 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "browser-sync": "^2.23.6",
-    "gulp": "^3.9.1"
+    "gulp": "^3.9.1",
+    "node-vibrant": "^3.0.0"
   },
   "devDependencies": {
     "browser-sync": "^2.23.6",

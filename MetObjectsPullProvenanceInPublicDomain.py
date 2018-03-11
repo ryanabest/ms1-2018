@@ -15,46 +15,48 @@ start_time = time.time()
 
 
 # Define data source variables
-# metObjectsUrl = 'https://media.githubusercontent.com/media/metmuseum/openaccess/master/MetObjects.csv'
-# metObjectsCSV =         os.path.join(dir, 'assets','metObjects.csv')
+metObjectsUrl = 'https://media.githubusercontent.com/media/metmuseum/openaccess/master/MetObjects.csv'
+metObjectsCSV =         os.path.join(dir, 'assets','metObjects.csv')
 # # metObjectsStatic5000 =  os.path.join(dir, 'assets','MetObjects5000.csv')
 # metObjectsImages = os.path.join(dir, 'assets','MMAImageURLS.csv')
 #
 # metObjectsContent = requests.get(metObjectsUrl).content
 # metObjectsFull = pd.read_csv(io.StringIO(metObjectsContent.decode('utf-8')))
-# # metObjectsFull = pd.read_csv(metObjectsCSV)
-# metObjectsFull = metObjectsFull.loc[metObjectsFull['Is Public Domain'],:]
-# metObjectsFull = metObjectsFull.loc[metObjectsFull['Classification']=='Paintings',:]
-# metObjectsFull = metObjectsFull.sort_values('Object ID',ascending=True)
+metObjectsFull = pd.read_csv(metObjectsCSV)
+metObjectsFull = metObjectsFull.loc[metObjectsFull['Is Public Domain'],:]
+metObjectsFull = metObjectsFull.loc[metObjectsFull['Classification']=='Paintings',:]
+metObjectsFull = metObjectsFull.sort_values('Object ID',ascending=True)
 # # print(metObjectsFull['Classification'].value_counts())
 #
-# provenanceList = []
-# apiBaseURL = 'https://collectionapi.metmuseum.org/api/collection/v1/object/'
+provenanceList = []
+apiBaseURL = 'https://collectionapi.metmuseum.org/api/collection/v1/object/'
 #
-# metObjectIDs = metObjectsFull['Object ID'].unique()
+metObjectIDs = metObjectsFull['Object ID'].unique()
 
 # print(metObjectIDs[0])
 
 ### ALL ###
 # Object ID 458962 (o = 6296) has no connection for whatever reason #
 # for o in (range(0,len(metObjectIDs)-1)):
-#     on = metObjectIDs[o]
-#     if o != 6296:
-#         apiObjData = requests.get(apiBaseURL + str(on)).json()
-#         try:
-#             for a in range(0,len(apiObjData['informationBoxes'])):
-#                 if apiObjData['informationBoxes'][a]['label'] == 'Provenance':
-#                     provenanceList.append({'object_number':on,'provenance':apiObjData['informationBoxes'][a]['text']})
-#                     print("added " + str(on) + ' - ' + str(o+1) + ' of ' + str(len(metObjectIDs)))
-#         except (TypeError,KeyError):
-#             provenanceList.append({'object_number':on,'provenance':np.nan})
-#             print("no provenance for " + str(on) + ' - ' + str(o+1) + ' of ' + str(len(metObjectIDs)))
-#
-# provenanceList = pd.DataFrame(provenanceList)
+for o in (range(1000,1010)):
+    on = metObjectIDs[o]
+    if o != 6296:
+        apiObjData = requests.get(apiBaseURL + str(on)).json()
+        try:
+            for a in range(0,len(apiObjData['informationBoxes'])):
+                if apiObjData['informationBoxes'][a]['label'] == 'Provenance':
+                    provenanceList.append({'object_number':on,'provenance':apiObjData['informationBoxes'][a]['text']})
+                    print("added " + str(on) + ' - ' + str(o+1) + ' of ' + str(len(metObjectIDs)))
+        except (TypeError,KeyError):
+            provenanceList.append({'object_number':on,'provenance':np.nan})
+            print("no provenance for " + str(on) + ' - ' + str(o+1) + ' of ' + str(len(metObjectIDs)))
+
+provenanceList = pd.DataFrame(provenanceList)
 # provenanceListExportFilePath = os.path.join(dir,'qual','assets','metObjectsProvenance.json')
 # provenanceList.to_json(provenanceListExportFilePath)
-#
-# print("--- %s seconds ---" % (time.time() - start_time))
+
+print(provenanceList)
+print("--- %s seconds ---" % (time.time() - start_time))
 
 
 # ~~ --- 535.2492849826813 seconds --- ~~

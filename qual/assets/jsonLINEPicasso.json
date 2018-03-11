@@ -1,0 +1,619 @@
+{"objects":
+  [
+  {"line":
+    { "year":1932
+      ,"coordinates":[[48.8588377,2.2770206]]
+      ,"cities":["Paris"]
+      ,"owner": ["the artist"]
+      ,"changeFlag":1
+    }},
+  {"line":
+    { "year":1933
+      ,"coordinates":[[48.8588377,2.2770206]]
+      ,"cities":["Paris"]
+      ,"owner": ["the artist"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1934
+      ,"coordinates":[[48.8588377,2.2770206]]
+      ,"cities":["Paris"]
+      ,"owner": ["the artist"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1935
+      ,"coordinates":[[48.8588377,2.2770206]]
+      ,"cities":["Paris"]
+      ,"owner": ["the artist"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1936
+      ,"coordinates":[[48.8588377,2.2770206]]
+      ,"cities":["Paris"]
+      ,"owner": ["the artist"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1937
+      ,"coordinates":[[48.8588377,2.2770206]]
+      ,"cities":["Paris"]
+      ,"owner": ["the artist"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1938
+      ,"coordinates":[[48.8588377,2.2770206]]
+      ,"cities":["Paris"]
+      ,"owner": ["the artist"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1939
+      ,"coordinates":[[48.8588377,2.2770206]]
+      ,"cities":["Paris"]
+      ,"owner": ["the artist"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1940
+      ,"coordinates":[[48.8588377,2.2770206]]
+      ,"cities":["Paris"]
+      ,"owner": ["the artist"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1941
+      ,"coordinates":[[48.8588377,2.2770206]]
+      ,"cities":["Paris"]
+      ,"owner": ["the artist"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1942
+      ,"coordinates":[[48.8588377,2.2770206]]
+      ,"cities":["Paris"]
+      ,"owner": ["the artist"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1943
+      ,"coordinates":[[48.8588377,2.2770206]]
+      ,"cities":["Paris"]
+      ,"owner": ["the artist"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1943
+      ,"coordinates":[[48.8588377,2.2770206]]
+      ,"cities":["Paris"]
+      ,"owner": ["the artist"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1944
+      ,"coordinates":[[48.8588377,2.2770206]]
+      ,"cities":["Paris"]
+      ,"owner": ["the artist"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1945
+      ,"coordinates":[[48.8588377,2.2770206]]
+      ,"cities":["Paris"]
+      ,"owner": ["the artist"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1946
+      ,"coordinates":[[48.8588377,2.2770206]]
+      ,"cities":["Paris"]
+      ,"owner": ["the artist"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1947
+      ,"coordinates":[[48.8588377,2.2770206]]
+      ,"cities":["Paris"]
+      ,"owner": ["the artist"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1948
+      ,"coordinates":[[48.8588377,2.2770206]]
+      ,"cities":["Paris"]
+      ,"owner": ["the artist"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1949
+      ,"coordinates":[[48.8588377,2.2770206]]
+      ,"cities":["Paris"]
+      ,"owner": ["the artist"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1950
+      ,"coordinates":[[48.8588377,2.2770206]]
+      ,"cities":["Paris"]
+      ,"owner": ["the artist"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1951
+      ,"coordinates":[[48.8588377,2.2770206]]
+      ,"cities":["Paris"]
+      ,"owner": ["the artist"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1952
+      ,"coordinates":[[48.8588377,2.2770206]]
+      ,"cities":["Paris"]
+      ,"owner": ["the artist"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1953
+      ,"coordinates":[[48.8588377,2.2770206],[41.9100952,12.4773537],[42.8584081,-2.8910137],[48.8588377,2.2770206]]
+      ,"cities":["Paris","Rome","Milan","Paris"]
+      ,"owner": ["the artist","Galleria Nazionale. 'Mostra di Pablo Picasso.'","Palazzo Reale. 'Pablo Picasso.'","the artist"]
+      ,"changeFlag":1
+    }},
+  {"line":
+    { "year":1954
+      ,"coordinates":[[48.8588377,2.2770206]]
+      ,"cities":["Paris"]
+      ,"owner": ["the artist"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1955
+      ,"coordinates":[[48.8588377,2.2770206],[41.0538042,-73.6098186]]
+      ,"cities":["Paris","Cos Cob"]
+      ,"owner": ["the artist","Peter and Elizabeth Rübel"]
+      ,"changeFlag":1
+    }},
+  {"line":
+    { "year":1956
+      ,"coordinates":[[41.0538042,-73.6098186],[40.6974034,-74.1197633],[41.0538042,-73.6098186]]
+      ,"cities":["Cos Cob","New York","Cob Cob"]
+      ,"owner": ["Peter and Elizabeth Rübel","Kootz Gallery. 'Picasso.' ","Peter and Elizabeth Rübel"]
+      ,"changeFlag":1
+    }},
+  {"line":
+    { "year":1957
+      ,"coordinates":[[41.0538042,-73.6098186],[40.6974034,-74.1197633],[41.0538042,-73.6098186]]
+      ,"cities":["Cos Cob","New York","Cob Cob"]
+      ,"owner": ["Peter and Elizabeth Rübel","Perls Galleries. 'Maîtres de la première génération du vingtième siècle: A Group of Paintings in the Collection of Peter and Elizabeth Rübel, New York' ","Peter and Elizabeth Rübel"]
+      ,"changeFlag":1
+    }},
+  {"line":
+    { "year":1958
+      ,"coordinates":[[41.0538042,-73.6098186]]
+      ,"cities":["Cos Cob"]
+      ,"owner": ["Peter and Elizabeth Rübel"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1959
+      ,"coordinates":[[41.0538042,-73.6098186]]
+      ,"cities":["Cos Cob"]
+      ,"owner": ["Peter and Elizabeth Rübel"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1960
+      ,"coordinates":[[41.0538042,-73.6098186]]
+      ,"cities":["Cos Cob"]
+      ,"owner": ["Peter and Elizabeth Rübel"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1961
+      ,"coordinates":[[41.0538042,-73.6098186]]
+      ,"cities":["Cos Cob"]
+      ,"owner": ["Peter and Elizabeth Rübel"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1962
+      ,"coordinates":[[41.0538042,-73.6098186],[40.6974034,-74.1197633],[41.0538042,-73.6098186]]
+      ,"cities":["Cos Cob","New York","Cob Cob"]
+      ,"owner": ["Peter and Elizabeth Rübel","Perls Galleries. 'Picasso: An American Tribute' ","Peter and Elizabeth Rübel"]
+      ,"changeFlag":1
+    }},
+  {"line":
+    { "year":1963
+      ,"coordinates":[[41.0538042,-73.6098186]]
+      ,"cities":["Cos Cob"]
+      ,"owner": ["Peter and Elizabeth Rübel"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1964
+      ,"coordinates":[[41.0538042,-73.6098186],[43.6567919,-79.4609319],[45.5579564,-73.8703845],[41.0538042,-73.6098186]]
+      ,"cities":["Cos Cob","Toronto","Montreal","Cos Cob"]
+      ,"owner": ["Peter and Elizabeth Rübel","Art Gallery of Toronto. 'Picasso and Man'","Montreal Museum of Fine Arts 'Picasso and Man'","Peter and Elizabeth Rübel"]
+      ,"changeFlag":1
+    }},
+  {"line":
+    { "year":1965
+      ,"coordinates":[[41.0538042,-73.6098186]]
+      ,"cities":["Cos Cob"]
+      ,"owner": ["Peter and Elizabeth Rübel"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1966
+      ,"coordinates":[[41.0538042,-73.6098186]]
+      ,"cities":["Cos Cob"]
+      ,"owner": ["Peter and Elizabeth Rübel"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1967
+      ,"coordinates":[[41.0538042,-73.6098186]]
+      ,"cities":["Cos Cob"]
+      ,"owner": ["Peter and Elizabeth Rübel"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1968
+      ,"coordinates":[[41.0538042,-73.6098186]]
+      ,"cities":["Cos Cob"]
+      ,"owner": ["Peter and Elizabeth Rübel"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1969
+      ,"coordinates":[[41.0538042,-73.6098186]]
+      ,"cities":["Cos Cob"]
+      ,"owner": ["Peter and Elizabeth Rübel"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1970
+      ,"coordinates":[[41.0538042,-73.6098186]]
+      ,"cities":["Cos Cob"]
+      ,"owner": ["Peter and Elizabeth Rübel"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1971
+      ,"coordinates":[[41.0538042,-73.6098186]]
+      ,"cities":["Cos Cob"]
+      ,"owner": ["Peter and Elizabeth Rübel"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1972
+      ,"coordinates":[[41.0538042,-73.6098186]]
+      ,"cities":["Cos Cob"]
+      ,"owner": ["Peter and Elizabeth Rübel"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1973
+      ,"coordinates":[[41.0538042,-73.6098186],[40.6974034,-74.1197633]]
+      ,"cities":["Cos Cob","New York"]
+      ,"owner": ["Peter and Elizabeth Rübel","Mr. and Mrs. Klaus Perls"]
+      ,"changeFlag":1
+    }},
+  {"line":
+    { "year":1974
+      ,"coordinates":[[40.6974034,-74.1197633]]
+      ,"cities":["New York"]
+      ,"owner": ["Mr. and Mrs. Klaus Perls"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1975
+      ,"coordinates":[[40.6974034,-74.1197633]]
+      ,"cities":["New York"]
+      ,"owner": ["Mr. and Mrs. Klaus Perls"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1976
+      ,"coordinates":[[40.6974034,-74.1197633]]
+      ,"cities":["New York"]
+      ,"owner": ["Mr. and Mrs. Klaus Perls"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1977
+      ,"coordinates":[[40.6974034,-74.1197633]]
+      ,"cities":["New York"]
+      ,"owner": ["Mr. and Mrs. Klaus Perls"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1978
+      ,"coordinates":[[40.6974034,-74.1197633]]
+      ,"cities":["New York"]
+      ,"owner": ["Mr. and Mrs. Klaus Perls"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1979
+      ,"coordinates":[[40.6974034,-74.1197633]]
+      ,"cities":["New York"]
+      ,"owner": ["Mr. and Mrs. Klaus Perls"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1980
+      ,"coordinates":[[40.6974034,-74.1197633]]
+      ,"cities":["New York"]
+      ,"owner": ["Mr. and Mrs. Klaus Perls"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1981
+      ,"coordinates":[[40.6974034,-74.1197633]]
+      ,"cities":["New York"]
+      ,"owner": ["Mr. and Mrs. Klaus Perls"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1982
+      ,"coordinates":[[40.6974034,-74.1197633]]
+      ,"cities":["New York"]
+      ,"owner": ["Mr. and Mrs. Klaus Perls"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1983
+      ,"coordinates":[[40.6974034,-74.1197633]]
+      ,"cities":["New York"]
+      ,"owner": ["Mr. and Mrs. Klaus Perls"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1984
+      ,"coordinates":[[40.6974034,-74.1197633]]
+      ,"cities":["New York"]
+      ,"owner": ["Mr. and Mrs. Klaus Perls"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1985
+      ,"coordinates":[[40.6974034,-74.1197633]]
+      ,"cities":["New York"]
+      ,"owner": ["Mr. and Mrs. Klaus Perls"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1985
+      ,"coordinates":[[40.6974034,-74.1197633]]
+      ,"cities":["New York"]
+      ,"owner": ["Mr. and Mrs. Klaus Perls"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1986
+      ,"coordinates":[[40.6974034,-74.1197633]]
+      ,"cities":["New York"]
+      ,"owner": ["Mr. and Mrs. Klaus Perls"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1987
+      ,"coordinates":[[40.6974034,-74.1197633]]
+      ,"cities":["New York"]
+      ,"owner": ["Mr. and Mrs. Klaus Perls"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1988
+      ,"coordinates":[[40.6974034,-74.1197633]]
+      ,"cities":["New York"]
+      ,"owner": ["Mr. and Mrs. Klaus Perls"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1989
+      ,"coordinates":[[40.6974034,-74.1197633]]
+      ,"cities":["New York"]
+      ,"owner": ["Mr. and Mrs. Klaus Perls"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1990
+      ,"coordinates":[[40.6974034,-74.1197633]]
+      ,"cities":["New York"]
+      ,"owner": ["Mr. and Mrs. Klaus Perls"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1991
+      ,"coordinates":[[40.6974034,-74.1197633]]
+      ,"cities":["New York"]
+      ,"owner": ["Mr. and Mrs. Klaus Perls"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1992
+      ,"coordinates":[[40.6974034,-74.1197633]]
+      ,"cities":["New York"]
+      ,"owner": ["Mr. and Mrs. Klaus Perls"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1993
+      ,"coordinates":[[40.6974034,-74.1197633]]
+      ,"cities":["New York"]
+      ,"owner": ["Mr. and Mrs. Klaus Perls"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1994
+      ,"coordinates":[[40.6974034,-74.1197633],[40.7794366,-73.9654327],[40.6974034,-74.1197633]]
+      ,"cities":["New York","New York","New York"]
+      ,"owner": ["Mr. and Mrs. Klaus Perls","The Metropolitan Museum of Art. 'Picasso and the Weeping Women: The Years of Marie-Thérèse Walter and Dora Maar'","Mr. and Mrs. Klaus Perls"]
+      ,"changeFlag":1
+    }},
+  {"line":
+    { "year":1995
+      ,"coordinates":[[40.6974034,-74.1197633]]
+      ,"cities":["New York"]
+      ,"owner": ["Mr. and Mrs. Klaus Perls"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1996
+      ,"coordinates":[[40.6974034,-74.1197633]]
+      ,"cities":["New York"]
+      ,"owner": ["Mr. and Mrs. Klaus Perls"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":1997
+      ,"coordinates":[[40.6974034,-74.1197633],[40.7794366,-73.9654327],[40.7794366,-73.9654327]]
+      ,"cities":["New York","New York","New York"]
+      ,"owner": ["Mr. and Mrs. Klaus Perls","MMA","The Metropolitan Museum of Art. 'Picasso the Engraver: Selections from the Musée Picasso, Paris'"]
+      ,"changeFlag":1
+    }},
+  {"line":
+    { "year":1998
+      ,"coordinates":[[40.7794366,-73.9654327],[35.6732619,139.5703052],[35.1680487,136.8940904],[40.7794366,-73.9654327]]
+      ,"cities":["New York","Tokyo","Nagoya","New York"]
+      ,"owner": ["MMA","Bunkamura Museum of Art. 'Pikaso ten: Kaikan 10-shunen kinen/Pablo Picasso: 10th Anniversary'","Nagoya City Art Museum. 'Pikaso ten: Kaikan 10-shunen kinen/Pablo Picasso: 10th Anniversary'","MMA"]
+      ,"changeFlag":1
+    }},
+  {"line":
+    { "year":1999
+      ,"coordinates":[[40.7794366,-73.9654327]]
+      ,"cities":["New York"]
+      ,"owner": ["MMA"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":2000
+      ,"coordinates":[[40.7794366,-73.9654327],[40.7794366,-73.9654327]]
+      ,"cities":["New York","New York"]
+      ,"owner": ["MMA","The Metropolitan Museum of Art. 'Painters in Paris: 1895–1950'"]
+      ,"changeFlag":1
+    }},
+  {"line":
+    { "year":2001
+      ,"coordinates":[[40.7794366,-73.9654327],[40.7794366,-73.9654327]]
+      ,"cities":["New York","New York"]
+      ,"owner": ["The Metropolitan Museum of Art. 'Painters in Paris: 1895–1950'","MMA"]
+      ,"changeFlag":1
+    }},
+  {"line":
+    { "year":2002
+      ,"coordinates":[[40.7794366,-73.9654327],[40.7794366,-73.9654327],[40.7794366,-73.9654327]]
+      ,"cities":["New York","New York","New York"]
+      ,"owner": ["MMA","The Metropolitan Museum of Art. 'Surrealism: Desire Unbound'","MMA"]
+      ,"changeFlag":1
+    }},
+  {"line":
+    { "year":2003
+      ,"coordinates":[[40.7794366,-73.9654327],[50.828806,12.9134041],[40.7794366,-73.9654327]]
+      ,"cities":["New York","Chemnitz","New York"]
+      ,"owner": ["MMA","Kunstsammlungen Chemnitz. 'Picasso and Women'","MMA"]
+      ,"changeFlag":1
+    }},
+  {"line":
+    { "year":2004
+      ,"coordinates":[[40.7794366,-73.9654327]]
+      ,"cities":["New York"]
+      ,"owner": ["MMA"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":2005
+      ,"coordinates":[[40.7794366,-73.9654327]]
+      ,"cities":["New York"]
+      ,"owner": ["MMA"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":2006
+      ,"coordinates":[[40.7794366,-73.9654327]]
+      ,"cities":["New York"]
+      ,"owner": ["MMA"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":2007
+      ,"coordinates":[[40.7794366,-73.9654327]]
+      ,"cities":["New York"]
+      ,"owner": ["MMA"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":2008
+      ,"coordinates":[[40.7794366,-73.9654327],[40.776238,-73.9648447],[40.7794366,-73.9654327]]
+      ,"cities":["New York","New York","New York"]
+      ,"owner": ["MMA","Acquavella Galleries. 'Picasso's Marie-Thérèse'","MMA"]
+      ,"changeFlag":1
+    }},
+  {"line":
+    { "year":2009
+      ,"coordinates":[[40.7794366,-73.9654327]]
+      ,"cities":["New York"]
+      ,"owner": ["MMA"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":2010
+      ,"coordinates":[[40.7794366,-73.9654327],[40.7794366,-73.9654327],[40.7794366,-73.9654327]]
+      ,"cities":["New York","New York","New York"]
+      ,"owner": ["MMA","The Metropolitan Museum of Art. 'Picasso in The Metropolitan Museum of Art'","MMA"]
+      ,"changeFlag":1
+    }},
+  {"line":
+    { "year":2011
+      ,"coordinates":[[40.7794366,-73.9654327]]
+      ,"cities":["New York"]
+      ,"owner": ["MMA"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":2012
+      ,"coordinates":[[40.7794366,-73.9654327]]
+      ,"cities":["New York"]
+      ,"owner": ["MMA"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":2013
+      ,"coordinates":[[40.7794366,-73.9654327]]
+      ,"cities":["New York"]
+      ,"owner": ["MMA"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":2014
+      ,"coordinates":[[40.7794366,-73.9654327]]
+      ,"cities":["New York"]
+      ,"owner": ["MMA"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":2015
+      ,"coordinates":[[40.7794366,-73.9654327]]
+      ,"cities":["New York"]
+      ,"owner": ["MMA"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":2016
+      ,"coordinates":[[40.7794366,-73.9654327]]
+      ,"cities":["New York"]
+      ,"owner": ["MMA"]
+      ,"changeFlag":0
+    }},
+  {"line":
+    { "year":2017
+      ,"coordinates":[[40.7794366,-73.9654327]]
+      ,"cities":["New York"]
+      ,"owner": ["MMA"]
+      ,"changeFlag":0
+    }}
+]}

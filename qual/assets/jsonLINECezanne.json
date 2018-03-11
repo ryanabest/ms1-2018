@@ -681,9 +681,9 @@
     }},
   {"line":
     { "year":1991
-      ,"coordinates":[[34.0201613,-118.691913],[40.7352037,-73.9586868],[33.769852,-116.4680504]]
-      ,"cities":["Los Angeles","New York","Rancho Mirage"]
-      ,"owner": ["Los Angeles County Museum of Art. 'Masterpieces of Impressionism & Post-Impressionism: The Annenberg Collection'","The Metropolitan Museum of Art. 'Masterpieces of Impressionism & Post-Impressionism: The Annenberg Collection'","Walter H. and Leonore Annenberg"]
+      ,"coordinates":[[33.769852,-116.4680504],[40.7352037,-73.9586868],[33.769852,-116.4680504]]
+      ,"cities":["Rancho Mirage","New York","Rancho Mirage"]
+      ,"owner": ["Walter H. and Leonore Annenberg","The Metropolitan Museum of Art. 'Masterpieces of Impressionism & Post-Impressionism: The Annenberg Collection'","Walter H. and Leonore Annenberg"]
       ,"changeFlag":1
     }},
     {"line":

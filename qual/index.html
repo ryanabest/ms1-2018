@@ -14,6 +14,10 @@
   <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"
     integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw=="
     crossorigin=""></script>
+  <!-- Leaflet Zoom Home -->
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>
+  <link rel="stylesheet" href="css/leaflet.zoomhome.css"/>
+  <script src="libraries/leaflet.zoomhome.min.js"></script>
 
   <!-- d3 -->
   <script src="https://d3js.org/d3.v4.min.js"></script>
@@ -21,26 +25,49 @@
   <!-- jQuery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
+  <!-- Color Thief -->
+  <script src='libraries/color-thief.min.js'></script>
+
+  <!-- Vibrant JS -->
+  <script src='libraries/vibrant.min.js'></script>
+  <script type="text/javascript" src="assets/artistImages.json"></script>
+
+  <!-- <script>
+  // $.getJSON('assets/artistImages.json', function(json) {
+  //   console.log(json);
+  // });
+  let artistImages = JSON.parse('[{"artist":"Cezanne","image":"DT1943.jpg"},{"artist":"Picasso","image":"DP220041.jpg"}]');
+  </script> -->
+
 </head>
 
 <body>
-  <div id='map' style='width: 150vh; height: 40vh;'></div>
-  <script src = 'map.js'></script>
-  <p id = 'current-year'> Year Will Tick Here </p>
-  <!-- <h1 id='year'>1894</h1> -->
-  <div class='container'>
+  <div class = 'images'>
+    <script src = 'js/images.js'></script>
+    <!-- <img src='assets/images/DT1943.jpg' class = "start-stop" id="DT1943.jpg"/> -->
   </div>
+  <div id='map-and-text'>
+    <div id='year-text'>
+      <h1 id = 'current-year'></h1>
+    </div>
+    <div id='map' style='height: 100vh;'>
+      <script src = 'js/map.js'></script>
+    </div>
+  </div>
+  <div class='container'></div>
   <!-- <svg
    xmlns="http://www.w3.org/2000/svg"
    width="200"
    height="200"
    version="1.1"
    id="svg">
-      <rect x="12" y="12" width="30" height="30" stroke="black" fill="transparent" stroke-width="5"/>
-      <line x1="10" x2="50" y1="110" y2="150" stroke="orange" stroke-width="5" stroke-dasharray="0"/>
-      <polyline stroke-dasharray="160,400" points="5 5 50 5 50 50 100 50 100 100 150 100 150 150 195 150 195 195 "
-      stroke="orange" fill="transparent" stroke-width="5" opacity="0."/>
- </svg> -->
+   <defs>
+    <pattern id="img1" patternUnits="userSpaceOnUse" width="100" height="100">
+      <image xlink:href="assets/DT1943_Thumb.jpg" x="0" y="0" height="100" width="100"/>
+    </pattern>
+    </defs>
+    <circle cx="50" cy="50" r="50" fill="url(#img1)"/>
+  </svg> -->
 </body>
 
 </html>
