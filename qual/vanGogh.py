@@ -82,9 +82,6 @@ for index in vanGoghProvenance.index.values:
             provItemMain = provItem.split(';')[0]
         provItemMainSplit = provItemMain.split(',')
 
-        if objectNumber == 436530:
-            print(provItem)
-
         ## if there are three items in the first chunk of each provenance, it is usually organized as owner, location, year
         if len(provItemMainSplit) == 3 :
 
@@ -217,7 +214,7 @@ for index in vanGoghProvenance.index.values:
         ## add item if we know when it was transferred to MMA
         if (p==len(splitProvList)-1):
             if objectNumber not in ([459123]):
-                mmaOwner = 'Metropolitan Museum of Art'
+                mmaOwner    = 'Metropolitan Museum of Art'
                 mmaLocation = 'Metropolitan Museum of Art'
                 mmaProvItem = provItem.replace('; on loan to MMA, 1936','on loan to MMA')
                 if re.sub('\D','', mmaProvItem.split(';')[-1]) == '':
@@ -308,7 +305,10 @@ for index in vanGoghProvenance.index.values:
         for eh in range(len(exhibitionHistory)):
             ehid = str(objectNumber) + '_' + str(eh)
             exhibitionHistory[eh] = exhibitionHistory[eh].replace('–','-')
-            exhibitionLocation = exhibitionHistory[eh].split(".")[0]
+            if exhibitionHistory[eh].split(".")[0] == "New York" and exhibitionHistory[eh].split(".")[1].strip() == "The Metropolitan Museum of Art":
+                "Metropolitan Museum of Art"
+            else:
+                exhibitionLocation = exhibitionHistory[eh].split(".")[0]
             if len(exhibitionHistory[eh].split(',')) >= 2:
                 try:
                     pullYear(2)
@@ -669,7 +669,7 @@ for index in vanGoghProvenance.index.values:
         'objects': jsonLINE
     }
 
-    '''
+
     ## Export a JSON for each painting ###
     jsonExportName = 'jsonLINE' + vanGoghProvenance['image'][index].split('.')[0] + '.json'
     jsonExportPath = os.path.join(dir,'assets/'+jsonExportName)
@@ -679,4 +679,4 @@ for index in vanGoghProvenance.index.values:
     fp.close()
     print("added " + jsonExportName)
     print("--- %s seconds ---" % (time.time() - start_time))
-    '''
+    

@@ -1,10 +1,50 @@
 * {
-  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-family: "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  margin:0;
   /* font-weight: 300; */
 }
 
 html, body {
   /* height: 100% */
+}
+
+.images, .intro {
+  background-color: RGB(250,250,250);
+}
+
+.intro {
+  /* padding: 10%; */
+}
+
+.intro h1, h2 {
+  text-align: center;
+  font-weight: 100;
+}
+
+.intro h1 {
+  color: RGB(250,250,250);
+  font-style: italic;
+  font-size: 900%;
+  background-color: RGB(178,178,178);
+  padding: 30px;
+  margin-top: 50px;
+  margin-bottom: 0px;
+}
+
+.intro h2 {
+  /* color: RGB(250,250,250); */
+  font-size: 300%;
+  padding-top: 5%;
+  padding-left: 10%;
+  padding-right: 10%;
+}
+
+.intro p {
+  padding-top: 5%;
+  padding-left: 20%;
+  padding-right: 20%;
+  font-size: 120%;
+  font-weight: 200;
 }
 
 .images {
@@ -14,45 +54,54 @@ html, body {
   padding: 10%;
   align-items: center;
   justify-content: center;
-  background-color: RGB(50,50,50);
+  padding-bottom: 20%;
+  /* background-color: #FFF; */
 }
 
 .start-stop {
-  height: 30vh;
-  padding: 0.2vh;
+  height: 45vh;
+  padding: 0.5vh;
   /* margin-right: 5px; */
 }
 
 .start-stop:hover {
-  opacity: 0.5;
+  opacity: 0.8;
+  /* width: 50%;
+  height: 50%; */
 }
 
 #map-and-text {
-  margin-top: 10%;
   position: relative;
 }
 
 #map-and-text .flex-div {
   position: absolute;
   top: 0%;
-  left: 25%;
-  width: 50%;
+  left: 0%;
+  width: 25%;
   padding-left: 1%;
   padding-right: 1%;
   padding-bottom: 1%;
   color: #FFF;
   background-color: #000;
   opacity: 0.5;
-  /* height: 25%; */
 }
 
 #map-and-text .flex-div h1 {
   font-style: italic;
   font-weight: 100;
+  font-size: 250%;
 }
 
 #map-and-text .flex-div li {
   font-weight: 100;
+  font-size: 150%;
+  line-height: 100%;
+}
+
+.li-small {
+  font-size: 50%;
+  line-height: 0.1;
 }
 
 #map {
