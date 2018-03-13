@@ -1,4 +1,4 @@
-let pace = 50;
+let pace = 750;
 // let filePath = '../assets/' // Local Testing
 let filePath = '/ms1-2018/qual/assets/' // GitHub Pages
 
