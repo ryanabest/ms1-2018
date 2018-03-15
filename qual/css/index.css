@@ -23,16 +23,18 @@ html, body {
 
 .intro h1 {
   color: RGB(250,250,250);
-  font-style: italic;
+  /* font-style: italic; */
   font-size: 900%;
   background-color: RGB(178,178,178);
   padding: 30px;
   margin-top: 50px;
   margin-bottom: 0px;
+  font-variant: small-caps;
 }
 
 .intro h2 {
   /* color: RGB(250,250,250); */
+  font-style: italic;
   font-size: 300%;
   padding-top: 5%;
   padding-left: 10%;
