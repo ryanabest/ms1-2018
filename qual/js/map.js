@@ -1,6 +1,6 @@
-let pace = 750;
-// let filePath = '../assets/' // Local Testing
-let filePath = '/ms1-2018/qual/assets/' // GitHub Pages
+let pace = 50;
+let filePath = '../assets/' // Local Testing
+// let filePath = '/ms1-2018/qual/assets/' // GitHub Pages
 
 let panZoomLevel = 5;
 
@@ -150,7 +150,7 @@ function drawPath(painting) {
             }
             // console.log(mmLatLngList)
             let finalBounds = new L.LatLngBounds(mmLatLngList);
-            map.flyToBounds(finalBounds);
+            map.flyToBounds(finalBounds,{maxZoom:8,padding:[150,150]});
             map.doubleClickZoom.enable();
             map.dragging.enable();
             // let zoom = L.control.zoom();
@@ -249,7 +249,7 @@ function drawPath(painting) {
           }
         }
         let drawAllBounds = new L.LatLngBounds(drawAllLatLngList);
-        map.flyToBounds(drawAllBounds,{maxZoom:8,padding:[20,20]});
+        map.flyToBounds(drawAllBounds,{maxZoom:8,padding:[150,150]});
 
 
         for (let i=0;i<provenance.objects.length;i++) {
@@ -308,6 +308,7 @@ function drawPath(painting) {
                     // d3.select('#timeline-line').attr("x2",yearChangePercent) // advance timeline svg
                     d3.select('#currentYear-line').attr("x1",yearChangePercent)
                                                   .attr("x2",yearChangePercent)
+                                                  .attr("opacity",1)
                     d3.select('#currentYear-text').text(currentYear)
                                                   .attr("x",yearChangeTextPercent)
 

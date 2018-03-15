@@ -1,208 +1,410 @@
-let pace = 500;
-let currentYear;
+let pace = 50;
+let filePath = '../assets/' // Local Testing
+// let filePath = '/ms1-2018/qual/assets/' // GitHub Pages
+
+let panZoomLevel = 5;
+
 
 mapboxgl.accessToken = 'pk.eyJ1IjoicnlhbmFiZXN0IiwiYSI6ImNqOTdzdWRpcjBhNnMzMmxzcHMyemxkMm0ifQ.ot3NoRC2w8zCbVOCkv2e_w';
-let map = L.map('map',{zoomControl:false,attributionControl:false}).setView([10,15], 2);
+// let map = L.map('map',{zoomControl:false,attributionControl:false}).fitBounds(L.latLngBounds(L.latLng(69,150),L.latLng(-9,-131)));
+let map = L.map('map',{zoomControl:false,attributionControl:false,easeLinearity:0.1,zoomSnap:0}).setView([0,0],3); // Load the whole map first
 L.tileLayer(
       'https://api.mapbox.com/styles/v1/ryanabest/cjeans7r303w02ro297dbye1j/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoicnlhbmFiZXN0IiwiYSI6ImNqOTdzdWRpcjBhNnMzMmxzcHMyemxkMm0ifQ.ot3NoRC2w8zCbVOCkv2e_w', {
-      // tileSize: 512,
-      // zoomOffset: -1,
       attribution: '© <a href="https://www.mapbox.com/map-feedback/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
-// var mapboxLightTileLayer = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/256/{z}/{x}/{y}?access_token={accessToken}', {
-//     // attribution: 'https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/256/{z}/{x}/{y}?access_token={accessToken}',
-//     maxZoom: 18,
-//     // id: 'ryanabest.cjeans7r303w02ro297dbye1j',
-//     accessToken: mapboxgl.accessToken
-// }).addTo(mymap);
-// var mymap = new mapboxgl.Map({
-//    container: 'map'
-//   ,style: 'mapbox://styles/ryanabest/cjeans7r303w02ro297dbye1j'
-//   ,attributionControl:false
-//   ,zoom:0.9
-// });
+let svgLayer;
+// L.control.scale().addTo(map);
 
-// L.marker([48.8588377,2.2770206]).addTo(mymap);
-// L.marker([40.6974034,-74.1197633]).addTo(mymap);
 
-// let jsonLINE = [
-//   {'lat': 48.8588377, 'lon': 2.2770206}, //Paris
-//   {'lat': 40.6974034, 'lon':-74.1197633} //NY
-// ];
+ $(window).on("load", function() {
+   $('.start-stop').click(function() {
+     $('.container').empty()
+     $('html,body').animate({
+       scrollTop: $('#map').offset().top
+     },1000);
+     let painting = event.target.id;
+     drawPath(painting);
+   });
+ });
 
-// https://bost.ocks.org/mike/leaflet/
-// let svg = d3.select(map.getPanes().overlayPane).append("svg"),
-//           g = svg.append("g").attr("class","leaflet-zoom-hide")
+function drawPath(painting) {
+  if (typeof svgLayer != 'undefined') {
+    svgLayer.remove();
+  }; //remove svg layer if it already exists, allowing for replays
+  // map.doubleClickZoom.disable();
+  // map.scrollWheelZoom.disable();
+  // map.dragging.disable();
+  svgLayer = L.svg();
+  svgLayer.addTo(map);
 
-let svgLayer = L.svg();
-svgLayer.addTo(map);
+  /* We simply pick up the SVG from the map object */
+  let svg = d3.select("#map").select("svg")
+       ,g = svg.append("g").attr("class", "leaflet-zoom-hide")
+       ,defs = svg.append("svg:defs");
 
-/* We simply pick up the SVG from the map object */
-let svg = d3.select("#map").select("svg")
-     ,g = svg.append("g").attr("class", "leaflet-zoom-hide");
+  /* Remove all previous paths from the map */
+  svg.selectAll('.path').remove();
+  svg.selectAll('#marker').remove();
 
-d3.json("assets/jsonLINECezanne.json", function(provenance) {
-  /* Add a LatLng object to each item in the dataset */
-  provenance.objects.forEach(function(d) {
-     d.year = d.line.year
-    ,d.latLng = d.line.coordinates
-    ,d.cities = d.line.cities
-    // d.line.coordinates.forEach(function(d,i) {
-    //   console.log(d);
-    // });
-  })
-
-  let i=0;
-  let allData = [];
-
-  for (let a=0;a<provenance.objects.length;a++) {
-    // console.log(a);
-    // allData = [];
-    let data = [];
-    for (let b=0;b<provenance.objects[a].latLng.length;b++) {
-      let dataPoint = {
-        "x": map.latLngToLayerPoint(provenance.objects[a].latLng[b]).x,
-        "y": map.latLngToLayerPoint(provenance.objects[a].latLng[b]).y,
-        "latLng": provenance.objects[a].latLng[b],
-        "year": provenance.objects[a].year,
-        "city": provenance.objects[a].cities[b]
+  // Add svg pattern to fill circle with painting and color the tail with the primary color in that painting
+  $.getJSON(filePath + 'metObjectsVanGogh.json', function(data) {
+    let circleRadius = 50;
+    let imageThumbnail;
+    for (let i=0;i<Object.keys(data['image']).length;i++) {
+      let image = data['image'][i]
+      if (image === painting) {
+        imageThumbnail = filePath+'Thumbnails/'+image
       }
-      data.push(dataPoint)
-      // console.log(provenance.objects[a].year)
-      // console.log(provenance.objects[a].cities[b]);
     }
-    allData.push({
-      'index': a
-      ,'data' : data
-    })
-    let lineFunction = d3.line()
-                         .x(function(d) {return d.x})
-                         .y(function(d) {return d.y})
+    let img = document.createElement('img');
+    img.src = imageThumbnail;
+    vibrantColor = Vibrant.from(img).getPalette(function(err, palette) {
+      let vibrantColor = "rgb("+Math.floor(palette['Vibrant']['r'])+","+Math.floor(palette['Vibrant']['g'])+","+Math.floor(palette['Vibrant']['b'])+")";
+      let mutedColor = "rgb("+Math.floor(palette['Muted']['r'])+","+Math.floor(palette['Muted']['g'])+","+Math.floor(palette['Muted']['b'])+")";
+      let pattern = defs.append("svg:pattern")
+                        .attr("id","circleThumb")
+                        .attr("x","0")
+                        .attr("y","0")
+                        .attr("width","1")
+                        .attr("height","1")
+                        .attr("patternUnits","objectBoundingBox")
+                        .append("svg:image")
+                        .attr("xlink:href",imageThumbnail)
+                        .attr("width",circleRadius*2)
+                        .attr("height",circleRadius*2)
+                        // .attr("x",0)
+                        // .attr("y",0)
+      let paintingPath = painting.split('.')[0]
 
-    let paths = svg.append('path')
-                  .attr('d',lineFunction(data))
-                  .attr("fill","none")
-                  .attr("stroke","#666666")
-                  .attr("stroke-width","3")
-                  .attr("opacity","0.4")
-                  .attr("stroke-dasharray","0,100")
-                  .attr("class","path"+String(a))
-                  .attr("id","path"+provenance.objects[a].year)
-  }
+      let jsonData = filePath + 'jsonLINE' + paintingPath + '.json'
+      d3.json(jsonData, function(provenance) {
+        console.log(paintingPath);
 
-  let marker = svg.append("circle")
-                  .attr("r",7)
-                  .attr("id","marker")
-                  .attr("fill","red")
+        /* First let's reset our timeline svg */
+        d3.selectAll('.timeline-circle').remove()
 
-  let firstPath = d3.select(".path0");
-  let startPoint = pathStartPoint(firstPath);
-  let markerLatLng = map.layerPointToLatLng(L.point(parseInt(startPoint.split(",")[0]),parseInt(startPoint.split(",")[1])));
+        /* Add a LatLng object to each item in the dataset */
+        provenance.objects.forEach(function(d) {
+           d.year = d.line.year
+          ,d.latLng = d.line.coordinates
+          ,d.cities = d.line.cities
+          ,d.owner = d.line.owner
+          ,d.changeFlag = d.line.changeFlag[0]
+        })
 
-  for (let i=0;i<provenance.objects.length;i++) {
-    animate(i);
-  }
+        let allData = [];
 
+        for (let a=0;a<provenance.objects.length;a++) {
+          let data = [];
+          for (let b=0;b<provenance.objects[a].latLng.length;b++) {
+            let dataPoint = {
+               "x": map.latLngToLayerPoint(L.latLng(provenance.objects[a].latLng[b])).x
+              ,"y": map.latLngToLayerPoint(L.latLng(provenance.objects[a].latLng[b])).y
+              ,"latLng": provenance.objects[a].latLng[b]
+              ,"year": provenance.objects[a].year
+              ,"city": provenance.objects[a].cities[b]
+              ,"owner": provenance.objects[a].owner[b]
+              ,"legs": provenance.objects[a].latLng[b].length
+            }
+            data.push(dataPoint)
+          }
+          allData.push({
+            'index': a
+            ,'data' : data
+          })
+          let lineFunction = d3.line()
+                               .x(function(d) {return d.x})
+                               .y(function(d) {return d.y})
 
-  map.on("viewreset", reset);
-  map.on("zoomend", reset);
-  reset();
+          let paths = svg.append('path')
+                        .attr('d',lineFunction(data))
+                        .attr("class","path")
+                        .attr("id","path"+String(a))
+                        .attr("fill","none")
+                        .attr("stroke",vibrantColor)
+                        .attr("stroke-width","8")
+                        .attr("opacity","0")
+                        // .attr("stroke-dasharray","0,1000000000")
+        }
 
-  // console.log(startPoint);
+        let marker = svg.append("circle")
+                        .attr("r",circleRadius)
+                        .attr("id","marker")
+                        .attr("fill","url(#circleThumb)")
+                        .attr("opacity","0")
 
-  function coordToLatLon(coord) {
-    var toPoint = map.layerPointToLatLng(new L.Point(coord[0],coord[1]));
-    return toPoint;
-  }
+        let firstPath = d3.select("#path0");
+        let startPoint = pathStartPoint(firstPath);
+        let markerLatLng = map.layerPointToLatLng(L.point(parseInt(startPoint.split(",")[0]),parseInt(startPoint.split(",")[1])));
 
-  function latLonToCoord(point) {
-    var toCoord = map.latLngToLayerPoint(new L.Point(point[0],point[1]));
-    return toCoord;
-  }
+        map.on("viewreset", reset);
+        map.on("zoomend", reset);
+        reset();
 
-  function pathStartPoint(path) {
-    // console.log(path.attr("d"))
-    let d = path.attr("d"),
-        dsplitted = d.split("L");
-    return(dsplitted[0].replace("M","").replace("Z",""));
-  }
-
-  function animate(x) {
-    i=x;
-    var path = d3.select('.path'+x).call(transition);
-  }
-
-  function tweenDash(d) {
-    let l = path.node().getTotalLength();
-    let s = d3.interpolateString("0," + l, l + "," + l); //interpolation of stroke-dasharray
-    return function(t) {
-      let marker = d3.select('#marker');
-      let p = path.node().getPointAtLength(t*l);
-      markerLatLng = map.layerPointToLatLng(L.point(p));
-      marker.attr("transform", "translate(" + p.x + "," + p.y + ")");//move marker
-      return s(t);
-    }
-  }
-
-  function transition(path) {
-    path.transition()
-        .delay(i*pace)
-        .duration(pace)
-        .attrTween('stroke-dasharray',
-          // tweenDash
-          function() {
-          let l = path.node().getTotalLength();
-          let s = d3.interpolateString("0," + l, l + "," + l); //interpolation of stroke-dasharray
-          return function(t) {
-            let marker = d3.select('#marker');
-            let p = path.node().getPointAtLength(t*l);
-            markerLatLng = map.layerPointToLatLng(L.point(p));
-            marker.attr("transform", "translate(" + p.x + "," + p.y + ")");//move marker
-            return s(t);
+        setTimeout(function() {
+          let mmLatLngList = []
+          for (let mm=0;mm<provenance.objects.length;mm++) {
+            for (let ll=0;ll<provenance.objects[mm].latLng.length;ll++) {
+              mmLatLngList.push(provenance.objects[mm].latLng[ll]);
             }
           }
-        )
+          // console.log(mmLatLngList)
+          let finalBounds = new L.LatLngBounds(mmLatLngList);
+          map.flyToBounds(finalBounds,{maxZoom:8,padding:[150,150]});
+          drawAllPaths();
+          d3.select("#marker").attr("opacity","1");
+          drawTimelineCircles();
+
+          function drawTimelineCircles() {
+            for (let j=0;j<provenance.objects.length;j++) {
+              let currentYear = provenance.objects[j].year;
+              let maxYear = provenance.objects[provenance.objects.length-1].year;
+              let minYear = provenance.objects[0].year;
+              let currentYearDiff = maxYear - currentYear;
+              let totalYearDiff = maxYear - minYear;
+              let yearChangePercent = ((((totalYearDiff-currentYearDiff)/totalYearDiff)*88)+6)+'%';
+              let yearChangeTextPercent = ((((totalYearDiff-currentYearDiff)/totalYearDiff)*88)+5.5)+'%';
+              if (currentYear%10 === 0) {
+                d3.select('#timeline-svg').append("text")
+                                          .attr("x",yearChangeTextPercent)
+                                          .attr("y","80%")
+                                          .attr("fill","#FFF")
+                                          .attr("font-size","15")
+                                          .attr("font-family","HelveticaNeue-Light")
+                                          .attr("style","font-style: italic; font-weight: 100;")
+                                          .attr("text-anchor","end")
+                                          .text(currentYear)
+                d3.select('#timeline-svg').append("line")
+                                          .attr("x1",yearChangePercent)
+                                          .attr("y1","50%")
+                                          .attr("x2",yearChangePercent)
+                                          .attr("y2","80%")
+                                          .attr("style","stroke:#FFF ; stroke-width:1 ; stroke-dasharray:5")
+              };
+              if (provenance.objects[j].changeFlag === 1) {
+
+                let divID = 'year-' + provenance.objects[j].year;
+                let divText = "";
+                divText += "<div class=flex-div id="+divID+">"
+                divText += "<h1>"+provenance.objects[j].year+"</h1>";
+                divText += "<ol>"
+                let olItems = '';
+                for (let x=0;x<provenance.objects[j].cities.length;x++) {
+                  olItems += "<li>" + provenance.objects[j].cities[x] + "<br><span class=li-small>" + provenance.objects[j].owner[x] + "</span><br></li>"
+                }
+                divText += olItems
+                divText += "</ol></div>"
+
+                let timelineSVG = d3.select("#timeline-svg")
+                timelineSVG.append("circle")
+                           .attr("cx",yearChangePercent)
+                           .attr("cy",'50%')
+                           .attr("r",5)
+                           .attr("fill","white")
+                           .attr("id","circle-"+currentYear+"-"+j)
+                           .attr("class","timeline-circle")
+                           .datum(divText)
+                           .on("mouseover",function(d) {
+                             d3.selectAll('#marker').attr("style","opacity:1");
+                             let divData = d3.select(this).datum();
+                             let thisPath = parseInt(d3.select(this).attr('id').split("-").slice(-1)[0]);
+                             d3.select(this).attr("r",10)
+                                            .attr("fill","red")
+                             // $('#map-and-text').append(divData)
+                             drawOne(thisPath,divData);
+                           })
+                           .on("mouseout",function(d) {
+                             d3.select(this).attr("r",3)
+                                            .attr("fill","white")
+                             // drawAllPaths();
+                           })
+                           .on("click",function() {
+                             drawAllPaths();
+                           })
+
+
+              }
+            }
+          }
+
+
+
+
+          /* EVERYTHING ABOVE HERE */
+          // iterate(painting);
+
+          // let timelineSVG = d3.select("#timeline-svg")
+          // timelineSVG.selectAll(".timeline-circle")
+          //            // .transition()
+          //            // .duration(250)
+          //            // .delay()
+          //            .attr("r",7)
+          //            .attr("fill","#696969")
+          //            .attr("stroke","#FFF")
+          //            .on("mouseover",function(d) {
+          //              d3.selectAll('#marker').attr("style","opacity:1");
+          //              let divData = d3.select(this).datum();
+          //              let thisPath = parseInt(d3.select(this).attr('id').split("-").slice(-1)[0]);
+          //              d3.select(this).attr("r",10)
+          //                             .attr("fill","red")
+          //              // $('#map-and-text').append(divData)
+          //              drawOne(thisPath,divData);
+          //            })
+          //            .on("mouseout",function(d) {
+          //              d3.select(this).attr("r",3)
+          //                             .attr("fill","white")
+          //             drawAllPaths();
+          //            })
+
+          // setTimeout(function() {
+          //   let mmLatLngList = []
+          //   for (let mm=0;mm<provenance.objects.length;mm++) {
+          //     for (let ll=0;ll<provenance.objects[mm].latLng.length;ll++) {
+          //       mmLatLngList.push(provenance.objects[mm].latLng[ll]);
+          //     }
+          //   }
+          //   // console.log(mmLatLngList)
+          //   let finalBounds = new L.LatLngBounds(mmLatLngList);
+          //   map.flyToBounds(finalBounds,{maxZoom:8,padding:[150,150]});
+          //   map.doubleClickZoom.enable();
+          //   map.dragging.enable();
+          //   // let zoom = L.control.zoom();
+          //   // zoom.addTo(map);
+          //   let timelineSVG = d3.select("#timeline-svg")
+          //   timelineSVG.selectAll(".timeline-circle")
+          //              // .transition()
+          //              // .duration(250)
+          //              // .delay()
+          //              .attr("r",7)
+          //              .attr("fill","#696969")
+          //              .attr("stroke","#FFF")
+          //              .on("mouseover",function(d) {
+          //                d3.selectAll('#marker').attr("style","opacity:1");
+          //                let divData = d3.select(this).datum();
+          //                let thisPath = parseInt(d3.select(this).attr('id').split("-").slice(-1)[0]);
+          //                d3.select(this).attr("r",10)
+          //                               .attr("fill","red")
+          //                // $('#map-and-text').append(divData)
+          //                drawOne(thisPath,divData);
+          //              })
+          //              .on("mouseout",function(d) {
+          //                d3.select(this).attr("r",3)
+          //                               .attr("fill","white")
+          //               drawAllPaths();
+          //              })
+          //
+          // },pace*(allData.length+1))
+        },1000);
+
+        function drawOne(thisPath,divData) {
+          $('.flex-div').remove()
+          d3.selectAll('.path').attr("style","opacity:0");
+          // d3.selectAll('#marker').attr("style","opacity:0");
+
+          for (let i=0;i<provenance.objects.length;i++) {
+            if (i === thisPath) {
+              let drawOneLatLngList = provenance.objects[i].latLng
+              let drawOneBounds = new L.LatLngBounds(drawOneLatLngList);
+              map.fitBounds(drawOneBounds,{maxZoom:8,padding:[150,150]});
+
+              map.on("zoomend",function(d) {
+                // d3.selectAll('#marker').attr("style","opacity:1");
+              })
+
+              let startingLatLng = drawOneLatLngList[0]
+              let markerStartPoint = map.latLngToLayerPoint(startingLatLng)
+              // d3.select('#marker').attr("transform", "translate(" + markerStartPoint.x + "," + markerStartPoint.y + ")")
+
+              function transition(path) {
+                path.attr("style","opacity:0.3")
+                    // .delay(1000)
+
+                path.transition()
+                    .delay(1000)
+                    .duration(500*provenance.objects[i].latLng.length)
+                    // .attr("style","opacity:.5")
+                    .attrTween('stroke-dasharray',tweenDash)
+
+                    function tweenDash(d) {
+                      // d3.selectAll('#marker').attr("style","opacity:1");
+                      let l = path.node().getTotalLength();
+                      let s = d3.interpolateString("0," + l, l + "," + l); // interpolation of stroke-dasharray style attr
+                      return function (t) {
+                        let marker = d3.select("#marker");
+                        let p = path.node().getPointAtLength(t * l);
+                        markerLatLng = map.layerPointToLatLng(L.point(p));
+                        marker.attr("transform", "translate(" + p.x + "," + p.y + ")"); //move marker
+                        marker.attr("opacity","1");
+                        // return s(t);
+                        }
+                    }
+                }
+
+              let path = d3.select("#path"+i).call(transition)
+
+              $('#map-and-text').append(divData)
+
+            // let path = d3.select('#path'+i) //.call(transition);
+            // console.log(path.node().getTotalLength())
+          }
+        }
       }
 
+      function drawAllPaths() {
+        $('.flex-div').remove()
+        let drawAllLatLngList = []
+        for (let i=0;i<provenance.objects.length;i++) {
+          for (let ll=0;ll<provenance.objects[i].latLng.length;ll++) {
+            drawAllLatLngList.push(provenance.objects[i].latLng[ll])
+          }
+        }
+        let drawAllBounds = new L.LatLngBounds(drawAllLatLngList);
+        map.flyToBounds(drawAllBounds,{maxZoom:8,padding:[150,150]});
 
-  function reset() {
-    // put the marker in the right spot when the map moves
-    let markerPoint = map.latLngToLayerPoint(L.latLng(markerLatLng['lat'],markerLatLng['lng']));
-    d3.select("#marker")
-      .attr("transform","translate(" + markerPoint.x + "," + markerPoint.y + ")") //move marker
 
-    for (let pr=0;pr<allData.length;pr++) { // for all individual paths (one per year)
-      for (let prd=0;prd<allData[pr]['data'].length;prd++) {
-        allData[pr]['data'][prd].x = map.latLngToLayerPoint(allData[pr]['data'][prd]['latLng']).x; // reset x and y coordinates in the data based on current map composition
-        allData[pr]['data'][prd].y = map.latLngToLayerPoint(allData[pr]['data'][prd]['latLng']).y;
+        for (let i=0;i<provenance.objects.length;i++) {
+          let path = d3.select("#path"+i)
+          let l =path.node().getTotalLength()
+          path.attr("style","opacity:.5")
+              .attr("stroke-dasharray",l)
+        }
+        // console.log(drawAllBounds.getNorthWest())
+        map.on('moveend',function(d) {
+          let endingLatLng = drawAllLatLngList.slice(-1)[0]
+          let markerEndPoint = map.latLngToLayerPoint(endingLatLng)
+          d3.select('#marker').attr("transform", "translate(" + markerEndPoint.x + "," + markerEndPoint.y + ")")
+        })
       }
 
-      let lineFunction = d3.line() // create new line formula to turn these new x and y coordinates into the format needed for path svg type
-                           .x(function(d) {return d.x})
-                           .y(function(d) {return d.y})
+        function pathStartPoint(path) {
+          let d = path.attr("d"),
+              dsplitted = d.split("L");
+          return(dsplitted[0].replace("M","").replace("Z",""));
+        }
 
-      let pathReset = d3.select('.path'+pr); // select individual path
-      let l = pathReset.node().getTotalLength();
-      pathReset.attr('d',lineFunction(allData[pr]['data'])) // reset path location
-               .attr('stroke-dasharray',l)
-               // .transition()
-               // .attrTween('stroke-dasharray',function() {
-               //   let l = pathReset.node().getTotalLength();
-               //   let s = d3.interpolateString("0," + l, l + "," + l); //interpolation of stroke-dasharray
-               //   return s;
-               //   // return function(t) {
-               //   //   // let marker = d3.select('#marker');
-               //   //   let p = path.node().getPointAtLength(t*l);
-               //   //   markerLatLng = map.layerPointToLatLng(L.point(p));
-               //   //   marker.attr("transform", "translate(" + p.x + "," + p.y + ")");//move marker
-               //   //   return s(t);
-               //   // }
-               // });
-      console.log(i);
-      console.log(pathReset.node().getTotalLength());
-      // pathReset.call(transition);
+        function reset() {
+          for (let pr=0;pr<allData.length;pr++) { // for each path (one for every year)
+            for (let prd=0;prd<allData[pr]['data'].length;prd++) {
+              allData[pr]['data'][prd].x = map.latLngToLayerPoint(allData[pr]['data'][prd]['latLng']).x; // reset x and y coordinates in the data based on current map composition
+              allData[pr]['data'][prd].y = map.latLngToLayerPoint(allData[pr]['data'][prd]['latLng']).y;
+            }
 
+            let lineFunction = d3.line() // create new line formula to turn these new x and y coordinates into the format needed for path svg type
+                                 .x(function(d) {return d.x})
+                                 .y(function(d) {return d.y})
 
-    }
-  }
-})
+            let pathReset = d3.select('#path'+pr); // select individual path for this # in loop
+            pathReset.attr('d',lineFunction(allData[pr]['data'])) // reset path location
+            let l = pathReset.node().getTotalLength();
+            pathReset.attr('stroke-dasharray',l)
+
+          }
+          // put the marker in the right spot when the map moves
+          let markerPoint = map.latLngToLayerPoint(L.latLng(markerLatLng));
+          d3.select("#marker")
+            .attr("transform","translate(" + markerPoint.x + "," + markerPoint.y + ")") //move marker
+          }
+      })
+    });
+  })
+}

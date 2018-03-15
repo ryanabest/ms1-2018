@@ -79,12 +79,14 @@ html, body {
   top: 0%;
   left: 0%;
   width: 25%;
+  padding: 1%;
+  /* padding-top: 1%;
   padding-left: 1%;
   padding-right: 1%;
-  padding-bottom: 1%;
-  color: #FFF;
-  background-color: #000;
-  opacity: 0.5;
+  padding-bottom: 1%; */
+  color: #696969;
+  /* background-color: #000; */
+  /* opacity: 0.5; */
 }
 
 #map-and-text .flex-div h1 {
