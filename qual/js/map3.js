@@ -267,7 +267,7 @@ function drawPath(painting) {
               // Enable hover for circles
               d3.selectAll(".timeline-circle")
                          .on("mouseover",function(d) {
-                           d3.selectAll('#marker').attr("style","opacity:1");
+                           d3.selectAll('#marker').attr("opacity",1);
                            d3.selectAll('#city-text').attr("opacity",0);
                            d3.selectAll('#owner-text').attr("opacity",0);
                            let divData = d3.select(this).datum();
