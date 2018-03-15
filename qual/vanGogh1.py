@@ -570,7 +570,7 @@ for index in vanGoghProvenance.index.values:
                     owners = []
                     # owners.append(exhibitionHistoryList['owner'][ownerExhibitionIndeces[len(ownerExhibitionIndeces)-1]])
                     # owners.append("On Exhibition")
-                    owners.append("Exhibition - "+re.sub(" ([\(\[]).*?([\)\]])", "", exhibitionHistoryList['owner'][ownerExhibitionIndeces[0]].split('.')[1].replace('"','')).split(",")[0])
+                    owners.append("Exhibition - "+re.sub(" ([\(\[]).*?([\)\]])", "", exhibitionHistoryList['owner'][ownerExhibitionIndeces[len(ownerExhibitionIndeces)-1]].split('.')[1].replace('"','')).split(",")[0])
                     # print(re.sub(" ([\(\[]).*?([\)\]])", "", exhibitionHistoryList['owner'][ownerExhibitionIndeces[0]].split('.')[1].replace('"','')).split(",")[0])
                     owners.append(provenanceList['owner'][nextOwnerRowIndex])
 
@@ -705,8 +705,8 @@ for index in vanGoghProvenance.index.values:
 
                         owners = []
                         # owners.append(ownerExhibitions['owner'][ownerExhibitionIndeces[oe-1]])
-                        owners.append("Exhibition - "+re.sub(" ([\(\[]).*?([\)\]])", "", exhibitionHistoryList['owner'][ownerExhibitionIndeces[0]].replace("Mrs.","Mrs").replace("G.","G").replace("R.","R").replace("M.","M").replace("E.","E").split('.')[1].replace('"','')).split(",")[0])
-                        owners.append("Exhibition - "+re.sub(" ([\(\[]).*?([\)\]])", "", exhibitionHistoryList['owner'][ownerExhibitionIndeces[0]].replace("Mrs.","Mrs").replace("G.","G").replace("R.","R").replace("M.","M").replace("E.","E").split('.')[1].replace('"','')).split(",")[0])
+                        owners.append("Exhibition - "+re.sub(" ([\(\[]).*?([\)\]])", "", exhibitionHistoryList['owner'][ownerExhibitionIndeces[oe-1]].replace("Mrs.","Mrs").replace("G.","G").replace("R.","R").replace("M.","M").replace("E.","E").split('.')[1].replace('"','')).split(",")[0])
+                        owners.append("Exhibition - "+re.sub(" ([\(\[]).*?([\)\]])", "", exhibitionHistoryList['owner'][ownerExhibitionIndeces[oe]].replace("Mrs.","Mrs").replace("G.","G").replace("R.","R").replace("M.","M").replace("E.","E").split('.')[1].replace('"','')).split(",")[0])
                         # owners.append("On Exhibition")
                         # owners.append("On Exhibition")
                         # print(exhibitionHistoryList['owner'][ownerExhibitionIndeces[0]].split('.')[1].replace('"',''))
@@ -742,7 +742,7 @@ for index in vanGoghProvenance.index.values:
                     owners = []
                     # owners.append(ownerExhibitions['owner'][ownerExhibitionIndeces[len(ownerExhibitionIndeces)-1]])
                     # owners.append("On Exhibition")
-                    owners.append("Exhibition - "+re.sub(" ([\(\[]).*?([\)\]])", "", exhibitionHistoryList['owner'][ownerExhibitionIndeces[0]].replace("Mrs.","Mrs").replace("G.","G").replace("R.","R").replace("M.","M").replace("E.","E").replace("J.","J").replace("Alex.","Alex").split('.')[1].replace('"','')).split(",")[0])
+                    owners.append("Exhibition - "+re.sub(" ([\(\[]).*?([\)\]])", "", exhibitionHistoryList['owner'][ownerExhibitionIndeces[len(ownerExhibitionIndeces)-1]].replace("Mrs.","Mrs").replace("G.","G").replace("R.","R").replace("M.","M").replace("E.","E").replace("J.","J").replace("Alex.","Alex").split('.')[1].replace('"','')).split(",")[0])
                     owners.append(provenanceList['owner'][nextOwnerRowIndex])
 
                     changeFlag = 1
@@ -1084,4 +1084,3 @@ for index in vanGoghProvenance.index.values:
     fp.close()
     print("added " + jsonExportName)
     print("--- %s seconds ---" % (time.time() - start_time))
-    
