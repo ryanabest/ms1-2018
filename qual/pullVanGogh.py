@@ -41,9 +41,10 @@ metObjectsFull = metObjectsFull.sort_values('Object ID',ascending=True)
 #
 
 metObjectsVanGogh = metObjectsFull.loc[metObjectsFull['Artist Display Name']=='Vincent van Gogh']
-print(metObjectsVanGogh['City'])
+# print(metObjectsVanGogh['City'])
 # print(metObjectsFull.loc[(pd.notnull(metObjectsFull['Artist Display Name'])) & (metObjectsFull['Artist Display Name'].str.contains('Gogh'))].count())
 metObjectsVanGoghYears = metObjectsVanGogh[['Object ID','Object Begin Date']]
+metObjectsVanGoghTitles = metObjectsVanGogh[['Object ID','Title']]
 
 '''
 exhibitionVanGoghList = []
@@ -70,9 +71,11 @@ for o in (range(0,len(metObjectIDs)-1)):
             print("no exhibition for " + str(on) + ' - ' + str(o+1) + ' of ' + str(len(metObjectIDs)))
 
 exhibitionVanGoghList = pd.DataFrame(exhibitionVanGoghList)
+# ~~ --- 535.2492849826813 seconds --- ~~
 
 #
 print("--- %s seconds ---" % (time.time() - start_time))
+''
 
 metObjectsProvenanceJSON = os.path.join(dir,'assets','FullProvenance','metObjectsProvenance.json')
 metObjectsProvenance = pd.read_json(metObjectsProvenanceJSON)
@@ -90,9 +93,6 @@ print(metObjectsVanGoghExport)
 
 vanGoghListExportFilePath = os.path.join(dir,'assets','metObjectsVanGogh.json')
 metObjectsVanGoghExport.to_json(vanGoghListExportFilePath)
-
-
-# ~~ --- 535.2492849826813 seconds --- ~~
 
 
 # provenanceList1FilePath = os.path.join(dir,'assets','metObjectsProvenance1.json')
@@ -117,12 +117,13 @@ metObjectsVanGoghExport.to_json(vanGoghListExportFilePath)
 # provenanceList.to_json(provenanceListExportFilePath)
 '''
 
-# metObjectsVanGoghExportedJSON = os.path.join(dir,'assets','metObjectsVanGogh.json')
-# metObjectsVanGoghExported = pd.read_json(metObjectsVanGoghExportedJSON)
-# metObjectsVanGoghExported = metObjectsVanGoghExported[['object_number','provenance','exhibitionHistory','image_url','image']]
-# metObjectsVanGoghExported = pd.merge(metObjectsVanGoghExported,metObjectsVanGoghYears,how='left',left_on='object_number',right_on='Object ID')
-# metObjectsVanGoghExported = metObjectsVanGoghExported[['object_number','provenance','exhibitionHistory','image_url','image','Object Begin Date']]
-# metObjectsVanGoghExported.columns = ['object_number','provenance','exhibitionHistory','image_url','image','object_year']
+metObjectsVanGoghExportedJSON = os.path.join(dir,'assets','metObjectsVanGogh.json')
+metObjectsVanGoghExported = pd.read_json(metObjectsVanGoghExportedJSON)
+metObjectsVanGoghExported = metObjectsVanGoghExported[['object_number','provenance','exhibitionHistory','image_url','image','object_year']]
+metObjectsVanGoghExported = pd.merge(metObjectsVanGoghExported,metObjectsVanGoghTitles,how='left',left_on='object_number',right_on='Object ID')
+metObjectsVanGoghExported = metObjectsVanGoghExported[['object_number','provenance','exhibitionHistory','image_url','image','object_year','Title']]
+metObjectsVanGoghExported.columns = ['object_number','provenance','exhibitionHistory','image_url','image','object_year','title']
+# print(metObjectsVanGoghExported)
 #
-# vanGoghListExportFilePath = os.path.join(dir,'assets','metObjectsVanGogh.json')
-# metObjectsVanGoghExported.to_json(vanGoghListExportFilePath)
+vanGoghListExportFilePath = os.path.join(dir,'assets','metObjectsVanGogh.json')
+metObjectsVanGoghExported.to_json(vanGoghListExportFilePath)

@@ -511,7 +511,7 @@ for index in vanGoghProvenance.index.values:
 
                     changeFlag = 1
 
-                    dataType = 'provenance_to_exhibition'
+                    dataType = 'exhibition'
 
                     eventSpecificRows.append({
                         'line': {
@@ -544,7 +544,7 @@ for index in vanGoghProvenance.index.values:
 
                         changeFlag = 1
 
-                        dataType = 'exhibition_to_exhibition'
+                        dataType = 'exhibition'
 
                         eventSpecificRows.append({
                             'line': {
@@ -576,7 +576,7 @@ for index in vanGoghProvenance.index.values:
 
                     changeFlag = 1
 
-                    dataType = 'provenance_to_exhibition'
+                    dataType = 'exhibition'
 
                     eventSpecificRows.append({
                         'line': {
@@ -679,7 +679,7 @@ for index in vanGoghProvenance.index.values:
 
                     changeFlag = 1
 
-                    dataType = 'provenance_to_exhibition'
+                    dataType = 'exhibition'
 
                     eventSpecificRows.append({
                         'line': {
@@ -713,7 +713,7 @@ for index in vanGoghProvenance.index.values:
 
                         changeFlag = 1
 
-                        dataType = 'exhibition_to_exhibition'
+                        dataType = 'exhibition'
 
                         eventSpecificRows.append({
                             'line': {
@@ -747,7 +747,7 @@ for index in vanGoghProvenance.index.values:
 
                     changeFlag = 1
 
-                    dataType = 'provenance_to_exhibition'
+                    dataType = 'provenance'
 
                     eventSpecificRows.append({
                         'line': {

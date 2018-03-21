@@ -1,5 +1,5 @@
 * {
-  font-family: "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  /* font-family: "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; */
   margin:0;
   /* font-weight: 300; */
 }
@@ -9,22 +9,19 @@ html, body {
 }
 
 .images, .intro {
+  font-family: 'Questrial', sans-serif;
   background-color: RGB(250,250,250);
-}
-
-.intro {
-  /* padding: 10%; */
 }
 
 .intro h1, h2 {
   text-align: center;
-  font-weight: 100;
+  /* font-weight: 100; */
 }
 
 .intro h1 {
   color: RGB(250,250,250);
   /* font-style: italic; */
-  font-size: 900%;
+  font-size: 700%;
   background-color: RGB(178,178,178);
   padding: 30px;
   margin-top: 50px;
@@ -33,38 +30,63 @@ html, body {
 }
 
 .intro h2 {
-  /* color: RGB(250,250,250); */
+  color: RGB(150,150,150);
   font-style: italic;
-  font-size: 300%;
-  padding-top: 5%;
-  padding-left: 10%;
-  padding-right: 10%;
+  font-size: 225%;
+  padding-top: 2%;
+  padding-left: 16%;
+  padding-right: 16%;
 }
 
 .intro p {
-  padding-top: 5%;
+  margin-top: 2%;
+  padding-top: 3%;
+  padding-bottom: 5%;
   padding-left: 25%;
   padding-right: 25%;
-  font-size: 90%;
-  line-height: 1.25em;
-  font-weight: 200;
-  font-family: 'Lora', serif;
+  font-size: 95%;
+  line-height: 1.5em;
+  font-family: 'Lato', serif;
 }
 
 #italic-p {
-  font-family: 'Lora', serif;
+  font-family: 'Lato', serif;
   font-style: italic;
 }
 
 .images {
+  background-color: RGB(245,245,245);
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  padding: 10%;
   align-items: center;
   justify-content: center;
+  padding-top:5%;
   padding-bottom: 20%;
-  /* background-color: #FFF; */
+  padding-left: 5%;
+  padding-right: 5%;
+  font-size: 200%;
+}
+
+.start-stop-div {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.start-stop-text {
+  position: absolute;
+  background-color: #FFF;
+  color: #696969;
+  font-size: 75%;
+  font-style: italic;
+  font-variant: small-caps;
+  bottom: 10%;
+  width: 100%;
+  padding: 0;
+  text-align: center;
+  opacity: 0;
 }
 
 .start-stop {
@@ -73,14 +95,20 @@ html, body {
   /* margin-right: 5px; */
 }
 
-.start-stop:hover {
-  opacity: 0.8;
-  /* width: 50%;
-  height: 50%; */
+.start-stop-div:hover img {
+  opacity: 0.75;
+  cursor: pointer;
+}
+
+.start-stop-div:hover p {
+  /* font-family: 'Lato', serif; */
+  opacity: 0.75;
+  cursor: pointer;
 }
 
 #map-and-text {
   position: relative;
+  font-family: "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
 #map-and-text .flex-div {
@@ -89,13 +117,7 @@ html, body {
   left: 0%;
   width: 25%;
   padding: 1%;
-  /* padding-top: 1%;
-  padding-left: 1%;
-  padding-right: 1%;
-  padding-bottom: 1%; */
   color: #696969;
-  /* background-color: #000; */
-  /* opacity: 0.5; */
 }
 
 #map-and-text .flex-div h1 {
@@ -119,19 +141,95 @@ html, body {
   z-index: -1;
 }
 
-#map-svg {
-  background-color: #000;
-  opacity: 0.5;
+#painting-title-and-year {
+  /* background-color: #696969;
+  opacity: 0.8; */
+  opacity: 0;
   position: absolute;
-  bottom: 0%;
+  top:2%;
+  width: 98%;
+  text-align: right;
+  font-family: 'Questrial', sans-serif;
+  font-size: 120%;
+  font-variant: small-caps;
+  /* font-weight: bolder; */
+}
+
+#painting-van-gogh {
+  text-align: right;
+}
+
+#map-svg {
+  background-color: #696969;
+  opacity: 0.8;
+  position: absolute;
+  bottom: 3%;
   width: 100%;
-  height: 15%;
+  height: 16%;
 }
 
 #map-svg svg {
   width: 100%;
   height: 100%;
 }
+
+#map-svg-legend {
+  position: absolute;
+  bottom: 0%;
+  height: 3%;
+  width: 100%;
+  background-color: #696969;
+  opacity: 0.8;
+}
+
+#map-svg-legend svg {
+  width: 100%;
+  height: 100%;
+}
+
+#replay-button {
+  position:absolute;
+  bottom:15%;
+  height: 5%;
+  width: 10%;
+}
+
+#full-path-button {
+  position:absolute;
+  bottom:19%;
+  right: 0%;
+  height: 5%;
+  width: 10%;
+  background-color: #696969;
+  opacity: 0;
+}
+
+#full-path-button button {
+  width: 100%;
+  height: 100%;
+  font-size: 110%;
+  background-color: #848484;
+  color: #fff;
+  font-variant: small-caps;
+  /* opacity:0.5; */
+  border: none;
+}
+
+#full-path-button button:hover {
+  background-color: #fff;
+  color: #848484;
+  cursor: pointer;
+}
+
+/* #replay-button button {
+  width: 100%;
+  height: 100%;
+  font-size: 110%;
+  background-color: #696969;
+  color: #fff;
+  opacity:0.5;
+  border: none;
+} */
 
 .container {
   display: flex;
@@ -146,4 +244,16 @@ html, body {
 
 .timeline-circle svg:hover {
   color: #ff0000;
+}
+
+#hover-expl {
+  position: absolute;
+  bottom: 19%;
+  left: 1%;
+  font-size: 150%;
+  font-weight:200;
+  font-variant: small-caps;
+  color: #848484;
+  font-style: italic;
+  opacity:0;
 }

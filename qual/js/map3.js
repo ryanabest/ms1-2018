@@ -6,7 +6,7 @@ let panZoomLevel = 5;
 let timelineWidth = 88;
 
 
-mapboxgl.accessToken = 'pk.eyJ1IjoicnlhbmFiZXN0IiwiYSI6ImNqOTdzdWRpcjBhNnMzMmxzcHMyemxkMm0ifQ.ot3NoRC2w8zCbVOCkv2e_w';
+// mapboxgl.accessToken = 'pk.eyJ1IjoicnlhbmFiZXN0IiwiYSI6ImNqOTdzdWRpcjBhNnMzMmxzcHMyemxkMm0ifQ.ot3NoRC2w8zCbVOCkv2e_w';
 // let map = L.map('map',{zoomControl:false,attributionControl:false}).fitBounds(L.latLngBounds(L.latLng(69,150),L.latLng(-9,-131)));
 let map = L.map('map',{
                        zoomControl:false
@@ -15,7 +15,10 @@ let map = L.map('map',{
                       ,zoomSnap:0
                     }).setView([0,0],3); // Load the whole map first
 L.tileLayer(
-      'https://api.mapbox.com/styles/v1/ryanabest/cjeans7r303w02ro297dbye1j/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoicnlhbmFiZXN0IiwiYSI6ImNqOTdzdWRpcjBhNnMzMmxzcHMyemxkMm0ifQ.ot3NoRC2w8zCbVOCkv2e_w', {
+      // 'https://api.mapbox.com/styles/v1/ryanabest/cjeans7r303w02ro297dbye1j/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoicnlhbmFiZXN0IiwiYSI6ImNqOTdzdWRpcjBhNnMzMmxzcHMyemxkMm0ifQ.ot3NoRC2w8zCbVOCkv2e_w', {
+      'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png', {
+    	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+    	subdomains: 'abcd',
       attribution: '© <a href="https://www.mapbox.com/map-feedback/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 let svgLayer;
@@ -23,12 +26,18 @@ let svgLayer;
 
 
  $(window).on("load", function() {
-   $('.start-stop').click(function() {
+   $('.start-stop-div').click(function() {
      $('.container').empty()
      $('html,body').animate({
        scrollTop: $('#map').offset().top
      },1000);
-     let painting = event.target.id;
+     // console.log(event.target.id.replace("-text",""));
+     let painting = event.target.id.split("-")[0];
+     let paintingTitleID = event.target.id + '-text'
+     console.log(paintingTitleID);
+     document.getElementById('painting-title').innerHTML = document.getElementById(paintingTitleID).innerHTML.split('(')[0]
+     // console.log(paintingTitleID);
+     // console.log($('.start-stop-div').text());
      drawPath(painting);
    });
  });
@@ -37,9 +46,7 @@ function drawPath(painting) {
   if (typeof svgLayer != 'undefined') {
     svgLayer.remove();
   }; //remove svg layer if it already exists, allowing for replays
-  // map.doubleClickZoom.disable();
-  // map.scrollWheelZoom.disable();
-  // map.dragging.disable();
+
   svgLayer = L.svg();
   svgLayer.addTo(map);
 
@@ -67,6 +74,16 @@ function drawPath(painting) {
     vibrantColor = Vibrant.from(img).getPalette(function(err, palette) {
       let vibrantColor = "rgb("+Math.floor(palette['Vibrant']['r'])+","+Math.floor(palette['Vibrant']['g'])+","+Math.floor(palette['Vibrant']['b'])+")";
       let mutedColor = "rgb("+Math.floor(palette['DarkMuted']['r'])+","+Math.floor(palette['DarkMuted']['g'])+","+Math.floor(palette['DarkMuted']['b'])+")";
+
+      // set HTML elements based on vibrant color //
+      $('#painting-title-and-year').css("opacity",1);
+      $('#painting-title').css("color",mutedColor);
+      $('#painting-van-gogh').css("color",mutedColor);
+      // d3.selectAll('.provenance-legend').attr("fill",'#D0B88A');
+
+      // let darkVibrantColor = "rgb("+Math.floor(palette['DarkVibrant']['r'])+","+Math.floor(palette['DarkVibrant']['g'])+","+Math.floor(palette['DarkVibrant']['b'])+")";
+      // let lightVibrantColor = "rgb("+Math.floor(palette['LightVibrant']['r'])+","+Math.floor(palette['LightVibrant']['g'])+","+Math.floor(palette['LightVibrant']['b'])+")";
+      // let lightMutedColor = "rgb("+Math.floor(palette['LightMuted']['r'])+","+Math.floor(palette['LightMuted']['g'])+","+Math.floor(palette['LightMuted']['b'])+")";
       let pattern = defs.append("svg:pattern")
                         .attr("id","circleThumb")
                         .attr("x","0")
@@ -98,7 +115,10 @@ function drawPath(painting) {
           ,d.cities = d.line.cities
           ,d.owner = d.line.owner
           ,d.changeFlag = d.line.changeFlag[0]
+          ,d.dataType = d.line.dataType
         })
+
+
 
 
 
@@ -119,6 +139,7 @@ function drawPath(painting) {
               ,"city": provenance.objects[a].cities[b]
               ,"owner": provenance.objects[a].owner[b]
               ,"legs": provenance.objects[a].latLng[b].length
+              ,"dataType": provenance.objects[a].dataType
             }
             data.push(dataPoint)
           }
@@ -157,8 +178,8 @@ function drawPath(painting) {
                           .attr("x",0)
                           .attr("y",0)
                           .attr("fill",mutedColor)
-                          .attr("font-size","30")
-                          .attr("font-family","Georgia")
+                          .attr("font-size","25")
+                          .attr("font-family","HelveticaNeue")
                           .attr("style","font-weight: 600;")
                           .attr("text-anchor","middle")
                           .attr("opacity","0")
@@ -170,7 +191,7 @@ function drawPath(painting) {
                           .attr("y",0)
                           .attr("fill",mutedColor)
                           .attr("font-size","18")
-                          .attr("font-family","Georgia")
+                          .attr("font-family","Helvetica")
                           .attr("style","font-weight: 200; font-style: italic;")
                           .attr("text-anchor","middle")
                           .attr("opacity","0")
@@ -185,19 +206,16 @@ function drawPath(painting) {
         reset();
 
         setTimeout(function() {
-          map.setView(markerLatLng,panZoomLevel);
-          map.panTo(markerLatLng);
-          iterate(painting);
-          // drawAllPaths();
           d3.select("#marker").attr("opacity","1");
           drawTimeline();
 
-          // setTimeout(function() {
-          //   // let adPath = d3.select("path22")
-          //   drawOne(22,'');
-          // },2000)
+          // To start with animation:
+          iterate(painting);
+
 
           function iterate(painting) {
+            map.setView(markerLatLng,panZoomLevel);
+            map.panTo(markerLatLng);
             let delayTimes = []
             let adDelay = 0;
             for (let ad=0;ad<allData.length;ad++) {
@@ -241,7 +259,7 @@ function drawPath(painting) {
                 }
               }
               let finalBounds = new L.LatLngBounds(mmLatLngList);
-              map.fitBounds(finalBounds,{maxZoom:8,padding:[250,250]});
+              map.fitBounds(finalBounds,{maxZoom:8,padding:[300,300]});
 
               let timelineSVG = d3.select("#timeline-svg")
               let totalYearDiff = maxYear - minYear;
@@ -273,15 +291,23 @@ function drawPath(painting) {
                            let divData = d3.select(this).datum();
                            let thisPath = parseInt(d3.select(this).attr('id').split("-").slice(-1)[0]);
                            d3.select(this).attr("r",10)
-                                          .attr("fill","red")
+                                          // .attr("fill","red")
                            // $('#map-and-text').append(divData)
+                           $('#full-path-button').css("opacity",0.8);
                            drawOneHover(thisPath,divData);
                          })
                          .on("mouseout",function(d) {
                            d3.select(this).attr("r","0.5%")
-                                          .attr("fill","white")
+                                          // .attr("fill","white")
                            // drawAllPaths();
                          })
+
+            // Enable click to See Full Path button
+            $('#full-path-button').click(function(){
+              drawAllPaths();
+              $('#full-path-button').css("opacity",0);
+            })
+            $('#hover-expl').css("opacity",1);
             },totalDelay)
           }
 
@@ -296,7 +322,7 @@ function drawPath(painting) {
               let currentYearDiff = maxYear - currentYear;
               let totalYearDiff = maxYear - minYear;
               let yearChangePercent = ((((totalYearDiff-currentYearDiff)/totalYearDiff)*timelineWidth)+6)+'%';
-              let yearChangeTextPercent = ((((totalYearDiff-currentYearDiff)/totalYearDiff)*timelineWidth)+6.5)+'%';
+              let yearChangeTextPercent = ((((totalYearDiff-currentYearDiff)/totalYearDiff)*timelineWidth)+6.1)+'%';
               if (currentYear%10 === 0) {
                 d3.select('#timeline-svg').append("text")
                                           .attr("class","timeline-legend")
@@ -328,7 +354,7 @@ function drawPath(painting) {
             if (i === thisPath) {
               let drawOneLatLngList = provenance.objects[i].latLng
               let drawOneBounds = new L.LatLngBounds(drawOneLatLngList);
-              map.fitBounds(drawOneBounds,{maxZoom:8,padding:[250,250]});
+              map.fitBounds(drawOneBounds,{maxZoom:8,padding:[300,300]});
 
               map.on("zoomend",function(d) {
                 // d3.selectAll('#marker').attr("style","opacity:1");
@@ -416,7 +442,7 @@ function drawPath(painting) {
               let markerPoint = map.latLngToLayerPoint(L.latLng(markerLatLng));
               d3.select("#marker")
                 .attr("transform","translate(" + markerPoint.x + "," + markerPoint.y + ")") //move marker
-              // map.fitBounds(drawOneBounds,{maxZoom:8,padding:[250,250]});
+              // map.fitBounds(drawOneBounds,{maxZoom:8,padding:[300,300]});
 
               map.on("zoomend",function(d) {
                 // d3.selectAll('#marker').attr("style","opacity:1");
@@ -446,7 +472,6 @@ function drawPath(painting) {
                                               .duration(pace)
                                               .text(currentYear)
                                               .attr("x",yearChangeTextPercent)
-
 
                 path.transition()
                     .delay(delay)
@@ -501,18 +526,25 @@ function drawPath(painting) {
                       }
                       let timelineR = 0.5
                       let timelineD = timelineR * 2
+                      let circleFill = ''
+                      if (provenance.objects[i].dataType === 'exhibition') {
+                        circleFill = 'white'
+                      } else if (provenance.objects[i].dataType === 'provenance') {
+                        circleFill = '#D0B88A'
+                      }
                       timelineSVG.append("circle")
                                  .attr("cx",yearChangePercent)
-                                 .attr("cy",String(75-(6*yOffset))+'%') // 75 is the % of the axis, and the 6 is just a number that makes this work on my laptop
+                                 .attr("cy",String(75-(7*yOffset))+'%') // 75 is the % of the axis, and the 6 is just a number that makes this work on my laptop
                                  .attr("r",String(timelineR)+'%')
                                  // .attr("r",'5')
-                                 .attr("fill","white")
+                                 .attr("fill",circleFill)
                                  .attr("id","circle-"+currentYear+'-'+i)
                                  .attr("class","timeline-circle")
                                  .datum(divText)
-                                 .on("click",function(){
-                                   drawAllPaths();
-                                 })
+                                 // .on("click",function(){
+                                 //   drawAllPaths();
+                                 // })
+
                     })
 
                     function tweenDash(d) {
@@ -555,7 +587,7 @@ function drawPath(painting) {
           }
         }
         let drawAllBounds = new L.LatLngBounds(drawAllLatLngList);
-        map.flyToBounds(drawAllBounds,{maxZoom:8,padding:[250,250]});
+        map.flyToBounds(drawAllBounds,{maxZoom:8,padding:[300,300]});
 
 
         for (let i=0;i<allData.length;i++) {
