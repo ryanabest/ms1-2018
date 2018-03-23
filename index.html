@@ -2,22 +2,70 @@
 <html>
 <head>
   <title>ms1-2018</title>
-  <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lato|Lora" rel="stylesheet">
   <style>
+
   * {
-    font-family: 'Nunito', sans-serif;
+    font-family: 'Lora', sans-serif;
   }
 
-  h1 {
-    font-size: 300%;
+  #intro h1 {
+    font-size: 130%;
     text-align: center;
-    color: #545454;
+    border-bottom: 1px solid black;
+  }
+
+  a {
+    color: #696969;
+  }
+
+  a:hover {
+    color: #EC0031
   }
 
   .container {
     display: flex;
-    flex-wrap: wrap;
+    /* flex-direction: column; */
+    /* flex-wrap: wrap; */
     justify-content: space-between;
+    margin: 3%;
+  }
+
+  .left-column {
+    width: 35%;
+    /* align-items: left; */
+    text-align: right;
+    margin-right: 3%;
+  }
+
+  .right-column {
+    display:flex;
+    /* width: 100; */
+    overflow: hidden;
+    justify-content: center;
+    width: 65%;
+    align-items: center;
+  }
+
+  .right-column img {
+    /* margin: auto; */
+    max-width: 100;
+    transition: all 0.5s;
+  }
+
+  .left-column h2 {
+    font-size: 110%;
+  }
+
+  .left-column p {
+    font-size: 90%;
+  }
+
+  img:hover {
+    -moz-transform: scale(1.5);
+    -webkit-transform: scale(1.5);
+    transform: scale(1.5);
+    /* opacity: 0.8; */
   }
 
   .flex-link {
@@ -34,12 +82,47 @@
   </style>
 </head>
 <body>
-  <h1>ms1-2018</h1>
-  <div class = "container">
-    <a class = "flex-link" href = 'https://slides.com/ryanbest/moma/fullscreen'>MoMA</a><br><br>
-    <a class = "flex-link" href = 'quant/index.html'>quant</a><br><br>
-    <a class = "flex-link" href = 'https://docs.google.com/presentation/d/1cn2p6GdWXHRbBvr5DLLawvWXKVtQDc6MiK6zOY--P-E/edit?usp=sharing'>tufte</a><br><br>
-    <a class = "flex-link" href = 'qual/index.html'>qual</a><br><br>
+  <div id='intro'>
+    <h1>ryan best - ms1</h1>
+  </div>
+  <div class = "container" id = "qual-div">
+    <div class = "left-column">
+      <h1>The Migration of Art</h1>
+      <h2>Where did the The Met's collection of Van Gogh paintings travel before arriving in the museum's galleries?</h2>
+      <p>
+        The Migration of Art focuses on understanding the paths that paintings travel through time and space. Where were they created, and how do these works change hands?
+        How often was this work sent on exhibitions, and where was it sent?
+        Studying these rich histories of movement helps us understand how the world has interacted with a piece of art and sheds light on the lifespan and cultural impact of each painting.
+      </p>
+      <p>
+        I hope to bring this history of movement to life for the Metropolitan Museum of Art's <a href ='https://www.metmuseum.org/art/object-package?pkgids=415'>collection</a> of Van Gogh paintings.
+        Through animated visualization, The Migration of Art walks through each leg of a specific painting's journey around the globe through either a change in ownership or an ehibition tour.
+        While we trace each movement, a timeline charting the type and overall frequency of movements develops underneath the animated map.
+        Once the animation finishes, we see the full migration path and can use the timeline to explore each specific leg of this journey to relive the painting's history of movement piece by piece at our own pace.
+    </p>
+      <a href = 'https://ryanabest.github.io/ms1-2018/qual/index.html'>See the visualization</a>
+    </div>
+    <div class = "right-column">
+      <a href='https://ryanabest.github.io/ms1-2018/qual/index.html'><img src='assets/Qual.png' width=1000vw/></a>
+    </div>
+  </div>
+  <div class = "container" id = "quant-div">
+    <div class = "left-column">
+      <h1>Examining a History of Collecting at The Met</h1>
+      <h2>How has the composition of The Metropolitan Museum of Art's collection changed over the museum's illustrious history?</h2>
+      <p>
+        A museum's collection practices reflects its representation of history and its impact on global culture.
+        In this project, I explore the history and evolution of collection practices at the Metropolitan Museum of Art has by charting the cumulative objects collected by The Met since the museum's inception in 1871.
+      </p>
+      <p>
+        This project allows us to watch the composition of the Met's collection change along a timeline of the museum's history, comparing the number of objects collected by the country of cultural significance attributed to each piece.
+        We can also then explore nuances within this timeline, viewing the classification breakdown of country-specific collections to understand the type of objects The Met has collected from different cultures, empires, and eras.
+      </p>
+      <a href = 'https://ryanabest.github.io/ms1-2018/quant/index.html'>See the visualization</a>
+    </div>
+    <div class = "right-column">
+      <a href='https://ryanabest.github.io/ms1-2018/quant/index.html'><img src='assets/Quant.png' width=1000vw/></a>
+    </div>
   </div>
 </body>
 </html>
