@@ -1,4 +1,5 @@
 let pace = 400;
+// let pace = 50;
 // let filePath = '../assets/' // Local Testing
 let filePath = '/ms1-2018/qual/assets/' // GitHub Pages
 
@@ -76,6 +77,7 @@ function drawPath(painting) {
       let mutedColor = "rgb("+Math.floor(palette['DarkMuted']['r'])+","+Math.floor(palette['DarkMuted']['g'])+","+Math.floor(palette['DarkMuted']['b'])+")";
 
       // set HTML elements based on vibrant color //
+      $('#hover-expl').css("opacity",0);
       $('#painting-title-and-year').css("opacity",1);
       $('#painting-title').css("color",mutedColor);
       $('#painting-van-gogh').css("color",mutedColor);
@@ -191,7 +193,7 @@ function drawPath(painting) {
                           .attr("y",0)
                           .attr("fill",mutedColor)
                           .attr("font-size","18")
-                          .attr("font-family","Helvetica")
+                          .attr("font-family","HelveticaNeue")
                           .attr("style","font-weight: 200; font-style: italic;")
                           .attr("text-anchor","middle")
                           .attr("opacity","0")
@@ -327,7 +329,7 @@ function drawPath(painting) {
                 d3.select('#timeline-svg').append("text")
                                           .attr("class","timeline-legend")
                                           .attr("x",yearChangeTextPercent)
-                                          .attr("y","90%")
+                                          .attr("y","95%")
                                           .attr("fill","#FFF")
                                           .attr("font-size","15")
                                           .attr("font-family","HelveticaNeue-Light")
@@ -337,9 +339,9 @@ function drawPath(painting) {
                 d3.select('#timeline-svg').append("line")
                                           .attr("class","timeline-legend")
                                           .attr("x1",yearChangePercent)
-                                          .attr("y1","75%")
+                                          .attr("y1","80%")
                                           .attr("x2",yearChangePercent)
-                                          .attr("y2","90%")
+                                          .attr("y2","95%")
                                           .attr("style","stroke:#FFF ; stroke-width:0.5 ; stroke-dasharray:1")
               };
             }
@@ -527,17 +529,22 @@ function drawPath(painting) {
                       let timelineR = 0.5
                       let timelineD = timelineR * 2
                       let circleFill = ''
+                      let circleStroke = ''
                       if (provenance.objects[i].dataType === 'exhibition') {
-                        circleFill = 'white'
+                        circleFill = 'RGB(50,50,50)'
+                        circleStroke = 'white'
                       } else if (provenance.objects[i].dataType === 'provenance') {
-                        circleFill = '#D0B88A'
+                        circleFill = 'white'
+                        circleStroke = 'RGB(50,50,50)'
                       }
                       timelineSVG.append("circle")
                                  .attr("cx",yearChangePercent)
-                                 .attr("cy",String(75-(7*yOffset))+'%') // 75 is the % of the axis, and the 6 is just a number that makes this work on my laptop
+                                 .attr("cy",String(80-(8*yOffset))+'%') // 75 is the % of the axis, and the 6 is just a number that makes this work on my laptop
                                  .attr("r",String(timelineR)+'%')
                                  // .attr("r",'5')
                                  .attr("fill",circleFill)
+                                 .attr("stroke",circleStroke)
+                                 .attr("stroke-weight",0.5)
                                  .attr("id","circle-"+currentYear+'-'+i)
                                  .attr("class","timeline-circle")
                                  .datum(divText)

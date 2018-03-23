@@ -3,7 +3,7 @@
 <head>
   <link href='css/index.css' rel='stylesheet' />
 
-  <link href="https://fonts.googleapis.com/css?family=Lato|Questrial" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lato|Questrial|Lora" rel="stylesheet">
 
   <!-- Mapbox -->
   <script src='https://api.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js'></script>
@@ -25,14 +25,6 @@
 
   <!-- Vibrant JS -->
   <script src='libraries/vibrant.min.js'></script>
-
-  <!-- <script>
-  // $.getJSON('assets/artistImages.json', function(json) {
-  //   console.log(json);
-  // });
-  let artistImages = JSON.parse('[{"artist":"Cezanne","image":"DT1943.jpg"},{"artist":"Picasso","image":"DP220041.jpg"}]');
-  </script> -->
-
 </head>
 
 <body>
@@ -63,8 +55,8 @@
        xmlns="http://www.w3.org/2000/svg"
        version="1.1"
        id="timeline-svg">
-        <line id = "timeline-line" x1="6%" y1="75%" x2="94%" y2="75%" style="stroke:#FFF ; stroke-width:3"/>
-        <line id = "currentYear-line" x1="6%" y1="20%" x2="6%" y2="75%" style="stroke:#FFF ; stroke-width:2 ; stroke-dasharray:5; opacity:1"/>
+        <line id = "timeline-line" x1="6%" y1="80%" x2="94%" y2="80%" style="stroke:#FFF ; stroke-width:3"/>
+        <line id = "currentYear-line" x1="6%" y1="15%" x2="6%" y2="80%" style="stroke:#FFF ; stroke-width:2 ; stroke-dasharray:5; opacity:1"/>
         <text id = "currentYear-text" text-anchor = "start" x="6.5%" y="25%" fill="#FFF" font-size="32" font-family="HelveticaNeue-Light" style="font-style: italic; font-weight: 100;"></text>
       </svg>
     </div>
@@ -75,11 +67,11 @@
        id="timeline-svg-legend">
        <text class='legend-title' id='legend-title' text-anchor="start" alignment-baseline="middle" x="6%" y="50%" fill="white" font-size="18" font-family="HelveticaNeue-Light" style="font-style: italic; font-weight: 100;">Legend:</text>
        <!-- Provenance Circle -->
-       <circle class='provenance-legend' id='provenance-legend-circle' cx="15%" cy="50%" r="0.4%" fill="#D0B88A"/>
-       <text class='provenance-legend' id='provenance-legend-text' text-anchor="start" alignment-baseline="middle" x="16%" y="50%" fill="#D0B88A" font-size="16" font-family="HelveticaNeue-Light" style="font-style: italic; font-weight: 100;">ownership change</text>
+       <circle class='provenance-legend' id='provenance-legend-circle' cx="15%" cy="50%" r="0.4%" fill="white" stroke="RGB(50,50,50)" />
+       <text class='provenance-legend' id='provenance-legend-text' text-anchor="start" alignment-baseline="middle" x="16%" y="50%" fill="white" font-size="16" font-family="HelveticaNeue-Light" style="font-style: italic; font-weight: 100;">ownership change</text>
        <!-- Exhibition Circle -->
-       <circle class='exhibition-legend' id='exhibition-legend-circle' cx="30%" cy="50%" r="0.4%" fill="white"/>
-       <text class='exhibition-legend' id='provenance-legend-text' text-anchor="start" alignment-baseline="middle" x="31%" y="50%" fill="white" font-size="16" font-family="HelveticaNeue-Light" style="font-style: italic; font-weight: 100;">painting went on exhibition</text>
+       <circle class='exhibition-legend' id='exhibition-legend-circle' cx="30%" cy="50%" r="0.4%" fill="RGB(50,50,50)" stroke="white"/>
+       <text class='exhibition-legend' id='provenance-legend-text' text-anchor="start" alignment-baseline="middle" x="31%" y="50%" fill="white" font-size="16" font-family="HelveticaNeue-Light" style="font-style: italic; font-weight: 100;">went on exhibition</text>
       </svg>
     </div>
     <!-- <div id = 'replay-button'>

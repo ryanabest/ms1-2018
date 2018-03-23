@@ -108,7 +108,13 @@ html, body {
 
 #map-and-text {
   position: relative;
-  font-family: "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-family: 'Questrial';
+}
+
+
+.flex-div {
+  width: 20%;
+  opacity:0;
 }
 
 #map-and-text .flex-div {
@@ -199,7 +205,7 @@ html, body {
   bottom:19%;
   right: 0%;
   height: 5%;
-  width: 10%;
+  width: 15%;
   background-color: #696969;
   opacity: 0;
 }
@@ -236,10 +242,6 @@ html, body {
   flex-direction: row;
   flex-wrap: wrap;
   position: relative;
-}
-
-.flex-div {
-  width: 20%;
 }
 
 .timeline-circle svg:hover {
