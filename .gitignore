@@ -1,0 +1,13 @@
+# ignore zip'd up project
+RyanBest_ms1-2018_Qual.zip
+
+# large assets files
+assets/MMAImageURLS.csv
+assets/MetObjects.csv
+assets/metObjects5000.csv
+
+# node modules and config files
+quant/node_modules/*
+qual/node_modules/*
+quant/package-lock.json
+.DS_Store
