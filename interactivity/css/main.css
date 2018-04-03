@@ -1,0 +1,25 @@
+#distSmallMults {
+  width: 71.43%;
+  padding-left: 14.29%;
+  padding-right: 14.29%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.smallmult-line {
+  fill:none;
+  stroke:#000;
+  stroke-width:2;
+  /* stroke-linejoin: round; */
+}
+
+.marey-line {
+  stroke: rgba(100,100,100,0.5);
+  fill:none;
+  stroke-width:4;
+}
+
+.marey-axis {
+  stroke: rgba(200,200,200,0.25);
+}
