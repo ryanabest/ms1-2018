@@ -1,5 +1,9 @@
 // source: https://www.geodatasource.com/developers/javascript
 // calculates distance between two points as the crow flies
+
+// let filePath = '../assets/' // Local Testing
+let filePath = '/ms1-2018/qual/assets/' // GitHub Pages
+
 function distance(lat1, lon1, lat2, lon2, unit) {
 	let radlat1 = Math.PI * lat1/180
 	let radlat2 = Math.PI * lat2/180
@@ -15,11 +19,11 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 }
 
 
-let objects = d3.json("assets/metObjectsVanGogh.json").then(function(objects) {
+let objects = d3.json(filePath + "metObjectsVanGogh.json").then(function(objects) {
   let files = [];
   let promises = [];
   for (let o=0;o<Object.keys(objects.image).length;o++) {
-    let JSONPath = "assets/jsonLine2" + objects.image[o].split(".")[0] + ".json";
+    let JSONPath = filePath + "jsonLine2" + objects.image[o].split(".")[0] + ".json";
     files.push(JSONPath);
   }
 

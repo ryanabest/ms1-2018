@@ -1,11 +1,13 @@
 // SHOULD I FLIP AXIS SO YEARS GO TOP TO BOTTOM AND CITIES LEFT TO RIGHT, TO REPLICATE EAST TO WEST??
+// let filePath = '../assets/' // Local Testing
+// let filePath = '/ms1-2018/qual/assets/' // GitHub Pages
 
 function mareyDistance(lat1,lon1,lat2,lon2) {
   // return(distance(lat1,lon1,lat2,lon2));
   return(Math.abs(lon1-lon2));
 }
 
-let data = d3.json("assets/locationsGeo.json").then(
+let data = d3.json(filePath + "locationsGeo.json").then(
   function(data) {
     let firstCoords = data.coordinates[0];
     let locations = [];
@@ -24,11 +26,11 @@ let data = d3.json("assets/locationsGeo.json").then(
     let margin = {top: height*0.1, right: width*0.1, bottom: height*0.1, left: width*0.1};
 
 
-    let objects = d3.json("assets/metObjectsVanGogh.json").then(function(objects) {
+    let objects = d3.json(filePath + "metObjectsVanGogh.json").then(function(objects) {
       let files = [];
       let promises = [];
       for (let o=0;o<Object.keys(objects.image).length;o++) {
-        let JSONPath = "assets/jsonLine2" + objects.image[o].split(".")[0] + ".json";
+        let JSONPath = filePath + "jsonLine2" + objects.image[o].split(".")[0] + ".json";
         files.push(JSONPath);
       }
 
