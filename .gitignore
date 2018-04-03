@@ -9,5 +9,7 @@ assets/metObjects5000.csv
 # node modules and config files
 quant/node_modules/*
 qual/node_modules/*
+interactivity/node_modules/*
+interactivity/npm-debug.log
 quant/package-lock.json
 .DS_Store
