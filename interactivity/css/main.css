@@ -15,11 +15,12 @@
 }
 
 .marey-line {
-  stroke: rgba(100,100,100,0.5);
+  stroke: rgb(150,150,150);
   fill:none;
   stroke-width:4;
 }
 
 .marey-axis {
   stroke: rgba(200,200,200,0.25);
+  stroke-width: 0.5;
 }

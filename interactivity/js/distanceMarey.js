@@ -1,6 +1,6 @@
 // SHOULD I FLIP AXIS SO YEARS GO TOP TO BOTTOM AND CITIES LEFT TO RIGHT, TO REPLICATE EAST TO WEST??
 // let filePath = '../assets/' // Local Testing
-// let filePath = '/ms1-2018/qual/assets/' // GitHub Pages
+// let filePath = '/ms1-2018/interactivity/assets/' // GitHub Pages
 
 function mareyDistance(lat1,lon1,lat2,lon2) {
   // return(distance(lat1,lon1,lat2,lon2));
@@ -79,14 +79,14 @@ let data = d3.json(filePath + "locationsGeo.json").then(
                        .attr("id", gd.objectNumber + "_marey")
 
           // draw line for each city
-          // locations.forEach(function(d) {
-          //   svg.append("line")
-          //      .attr("y1",y(d.distance))
-          //      .attr("x1",margin.left)
-          //      .attr("y2",y(d.distance))
-          //      .attr("x2",width-margin.right)
-          //      .attr("class","marey-axis")
-          // })
+          locations.forEach(function(d) {
+            svg.append("line")
+               .attr("y1",y(d.distance))
+               .attr("x1",margin.left)
+               .attr("y2",y(d.distance))
+               .attr("x2",width-margin.right)
+               .attr("class","marey-axis")
+          })
 
           let firstYear = gd.objects[0].line.year;
           let firstCoordinates = gd.objects[0].line.coordinates[0];
