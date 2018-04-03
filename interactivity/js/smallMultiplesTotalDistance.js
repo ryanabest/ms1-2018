@@ -2,7 +2,7 @@
 // calculates distance between two points as the crow flies
 
 // let filePath = '../assets/' // Local Testing
-let filePath = '/ms1-2018/qual/assets/' // GitHub Pages
+let filePath = '/ms1-2018/interactivity/assets/' // GitHub Pages
 
 function distance(lat1, lon1, lat2, lon2, unit) {
 	let radlat1 = Math.PI * lat1/180
