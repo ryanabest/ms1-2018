@@ -30,7 +30,6 @@ import json
 # def get_image(row):
 #     return row['image_url'].split('/')[-1]
 # vanGoghProvenance['image'] = vanGoghProvenance.apply(get_image, axis=1)
-
 # Save images into assets folder
 # for x in vanGoghProvenance.index.values:
 #     imageURL = vanGoghProvenance.iloc[x]['image_url']
@@ -38,7 +37,6 @@ import json
 #     imageFilePath = os.path.join(dir,'assets','images',image)
 #     # print(imageFilePath)
 #     req.urlretrieve(imageURL,imageFilePath)
-
 # Create thumbnails of these images one by one using Image Magick on terminal
 # http://www.imagemagick.org/Usage/thumbnails/#cut
 # convert -define jpeg:size=500x500 DT1567.jpg -thumbnail 500x500^ -gravity center -extent 500x500 ../thumbnails/DT1567.jpg
@@ -336,6 +334,7 @@ for index in vanGoghProvenance.index.values:
                 })
 
 exhibitionHistoryList = pd.DataFrame(exhibitionHistoryList)
+# print(exhibitionHistoryList.loc[(exhibitionHistoryList['object_number']==437980),:]);
 
 provenanceList = pd.DataFrame(provenanceList)
 provenanceList['year'] = provenanceList['year'].astype(int)
@@ -364,7 +363,7 @@ provenanceList.loc[provenanceList['location']=='Zurich','location'] = 'Zürich'
 
 
 ### Pull Lat Lng coordinates for all locations from Google Geocoding API once, which I will then join back into Prov and ExhibHistory data
-
+'''
 locationsList = list(provenanceList['location'].unique()) + list(exhibitionHistoryList['location'].unique())
 locationsList = list(set(locationsList))
 # print(locationsList)
@@ -372,481 +371,41 @@ locationsGeo = []
 for l in range(len(locationsList)):
     time.sleep(0.5) # Do two requests per second to avoid issues with Google API Usage Limits - https://developers.google.com/maps/documentation/geocoding/usage-limits
     print(locationsList[l])
-
-    city = ''
-    state = ''
-    sublocality = ''
-    country = ''
-
     # # seach google geocoding api to pull LatLng for that location
     coordinates = []
-    displayCoordinates = []
     googleAPIKey = '***REMOVED***'
     googleGeocodeBaseURL = 'https://maps.googleapis.com/maps/api/geocode/json?address='
-    exhibitionLocationURL = locationsList[l]
+    exhibitionLocationURL = locationsList[l].replace(' ','+')
     responseURL = googleGeocodeBaseURL+exhibitionLocationURL+'&key='+googleAPIKey
     response = requests.get(responseURL)
     resp_json_payload = response.json()
-    if (resp_json_payload['status'] != "ZERO_RESULTS"):
-        for l in range(len(resp_json_payload['results'][0]['address_components'])):
-            if 'locality' in resp_json_payload['results'][0]['address_components'][l]['types']:
-                city = resp_json_payload['results'][0]['address_components'][l]['long_name'].replace('Taitō','Tokyo')
-            elif 'administrative_area_level_1' in resp_json_payload['results'][0]['address_components'][l]['types']:
-                state = ', ' + resp_json_payload['results'][0]['address_components'][l]['short_name']
-            elif 'country' in resp_json_payload['results'][0]['address_components'][l]['types']:
-                country = resp_json_payload['results'][0]['address_components'][l]['long_name']
-            elif 'sublocality' in resp_json_payload['results'][0]['address_components'][l]['types']:
-                sublocality = resp_json_payload['results'][0]['address_components'][l]['long_name']
-
-        lat = resp_json_payload['results'][0]['geometry']['location']['lat']
-        lng = resp_json_payload['results'][0]['geometry']['location']['lng']
-        coordinates.append(lat)
-        coordinates.append(lng)
-
-    if city == '':
-        if sublocality == '':
-            displayLocation = country
-        else:
-            if country == 'United States':
-                displayLocation = sublocality+state
-            else:
-                displayLocation = sublocality
-    elif country == 'United States':
-        displayLocation = city+state
-    else:
-        displayLocation = city
-
-    print(displayLocation)
-
-    displayLocationURL = displayLocation + ', ' + country
-    displayLocationResponseURL = googleGeocodeBaseURL+displayLocationURL+'&key='+googleAPIKey
-    displayResponse = requests.get(displayLocationResponseURL)
-    display_resp_json_payload = displayResponse.json()
-    if (resp_json_payload['status'] != "ZERO_RESULTS"):
-        displayLat = display_resp_json_payload['results'][0]['geometry']['location']['lat']
-        displayLng = display_resp_json_payload['results'][0]['geometry']['location']['lng']
-        displayCoordinates.append(displayLat)
-        displayCoordinates.append(displayLng)
-
+    lat = resp_json_payload['results'][0]['geometry']['location']['lat']
+    lng = resp_json_payload['results'][0]['geometry']['location']['lng']
+    coordinates.append(lat)
+    coordinates.append(lng)
     print("--- %s seconds ---" % (time.time() - start_time))
     #
     # # add exhibition to exhibitionHistoryList
     #
     locationsGeo.append({
         'location': locationsList[l],
-        'coordinates': coordinates,
-        'displayLocation': displayLocation,
-        'country': country,
-        'displayCoordinates': displayCoordinates
+        'coordinates': coordinates
     })
-
 locationsGeoDF = pd.DataFrame(locationsGeo)
-locationsGeoJSON = os.path.join(dir,'locationsGeo.json')
+locationsGeoJSON = os.path.join(dir,'assets','locationsGeo.json')
 locationsGeoDF.to_json(locationsGeoJSON)
-
 '''
+
 ### Join pulled lat lng coordinates into Prov and ExhibHistory
 locationsGeoJSON = os.path.join(dir,'assets','locationsGeo.json')
 locationsGeo = pd.read_json(locationsGeoJSON)
 exhibitionHistoryList = pd.merge(exhibitionHistoryList,locationsGeo,on='location',how='left')
 provenanceList = pd.merge(provenanceList,locationsGeo,on='location',how='left')
-exhibitionHistoryList.columns = ['pid','owner','location','object_number','year','coordinates']
-provenanceList['data_type'] = 'provenance'
-exhibitionHistoryList['data_type'] = 'exhibition'
 
 currentYear = now.year
+minYear = min(vanGoghProvenance['object_year'])
 
-# print(provenanceList.columns.values)
-# print(exhibitionHistoryList.columns.values)
-# print(exhibitionHistoryList.head(15))
-
-provAndExhib = pd.concat([provenanceList,exhibitionHistoryList])
-provAndExhib = provAndExhib.sort_values(by=['object_number','year'],ascending=['True','True']).reset_index()
-provAndExhibShort = provAndExhib[['location','object_number']]
-provAndExhibShort = provAndExhibShort.drop_duplicates()
-print(provAndExhibShort['location'].value_counts())
-''''''
 for index in vanGoghProvenance.index.values:
-    eventSpecificRows = []
-    imageName = vanGoghProvenance['image'][index]
-    # print(imageName)
-    objectNumber = vanGoghProvenance['object_number'][index]
-    ownerList = provenanceList.loc[provenanceList['object_number']==objectNumber,'owner'].unique()
-    # if objectNumber == 436525:
-    for o in range(len(ownerList)):
-        owner = ownerList[o]
-        ownerRow = provenanceList.loc[(provenanceList['owner']==owner) & (provenanceList['object_number']==objectNumber),:]
-        ownerRowIndex = ownerRow.index.values[0]
-        if owner == ownerList[0]:
-            prevOwner = 'FIRST'
-        else:
-            prevOwner = ownerList[o-1]
-        if owner == ownerList[len(ownerList)-1]:
-            nextOwner = 'LAST'
-        else:
-            nextOwner = ownerList[o+1]
-
-        def addOwnerRows(objectNumber,owner,prevOwner,nextOwner):
-            ownerRow = provenanceList.loc[(provenanceList['owner']==owner) & (provenanceList['object_number']==objectNumber),:]
-            ownerRowIndex = ownerRow.index.values[0]
-
-            # prevOwnerRow = provenanceList.loc[(provenanceList['owner']==prevOwner) & (provenanceList['object_number']==objectNumber),:]
-            # prevOwnerRowIndex = prevOwnerRow.index.values[0]
-
-            # nextOwnerRow = provenanceList.loc[(provenanceList['owner']==nextOwner) & (provenanceList['object_number']==objectNumber),:]
-            # nextOwnerRowIndex = nextOwnerRow.index.values[0]
-
-            startYear = provenanceList['year'][ownerRowIndex]
-            if nextOwner == 'LAST':
-                endYear = currentYear
-                nextOwnerRowIndex = ownerRowIndex
-            else:
-                nextOwnerRow = provenanceList.loc[(provenanceList['owner']==nextOwner) & (provenanceList['object_number']==objectNumber),:]
-                nextOwnerRowIndex = nextOwnerRow.index.values[0]
-                endYear = provenanceList['year'][nextOwnerRowIndex]
-
-            ownerExhibitions = exhibitionHistoryList.loc[(exhibitionHistoryList['object_number']==objectNumber) & (exhibitionHistoryList['year'] >= startYear) & (exhibitionHistoryList['year'] < endYear),:]
-
-            ## Add first line that moves "to and from" starting location ##
-            if prevOwner == 'FIRST':
-                year = int(provenanceList['year'][ownerRowIndex])
-
-                coordinates = []
-                coordinates.append(provenanceList['coordinates'][ownerRowIndex])
-                coordinates.append(provenanceList['coordinates'][ownerRowIndex])
-
-                cities = []
-                cities.append(provenanceList['location'][ownerRowIndex])
-                cities.append(provenanceList['location'][ownerRowIndex])
-
-                owners = []
-                owners.append(provenanceList['owner'][ownerRowIndex])
-                owners.append(provenanceList['owner'][ownerRowIndex])
-
-                changeFlag = 1
-
-                dataType = 'provenance'
-
-                eventSpecificRows.append({
-                    'line': {
-                         'year': year
-                        ,'coordinates': coordinates
-                        ,'cities': cities
-                        ,'owner': owners
-                        ,'changeFlag': changeFlag
-                        ,'dataType': dataType
-                    }
-                })
-
-                if len(ownerExhibitions)>0:
-                    ownerExhibitionIndeces = ownerExhibitions.index.values
-                    # print(len(ownerExhibitionIndeces))
-                    year = int(exhibitionHistoryList['year'][ownerExhibitionIndeces[0]])
-
-                    coordinates = []
-                    coordinates.append(provenanceList['coordinates'][ownerRowIndex])
-                    coordinates.append(exhibitionHistoryList['coordinates'][ownerExhibitionIndeces[0]])
-
-                    cities = []
-                    cities.append(provenanceList['location'][ownerRowIndex])
-                    cities.append(exhibitionHistoryList['location'][ownerExhibitionIndeces[0]])
-
-                    owners = []
-                    owners.append(provenanceList['owner'][ownerRowIndex])
-                    owners.append("Exhibition - "+re.sub(" ([\(\[]).*?([\)\]])", "", exhibitionHistoryList['owner'][ownerExhibitionIndeces[0]].split('.')[1].replace('"','')).split(",")[0])
-                    # owners.append(exhibitionHistoryList['owner'][ownerExhibitionIndeces[0]])
-                    # owners.append("On Exhibition")
-
-                    changeFlag = 1
-
-                    dataType = 'exhibition'
-
-                    eventSpecificRows.append({
-                        'line': {
-                             'year': year
-                            ,'coordinates': coordinates
-                            ,'cities': cities
-                            ,'owner': owners
-                            ,'changeFlag': changeFlag
-                            ,'dataType': dataType
-                        }
-                    })
-
-                    for oe in range(1,len(ownerExhibitionIndeces)):
-                        year = int(exhibitionHistoryList['year'][ownerExhibitionIndeces[oe]])
-
-                        coordinates = []
-                        coordinates.append(exhibitionHistoryList['coordinates'][ownerExhibitionIndeces[oe-1]])
-                        coordinates.append(exhibitionHistoryList['coordinates'][ownerExhibitionIndeces[oe]])
-
-                        cities = []
-                        cities.append(exhibitionHistoryList['location'][ownerExhibitionIndeces[oe-1]])
-                        cities.append(exhibitionHistoryList['location'][ownerExhibitionIndeces[oe]])
-
-                        owners = []
-                        # owners.append(exhibitionHistoryList['owner'][ownerExhibitionIndeces[oe-1]])
-                        owners.append("On Exhibition")
-                        # print(exhibitionHistoryList['owner'][ownerExhibitionIndeces[0]].split('.')[1].replace('"',''))
-                        # owners.append(exhibitionHistoryList['owner'][ownerExhibitionIndeces[oe]])
-                        owners.append("On Exhibition")
-
-                        changeFlag = 1
-
-                        dataType = 'exhibition'
-
-                        eventSpecificRows.append({
-                            'line': {
-                                 'year': year
-                                ,'coordinates': coordinates
-                                ,'cities': cities
-                                ,'owner': owners
-                                ,'changeFlag': changeFlag
-                                ,'dataType': dataType
-                            }
-                        })
-
-                    year = int(provenanceList['year'][nextOwnerRowIndex])
-
-                    coordinates = []
-                    coordinates.append(exhibitionHistoryList['coordinates'][ownerExhibitionIndeces[len(ownerExhibitionIndeces)-1]])
-                    coordinates.append(provenanceList['coordinates'][nextOwnerRowIndex])
-
-                    cities = []
-                    cities.append(exhibitionHistoryList['location'][ownerExhibitionIndeces[len(ownerExhibitionIndeces)-1]])
-                    cities.append(provenanceList['location'][nextOwnerRowIndex])
-
-                    owners = []
-                    # owners.append(exhibitionHistoryList['owner'][ownerExhibitionIndeces[len(ownerExhibitionIndeces)-1]])
-                    # owners.append("On Exhibition")
-                    owners.append("Exhibition - "+re.sub(" ([\(\[]).*?([\)\]])", "", exhibitionHistoryList['owner'][ownerExhibitionIndeces[len(ownerExhibitionIndeces)-1]].split('.')[1].replace('"','')).split(",")[0])
-                    # print(re.sub(" ([\(\[]).*?([\)\]])", "", exhibitionHistoryList['owner'][ownerExhibitionIndeces[0]].split('.')[1].replace('"','')).split(",")[0])
-                    owners.append(provenanceList['owner'][nextOwnerRowIndex])
-
-                    changeFlag = 1
-
-                    dataType = 'exhibition'
-
-                    eventSpecificRows.append({
-                        'line': {
-                             'year': year
-                            ,'coordinates': coordinates
-                            ,'cities': cities
-                            ,'owner': owners
-                            ,'changeFlag': changeFlag
-                            ,'dataType': dataType
-                        }
-                    })
-
-                else:
-                    # pass
-                    year = int(provenanceList['year'][nextOwnerRowIndex])
-
-                    coordinates = []
-                    coordinates.append(provenanceList['coordinates'][ownerRowIndex])
-                    coordinates.append(provenanceList['coordinates'][nextOwnerRowIndex])
-
-                    cities = []
-                    cities.append(provenanceList['location'][ownerRowIndex])
-                    cities.append(provenanceList['location'][nextOwnerRowIndex])
-
-                    owners = []
-                    owners.append(provenanceList['owner'][ownerRowIndex])
-                    owners.append(provenanceList['owner'][nextOwnerRowIndex])
-
-                    changeFlag = 1
-
-                    dataType = 'provenance'
-
-                    eventSpecificRows.append({
-                        'line': {
-                             'year': year
-                            ,'coordinates': coordinates
-                            ,'cities': cities
-                            ,'owner': owners
-                            ,'changeFlag': changeFlag
-                            ,'dataType': dataType
-                        }
-                    })
-
-
-
-            else:
-                prevOwnerRow = provenanceList.loc[(provenanceList['owner']==prevOwner) & (provenanceList['object_number']==objectNumber),:]
-                prevOwnerRowIndex = prevOwnerRow.index.values[0]
-
-                # year = int(provenanceList['year'][ownerRowIndex])
-                #
-                # coordinates = []
-                # coordinates.append(provenanceList['coordinates'][prevOwnerRowIndex])
-                # coordinates.append(provenanceList['coordinates'][ownerRowIndex])
-                #
-                # cities = []
-                # cities.append(provenanceList['location'][prevOwnerRowIndex])
-                # cities.append(provenanceList['location'][ownerRowIndex])
-                #
-                # owners = []
-                # owners.append(provenanceList['owner'][prevOwnerRowIndex])
-                # owners.append(provenanceList['owner'][ownerRowIndex])
-                #
-                # changeFlag = 1
-                #
-                # dataType = 'provenance'
-                #
-                # eventSpecificRows.append({
-                #     'line': {
-                #          'year': year
-                #         ,'coordinates': coordinates
-                #         ,'cities': cities
-                #         ,'owner': owners
-                #         ,'changeFlag': changeFlag
-                #         ,'dataType': dataType
-                #     }
-                # })
-
-
-                ### Were there any exhibitions that happened while that person was the owner? ###
-                if len(ownerExhibitions)>0:
-                    ownerExhibitionIndeces = ownerExhibitions.index.values
-                    # print(len(ownerExhibitionIndeces))
-                    year = int(ownerExhibitions['year'][ownerExhibitionIndeces[0]])
-
-                    coordinates = []
-                    coordinates.append(provenanceList['coordinates'][ownerRowIndex])
-                    coordinates.append(ownerExhibitions['coordinates'][ownerExhibitionIndeces[0]])
-
-                    cities = []
-                    cities.append(provenanceList['location'][ownerRowIndex])
-                    cities.append(ownerExhibitions['location'][ownerExhibitionIndeces[0]])
-
-                    owners = []
-                    owners.append(provenanceList['owner'][ownerRowIndex])
-                    # owners.append(ownerExhibitions['owner'][ownerExhibitionIndeces[0]])
-                    # owners.append("On Exhibition")
-                    owners.append("Exhibition - "+re.sub(" ([\(\[]).*?([\)\]])", "", exhibitionHistoryList['owner'][ownerExhibitionIndeces[0]].split('.')[1].replace('"','')).split(",")[0])
-                    # print(exhibitionHistoryList['owner'][ownerExhibitionIndeces[0]].split('.')[0].replace('"',''))
-
-                    changeFlag = 1
-
-                    dataType = 'exhibition'
-
-                    eventSpecificRows.append({
-                        'line': {
-                             'year': year
-                            ,'coordinates': coordinates
-                            ,'cities': cities
-                            ,'owner': owners
-                            ,'changeFlag': changeFlag
-                            ,'dataType': dataType
-                        }
-                    })
-
-                    for oe in range(1,len(ownerExhibitionIndeces)):
-                        year = int(ownerExhibitions['year'][ownerExhibitionIndeces[oe]])
-
-                        coordinates = []
-                        coordinates.append(ownerExhibitions['coordinates'][ownerExhibitionIndeces[oe-1]])
-                        coordinates.append(ownerExhibitions['coordinates'][ownerExhibitionIndeces[oe]])
-
-                        cities = []
-                        cities.append(ownerExhibitions['location'][ownerExhibitionIndeces[oe-1]])
-                        cities.append(ownerExhibitions['location'][ownerExhibitionIndeces[oe]])
-
-                        owners = []
-                        # owners.append(ownerExhibitions['owner'][ownerExhibitionIndeces[oe-1]])
-                        owners.append("Exhibition - "+re.sub(" ([\(\[]).*?([\)\]])", "", exhibitionHistoryList['owner'][ownerExhibitionIndeces[oe-1]].replace("Mrs.","Mrs").replace("G.","G").replace("R.","R").replace("M.","M").replace("E.","E").split('.')[1].replace('"','')).split(",")[0])
-                        owners.append("Exhibition - "+re.sub(" ([\(\[]).*?([\)\]])", "", exhibitionHistoryList['owner'][ownerExhibitionIndeces[oe]].replace("Mrs.","Mrs").replace("G.","G").replace("R.","R").replace("M.","M").replace("E.","E").split('.')[1].replace('"','')).split(",")[0])
-                        # owners.append("On Exhibition")
-                        # owners.append("On Exhibition")
-                        # print(exhibitionHistoryList['owner'][ownerExhibitionIndeces[0]].split('.')[1].replace('"',''))
-
-                        changeFlag = 1
-
-                        dataType = 'exhibition'
-
-                        eventSpecificRows.append({
-                            'line': {
-                                 'year': year
-                                ,'coordinates': coordinates
-                                ,'cities': cities
-                                ,'owner': owners
-                                ,'changeFlag': changeFlag
-                                ,'dataType': dataType
-                            }
-                        })
-
-                    if nextOwner == 'LAST':
-                        year = int(ownerExhibitions['year'][ownerExhibitionIndeces[len(ownerExhibitionIndeces)-1]])
-                    else:
-                        year = int(provenanceList['year'][nextOwnerRowIndex])
-
-                    coordinates = []
-                    coordinates.append(ownerExhibitions['coordinates'][ownerExhibitionIndeces[len(ownerExhibitionIndeces)-1]])
-                    coordinates.append(provenanceList['coordinates'][nextOwnerRowIndex])
-
-                    cities = []
-                    cities.append(ownerExhibitions['location'][ownerExhibitionIndeces[len(ownerExhibitionIndeces)-1]])
-                    cities.append(provenanceList['location'][nextOwnerRowIndex])
-
-                    owners = []
-                    # owners.append(ownerExhibitions['owner'][ownerExhibitionIndeces[len(ownerExhibitionIndeces)-1]])
-                    # owners.append("On Exhibition")
-                    owners.append("Exhibition - "+re.sub(" ([\(\[]).*?([\)\]])", "", exhibitionHistoryList['owner'][ownerExhibitionIndeces[len(ownerExhibitionIndeces)-1]].replace("Mrs.","Mrs").replace("G.","G").replace("R.","R").replace("M.","M").replace("E.","E").replace("J.","J").replace("Alex.","Alex").split('.')[1].replace('"','')).split(",")[0])
-                    owners.append(provenanceList['owner'][nextOwnerRowIndex])
-
-                    changeFlag = 1
-
-                    dataType = 'provenance'
-
-                    eventSpecificRows.append({
-                        'line': {
-                             'year': year
-                            ,'coordinates': coordinates
-                            ,'cities': cities
-                            ,'owner': owners
-                            ,'changeFlag': changeFlag
-                            ,'dataType': dataType
-                        }
-                    })
-
-                else:
-                    # pass
-                    year = int(provenanceList['year'][nextOwnerRowIndex])
-
-                    coordinates = []
-                    coordinates.append(provenanceList['coordinates'][ownerRowIndex])
-                    coordinates.append(provenanceList['coordinates'][nextOwnerRowIndex])
-
-                    cities = []
-                    cities.append(provenanceList['location'][ownerRowIndex])
-                    cities.append(provenanceList['location'][nextOwnerRowIndex])
-
-                    owners = []
-                    owners.append(provenanceList['owner'][ownerRowIndex])
-                    owners.append(provenanceList['owner'][nextOwnerRowIndex])
-
-                    changeFlag = 1
-
-                    dataType = 'provenance'
-
-                    eventSpecificRows.append({
-                        'line': {
-                             'year': year
-                            ,'coordinates': coordinates
-                            ,'cities': cities
-                            ,'owner': owners
-                            ,'changeFlag': changeFlag
-                            ,'dataType': dataType
-                        }
-                    })
-
-            # print(str(startYear) + '-' + str(endYear))
-
-        addOwnerRows(objectNumber,owner,prevOwner,nextOwner)
-
-
-    # print(eventSpecificRows)
-    '''
-'''
     jsonLINE = []
 
     def addProvenance(column,listName):
@@ -883,10 +442,23 @@ for index in vanGoghProvenance.index.values:
             }
         })
 
-    # print(vanGoghProvenance)
     objectNumber = vanGoghProvenance['object_number'][index]
+    for y in range(minYear,vanGoghProvenance['object_year'][index]):
+        jsonLINE.append({
+            'line': {
+                 'year': y
+                ,'coordinates': []
+                ,'cities': ''
+                ,'owner': ''
+                ,'changeFlag': ''
+                ,'dataType': ''
+            }
+        })
+        # print(y)
+
     for y in range(vanGoghProvenance['object_year'][index],currentYear):
         year = y
+        # print(year)
 
         ### This is where owners change hands ###
         if (len(provenanceList.loc[(provenanceList['object_number']==vanGoghProvenance['object_number'][index]) & (provenanceList['year']==y)]) >= 1):
@@ -922,8 +494,7 @@ for index in vanGoghProvenance.index.values:
                     for cd in range(len(provenanceList.loc[(provenanceList['object_number']==vanGoghProvenance['object_number'][index]) & (provenanceList['year']==y)])):
                         dataType.append("provenance")
 
-                    print(len(coordinates))
-                    # addToJSONLine()
+                    addToJSONLine()
 
 
                 ### If an exhibition spanned into the past year ##
@@ -984,7 +555,7 @@ for index in vanGoghProvenance.index.values:
 
 
             else :
-                ### This is where owners change hands once without exhibitions int that year. ###
+                ### This is where owners change hands once without exhibitions in that year. ###
                 coordinates = []
                 addPrevProvenance('coordinates',coordinates)
                 addProvenance('coordinates',coordinates)
@@ -1064,8 +635,6 @@ for index in vanGoghProvenance.index.values:
 
                 ### Ehibition was only in this year ###
                 else:
-                    # if (objectNumber == 436525 and year == 1991):
-                    #     print(exhibitionHistoryList.loc[(exhibitionHistoryList['object_number']==vanGoghProvenance['object_number'][index]) & (exhibitionHistoryList['year']==y)])
                     ## Goes from current owner to exhibitions, back to current owner
                     coordinates = []
                     addCurrentProvenance('coordinates',coordinates)
@@ -1094,44 +663,37 @@ for index in vanGoghProvenance.index.values:
                     addToJSONLine()
 
             else:
-                pass
                 ## current provenance ##
-                # coordinates = []
-                # addCurrentProvenance('coordinates',coordinates)
-                #
-                # cities = []
-                # addCurrentProvenance('location',cities)
-                #
-                # owners = []
-                # addCurrentProvenance('owner',owners)
-                #
-                # changeFlag = []
-                # changeFlag.append(0)
-                #
-                # dataType = []
-                # dataType.append("provenance")
-                #
-                # addToJSONLine()
-                '''
+                coordinates = []
+                addCurrentProvenance('coordinates',coordinates)
 
-'''
+                cities = []
+                addCurrentProvenance('location',cities)
+
+                owners = []
+                addCurrentProvenance('owner',owners)
+
+                changeFlag = []
+                changeFlag.append(0)
+
+                dataType = []
+                dataType.append("provenance")
+
+                addToJSONLine()
+
     jsonLINEExport = {
-        'objects': eventSpecificRows
-        ,'imageName':imageName
-        ,'objectNumber':str(objectNumber)
+         'objects'     : jsonLINE
+        ,'imageName'   : vanGoghProvenance['image'][index]
+        ,'objectNumber': str(objectNumber)
     }
 
 
-    # print(jsonLINEExport);
-
-
     ## Export a JSON for each painting ###
-    jsonExportName = 'jsonLINE2' + vanGoghProvenance['image'][index].split('.')[0] + '.json'
+    jsonExportName = 'jsonLINE' + vanGoghProvenance['image'][index].split('.')[0] + '.json'
     jsonExportPath = os.path.join(dir,'assets/'+jsonExportName)
     js = json.dumps(jsonLINEExport)
-    fp = open(jsonExportName, 'a')
+    fp = open(jsonExportName, 'w')
     fp.write(js)
     fp.close()
     print("added " + jsonExportName)
     print("--- %s seconds ---" % (time.time() - start_time))
-'''

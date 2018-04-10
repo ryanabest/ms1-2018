@@ -1,6 +1,4 @@
 // SHOULD I FLIP AXIS SO YEARS GO TOP TO BOTTOM AND CITIES LEFT TO RIGHT, TO REPLICATE EAST TO WEST??
-// let filePath = '../assets/' // Local Testing
-// let filePath = '/ms1-2018/interactivity/assets/' // GitHub Pages
 
 function mareyDistance(lat1,lon1,lat2,lon2) {
   // return(distance(lat1,lon1,lat2,lon2));
@@ -80,12 +78,14 @@ let data = d3.json(filePath + "locationsGeo.json").then(
 
           // draw line for each city
           locations.forEach(function(d) {
+            // console.log(d);
             svg.append("line")
                .attr("y1",y(d.distance))
                .attr("x1",margin.left)
                .attr("y2",y(d.distance))
                .attr("x2",width-margin.right)
                .attr("class","marey-axis")
+               .attr("id","marey-axis-"+d.location)
           })
 
           let firstYear = gd.objects[0].line.year;
@@ -94,7 +94,7 @@ let data = d3.json(filePath + "locationsGeo.json").then(
           // for each year, find the point that was furthest from the starting point
           let years = [];
           gd.objects.forEach(function(d) {
-            if($.inArray(d.line.year, years) === -1) { // add data type if statement here
+            if($.inArray(d.line.year, years) === -1 && d.line.dataType === 'provenance') { // add data type if statement here
               years.push(d.line.year);
             }
           });
@@ -104,7 +104,8 @@ let data = d3.json(filePath + "locationsGeo.json").then(
             let yearDistance = 0;
             let yearCity = '';
             gd.objects.forEach(function(d) {
-              if (d.line.year === y) { // add data type if statement here
+              if (d.line.year === y && d.line.dataType === 'provenance') { // add data type if statement here
+                // console.log(d.line.coordinates.length);
                 for (let coord=1;coord<d.line.coordinates.length;coord++) { // skip first coordinate, which is ending coord for previous year
                   let c = d.line.coordinates[coord];
                   if (distance(firstCoordinates[0],firstCoordinates[1],c[0],c[1]) || 0 >= yearDistance) {
@@ -118,7 +119,6 @@ let data = d3.json(filePath + "locationsGeo.json").then(
               ,"distance":yearDistance
             })
           })
-
 
           // console.log(gd.objects[0].line.year);
           let graphDataAllYears = [];

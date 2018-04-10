@@ -1,9 +1,6 @@
 // source: https://www.geodatasource.com/developers/javascript
 // calculates distance between two points as the crow flies
 
-// let filePath = '../assets/' // Local Testing
-let filePath = 'https://raw.githubusercontent.com/ryanabest/ms1-2018/master/interactivity/assets/' // GitHub Pages
-
 function distance(lat1, lon1, lat2, lon2, unit) {
 	let radlat1 = Math.PI * lat1/180
 	let radlat2 = Math.PI * lat2/180
