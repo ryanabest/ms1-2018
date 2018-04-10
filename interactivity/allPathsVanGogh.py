@@ -361,7 +361,6 @@ exhibitionHistoryList.loc[exhibitionHistoryList['location']=='Zurich','location'
 exhibitionHistoryList.loc[exhibitionHistoryList['location']=='Oxford Arts Club','location'] = 'Oxford'
 provenanceList.loc[provenanceList['location']=='Zurich','location'] = 'Zürich'
 
-
 ### Pull Lat Lng coordinates for all locations from Google Geocoding API once, which I will then join back into Prov and ExhibHistory data
 '''
 locationsList = list(provenanceList['location'].unique()) + list(exhibitionHistoryList['location'].unique())
@@ -400,8 +399,14 @@ locationsGeoDF.to_json(locationsGeoJSON)
 locationsGeoJSON = os.path.join(dir,'assets','locationsGeo.json')
 locationsGeo = pd.read_json(locationsGeoJSON)
 exhibitionHistoryList = pd.merge(exhibitionHistoryList,locationsGeo,on='location',how='left')
+provenanceList = provenanceList[['location']]
+provenanceList = provenanceList.drop_duplicates(subset=['location'],keep='first')
 provenanceList = pd.merge(provenanceList,locationsGeo,on='location',how='left')
 
+# print(provenanceList[['location','coordinates']].nunique())
+# print(provenanceList['location'].value_counts())
+print(provenanceList)
+'''
 currentYear = now.year
 minYear = min(vanGoghProvenance['object_year'])
 
@@ -697,3 +702,4 @@ for index in vanGoghProvenance.index.values:
     fp.close()
     print("added " + jsonExportName)
     print("--- %s seconds ---" % (time.time() - start_time))
+'''

@@ -1,4 +1,6 @@
 // SHOULD I FLIP AXIS SO YEARS GO TOP TO BOTTOM AND CITIES LEFT TO RIGHT, TO REPLICATE EAST TO WEST??
+// let filePath = '../assets/' // Local Testing
+let filePath = '/ms1-2018/interactivity/assets/' // GitHub Pages
 
 function mareyDistance(lat1,lon1,lat2,lon2) {
   // return(distance(lat1,lon1,lat2,lon2));

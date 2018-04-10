@@ -1,6 +1,9 @@
 // let sliderYear = 0;
 // mapboxgl.accessToken = 'pk.eyJ1IjoicnlhbmFiZXN0IiwiYSI6ImNqOTdzdWRpcjBhNnMzMmxzcHMyemxkMm0ifQ.ot3NoRC2w8zCbVOCkv2e_w';
 // let map = L.map('map',{zoomControl:false,attributionControl:false}).fitBounds(L.latLngBounds(L.latLng(69,150),L.latLng(-9,-131)));
+// let filePath = '../assets/' // Local Testing
+let filePath = '/ms1-2018/interactivity/assets/' // GitHub Pages
+
 let map = L.map('map',{
                        zoomControl:false
                       ,attributionControl:false
