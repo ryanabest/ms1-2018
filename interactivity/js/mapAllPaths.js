@@ -15,11 +15,26 @@ var CartoDB_PositronNoLabels = L.tileLayer('https://cartodb-basemaps-{s}.global.
 svgLayer = L.svg();
 svgLayer.addTo(map);
 
+/*
+d3.csv(filePath + "SubwayLocations.csv").then(function(locs) {
+  locs.forEach(function(l) {
+    l.Coords = (l.Coords.replace("[","").replace("]","").split(", "))
+    l.Coords[0] = parseFloat(l.Coords[0]);
+    l.Coords[1] = parseFloat(l.Coords[1]);
+    // L.marker(l.Coords).addTo(map);
+    L.marker(l.Coords).addTo(map)
+     .bindPopup(l.City + ' - ' + l.Objects)
+  })
+})
+*/
+
+
 let svg = d3.select("#map").select("svg")
      ,g = svg.append("g").attr("class", "leaflet-zoom-hide")
      // ,defs = svg.append("svg:defs");
 
-let paths = d3.json(filePath + "metObjectsVanGogh.json").then(function(paths) {
+let paths = $.getJSON(filePath + 'metObjectsVanGogh.json', function(paths) {
+// let paths = d3.json(filePath + "metObjectsVanGogh.json").then(function(paths) {
   let files = [];
   let promises = [];
 
@@ -83,7 +98,11 @@ let paths = d3.json(filePath + "metObjectsVanGogh.json").then(function(paths) {
         vibrantColor = Vibrant.from(img).getPalette(function(err,palette) {
           let vibrantColor      = "rgb("+Math.floor(palette['Vibrant']['r'])+","+Math.floor(palette['Vibrant']['g'])+","+Math.floor(palette['Vibrant']['b'])+")";
           let vibrantDarkColor  = "rgb("+Math.floor(palette['DarkVibrant']['r'])+","+Math.floor(palette['DarkVibrant']['g'])+","+Math.floor(palette['DarkVibrant']['b'])+")";
-          // let vibrantLightColor = "rgb("+Math.floor(palette['Muted']['r'])+","+Math.floor(palette['Muted']['g'])+","+Math.floor(palette['Muted']['b'])+")";
+          // if (typeOf)
+          // let vibrantLightColor = "rgb("+Math.floor(palette['LightVibrant']['r'])+","+Math.floor(palette['LightVibrant']['g'])+","+Math.floor(palette['LightVibrant']['b'])+")";
+
+          // console.log(m.objectNumber);
+          // console.log(palette);
 
           let promData = [];
           m.objects.forEach(function(d) {
