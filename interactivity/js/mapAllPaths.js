@@ -1,8 +1,6 @@
 // let sliderYear = 0;
 // mapboxgl.accessToken = 'pk.eyJ1IjoicnlhbmFiZXN0IiwiYSI6ImNqOTdzdWRpcjBhNnMzMmxzcHMyemxkMm0ifQ.ot3NoRC2w8zCbVOCkv2e_w';
 // let map = L.map('map',{zoomControl:false,attributionControl:false}).fitBounds(L.latLngBounds(L.latLng(69,150),L.latLng(-9,-131)));
-// let filePath = '../assets/' // Local Testing
-let filePath = '/ms1-2018/interactivity/assets/' // GitHub Pages
 
 let map = L.map('map',{
                        zoomControl:false
@@ -36,14 +34,14 @@ let svg = d3.select("#map").select("svg")
      ,g = svg.append("g").attr("class", "leaflet-zoom-hide")
      // ,defs = svg.append("svg:defs");
 
-let paths = $.getJSON(filePath + 'metObjectsVanGogh.json', function(paths) {
-// let paths = d3.json(filePath + "metObjectsVanGogh.json").then(function(paths) {
+// let paths = $.getJSON(filePath + 'metObjectsVanGogh.json', function(paths) {
+let paths = d3.json(filePath + "metObjectsVanGogh.json").then(function(paths) {
   let files = [];
   let promises = [];
 
   // Load JSON file paths into list to create promises
   for (let p=0;p<Object.keys(paths.image).length;p++) {
-    let JSONPath = filePath + "jsonLine2" + paths.image[p].split(".")[0] + ".json";
+    let JSONPath = filePath + "jsonLINE2" + paths.image[p].split(".")[0] + ".json";
     files.push(JSONPath);
   }
   files.forEach(function(url){
