@@ -141,26 +141,26 @@ let data = d3.json(filePath + "locationsGeo.json").then(
           // CONTINENT LABELS
           svg.append("text")
              .attr("x",margin.left*0.5)
-             .attr("y",140)
+             .attr("y",height*0.2)
              .attr("class","continent-label")
              // .attr("writing-mode","tb-lr")
-             .attr("transform","rotate(270,"+margin.left*0.5+",140)")
+             .attr("transform","rotate(270,"+margin.left*0.5+","+height*0.2+")")
              .text("North America")
 
           svg.append("text")
              .attr("x",margin.left*0.5)
-             .attr("y",400)
+             .attr("y",height*0.52)
              .attr("class","continent-label")
              // .attr("writing-mode","tb-lr")
-             .attr("transform","rotate(270,"+margin.left*0.5+",400)")
+             .attr("transform","rotate(270,"+margin.left*0.5+","+height*0.52+")")
              .text("Europe")
 
           svg.append("text")
              .attr("x",margin.left*0.5)
-             .attr("y",730)
+             .attr("y",height*0.97)
              .attr("class","continent-label")
              // .attr("writing-mode","tb-lr")
-             .attr("transform","rotate(270,"+margin.left*0.5+",730)")
+             .attr("transform","rotate(270,"+margin.left*0.5+","+height*0.97+")")
              .text("Asia & Oceania")
 
           // // LOCATION LABELS THAT WILL BE ANIMATED
