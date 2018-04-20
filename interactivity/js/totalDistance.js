@@ -19,7 +19,7 @@ let objects = d3.json("assets/metObjectsVanGogh.json").then(function(objects) {
   let files = [];
   let promises = [];
   for (let o=0;o<Object.keys(objects.image).length;o++) {
-    let JSONPath = "assets/jsonLine2" + objects.image[o].split(".")[0] + ".json";
+    let JSONPath = "assets/jsonLINE2" + objects.image[o].split(".")[0] + ".json";
     files.push(JSONPath);
   }
 

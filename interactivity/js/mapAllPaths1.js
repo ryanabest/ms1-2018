@@ -25,7 +25,7 @@ let paths = d3.json(filePath + "metObjectsVanGogh.json").then(function(paths) {
 
   // Load JSON file paths into list to create promises
   for (let p=0;p<Object.keys(paths.image).length;p++) {
-    let JSONPath = filePath + "jsonLine" + paths.image[p].split(".")[0] + ".json";
+    let JSONPath = filePath + "jsonLINE" + paths.image[p].split(".")[0] + ".json";
     files.push(JSONPath);
   }
   files.forEach(function(url){

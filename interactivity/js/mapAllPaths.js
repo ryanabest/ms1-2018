@@ -3,9 +3,9 @@
 // let map = L.map('map',{zoomControl:false,attributionControl:false}).fitBounds(L.latLngBounds(L.latLng(69,150),L.latLng(-9,-131)));
 
 let map = L.map('map',{
-                       zoomControl:false
-                      ,attributionControl:false
-                    }).setView([30,0],2); // Load the whole map first
+                       scrollWheelZoom: false
+                       // ,zoomControl: false
+                    }).setView([20,0],2); // Load the whole map first
 var CartoDB_PositronNoLabels = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png', {
 	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
 	subdomains: 'abcd',
@@ -15,6 +15,12 @@ var CartoDB_PositronNoLabels = L.tileLayer('https://cartodb-basemaps-{s}.global.
 // Add svg layer to my map
 svgLayer = L.svg();
 svgLayer.addTo(map);
+
+// let width = window.innerWidth*0.9;
+// let height = window.innerHeight*0.8;
+//
+// // console.log(width);
+// d3.select("#map").style("width",width+"px").style("height",height+"px")
 
 /*
 d3.csv(filePath + "SubwayLocations.csv").then(function(locs) {
@@ -69,11 +75,26 @@ let paths = d3.json(filePath + "metObjectsVanGogh.json").then(function(paths) {
     drawPaths(yearSliderValue,proms);
     // drawMarkers();
 
-    // update opacity when slider changes
+    // update when slider changes
     yearSlider.oninput = function() {
+      let y = d3.scaleLinear().domain([minYear,maxYear]).range([2,88])
       yearSliderValue = this.value;
-      console.log(yearSliderValue);
-      // opacityYear(yearSliderValue);
+
+      d3.select("#slideyear")
+        .text(yearSliderValue)
+        // .style("margin-left",y(yearSliderValue)+'vw');
+
+      drawPaths(yearSliderValue,proms)
+    }
+
+    yearSlider.onchange = function() {
+      let y = d3.scaleLinear().domain([minYear,maxYear]).range([2,88])
+      yearSliderValue = this.value;
+
+      d3.select("#slideyear")
+        .text(yearSliderValue)
+        // .style("margin-left",y(yearSliderValue)+'vw');
+
       drawPaths(yearSliderValue,proms)
     }
 
@@ -93,9 +114,22 @@ let paths = d3.json(filePath + "metObjectsVanGogh.json").then(function(paths) {
 
       promises.forEach(function(m){ // I am now working on each painting path
         // Load thumbnail images from assets folder for vibrant color tail
+        // console.log(m.)
+        let mapRadius = 10;
         let img = document.createElement('img');
         imageThumbnail = filePath + "Thumbnails/" + m.imageName
         img.src = imageThumbnail;
+        let pattern = svg.append("svg:pattern")
+                          .attr("id","map-pattern-"+m.objectNumber)
+                          .attr("x","0")
+                          .attr("y","0")
+                          .attr("width","1")
+                          .attr("height","1")
+                          .attr("patternUnits","objectBoundingBox")
+                          .append("svg:image")
+                          .attr("xlink:href",imageThumbnail)
+                          .attr("width",mapRadius*2)
+                          .attr("height",mapRadius*2)
         vibrantColor = Vibrant.from(img).getPalette(function(err,palette) {
           let vibrantColor      = "rgb("+Math.floor(palette['Vibrant']['r'])+","+Math.floor(palette['Vibrant']['g'])+","+Math.floor(palette['Vibrant']['b'])+")";
           let vibrantDarkColor  = "rgb("+Math.floor(palette['DarkVibrant']['r'])+","+Math.floor(palette['DarkVibrant']['g'])+","+Math.floor(palette['DarkVibrant']['b'])+")";
@@ -118,8 +152,8 @@ let paths = d3.json(filePath + "metObjectsVanGogh.json").then(function(paths) {
 
           for (let a=0;a<m.objects.length;a++) {
             let data = [];
-            // if (m.objects[a].dataType) {
-            if (m.objects[a].dataType === 'provenance' /*&& m.objectNumber == 436533*/) {
+            if (m.objects[a].dataType) {
+            // if (m.objects[a].dataType === 'provenance' /*&& m.objectNumber == 436533*/) {
               let dataPoint = {
                  "x":            map.latLngToLayerPoint(L.latLng(m.objects[a].latLng[1])).x
                 ,"y":            map.latLngToLayerPoint(L.latLng(m.objects[a].latLng[1])).y
@@ -155,6 +189,13 @@ let paths = d3.json(filePath + "metObjectsVanGogh.json").then(function(paths) {
                         .attr("class","path")
                         .attr("id","path-"+m.objectNumber)
                         .attr("stroke",vibrantDarkColor)
+                        .style("opacity",function(d) {
+                          if (d.objectNumber == paintingSelection) {
+                            return "0.5";
+                          } else {
+                            return "0";
+                          }
+                        })
 
           // console.log(promData[promData.length-1]);
           markerData.push(promData[promData.length-1]);
@@ -163,7 +204,7 @@ let paths = d3.json(filePath + "metObjectsVanGogh.json").then(function(paths) {
         // console.log(m.objectNumber)
         // console.log(promData);
         if (promData.length > 0) {
-          let circleRadius = 10;
+          // let mapRadius = 10;
           let markerPoint = map.latLngToLayerPoint(L.latLng(promData[promData.length-1].latLng))
           // console.log(markerPoint);
           d3.select("#map").select("svg").append('circle')
@@ -171,23 +212,22 @@ let paths = d3.json(filePath + "metObjectsVanGogh.json").then(function(paths) {
                                          .attr("id","marker-"+promData[promData.length-1].objectNumber)
                                          .attr("cx",markerPoint.x)
                                          .attr("cy",markerPoint.y)
-                                         .attr("fill",vibrantDarkColor)
-                                         .attr("r",circleRadius)
+                                         .attr("fill",function(d) {return "url(#map-pattern-"+promData[promData.length-1].objectNumber+")"})
+                                         .attr("r",mapRadius)
+                                         .style("opacity",function(d) {
+                                           if (promData[promData.length-1].objectNumber == paintingSelection) {
+                                             return "1";
+                                           } else {
+                                             return "0";
+                                           }
+                                         })
                                          // .style("opacity",1)
         }
         }) // closes vibrantColor
       }) // closes painting loop
-      // console.log(Object.keys(markerData));
+
     }
 
-    function drawMarkers() {
-      let circleRadius = 10;
-      d3.select("#map").select("svg").selectAll(".marker").remove();
-      console.log(Object.keys(markerData).length);
-      for (let md=0;md<markerData.length;md++) {
-        console.log(markerData[md]);
-      }
-    }
 
   }) // closes promise THEN
 }) // closes first d3.JSON call

@@ -1,0 +1,89 @@
+#slidecontainer {
+  width: 70vw;
+  height: 7vh;
+  position: fixed;
+  margin-top: 0;
+  margin-left: 15vw;
+  top: 105vh;
+  display: flex;
+}
+
+#slider-buttons {
+  width: 20vw;
+  background-color: #333333;
+}
+
+#slider-buttons p {
+  font-size: 12px;
+  margin: 0;
+  padding: 5px;
+}
+
+#slider-buttons button {
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+  background-color: #e55c69;
+  color: #fff;
+  font-size: 16px;
+  /* font-weight: 400; */
+  /* font-family: "Roboto"; */
+}
+
+#slider {
+  background-color: #F0F0F0;
+  flex: 1;
+  width: 50vw;
+}
+
+
+#year-slider {
+  /* margin-left: 2vw; */
+  /* -webkit-appearance: none; */
+  width: 88%;
+  position: relative;
+  left: 6%;
+  height: 1vh;
+  border-radius: 5px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+#year-slider:hover {
+    opacity: 1;
+}
+
+/*
+#year-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 2vh;
+    height: 2vh;
+    border-radius: 50%;
+    background: #e55c69;
+    cursor: pointer;
+}
+
+#year-slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #e55c69;
+    cursor: pointer;
+}
+*/
+
+#slidecontainer #slideyear {
+  color: #e55c69;
+  font-weight: 400;
+  font-size: 22px;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  /* left: 2vw; */
+  /* margin-left: 5vw; */
+  /* text-align: right; */
+}

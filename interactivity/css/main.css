@@ -1,67 +1,3 @@
-/* All Paths Map */
-
-#map{
-  width: 1200px;
-  height: 600px;
-}
-
- /* #path-436524, #marker-436524 {
-  opacity: 1;
-} */
-
-.path {
-  stroke-width: 0.4vh;
-  opacity:0.7;
-  /* opacity: 0; */
-  fill:none;
-}
-
-.marker {
-  opacity:1;
-  /* opacity: 0; */
-}
-
-.slidecontainer {
-  padding-top: 10px;
-  /* background-color: #696969; */
-  opacity: 0.8;
-}
-
-#year-slider {
-  -webkit-appearance: none;
-  width: 100%;
-  height: 15px;
-  border-radius: 5px;
-  background: #d3d3d3;
-  outline: none;
-  opacity: 0.7;
-  -webkit-transition: .2s;
-  transition: opacity .2s;
-}
-
-#year-slider:hover {
-    opacity: 1;
-}
-
-#year-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    background: #4CAF50;
-    cursor: pointer;
-}
-
-#year-slider::-moz-range-thumb {
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    background: #4CAF50;
-    cursor: pointer;
-}
-
-
 /* Small Multiples  */
 
 #distSmallMults {
@@ -73,6 +9,72 @@
   justify-content: center;
 }
 
+#marey {
+  width: 70vw;
+  height: 87vh;
+  position: fixed;
+  margin-left: 15vw;
+  top: 105vh;
+  background-color: rgba(0,0,0,0);
+
+  display: flex;
+  flex-shrink: 0;
+
+  -moz-box-shadow:    0 0 30px 5px #999;
+  -webkit-box-shadow: 0 0 30px 5px #999;
+
+  /* padding: 0.2vw; */
+}
+
+#marey-legend {
+  width: 20vw;
+  background-color: #333333;
+  /* margin: 0.2vw; */
+  padding: 20px;
+  font-family: "Roboto", sans-serif;
+  color: #fff;
+}
+
+#marey-legend hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid rgb(150,150,150);
+  margin: 1em 0;
+  padding: 0;
+}
+
+#marey-legend h1 {
+  font-family: "Roboto", sans-serif;
+  font-size: 32px;
+  left: 0%;
+  font-weight: 400;
+  line-height: 1em;
+  margin-top: 0;
+  color: #e55c69;
+}
+
+#marey-legend h3 {
+  font-size: 12px;
+  color: rgb(150,150,150);
+  margin-bottom: 10px;
+}
+
+#marey-legend h2 {
+  font-size: 18px;
+}
+
+#marey-legend p,a {
+  font-size: 14px;
+  color: #e7e7e7;
+  padding: 0%;
+  text-decoration: none;
+}
+
+#marey-chart {
+  flex: 1;
+}
+
 .smallmult-line {
   fill:none;
   stroke:#000;
@@ -81,12 +83,44 @@
 }
 
 .marey-line {
-  stroke: rgb(150,150,150);
+  /* stroke: rgb(150,150,150); */
   fill:none;
-  stroke-width:4;
+  stroke-width:1;
+  opacity: 0;
+}
+
+.provenance-path {
+  /* stroke: rgb(150,150,150); */
+  fill:none;
+  stroke-width:5;
+  opacity:0;
+}
+
+.exhibition-circle {
+  fill: none;
+  opacity: 0;
 }
 
 .marey-axis {
-  stroke: rgba(200,200,200,0.25);
+  /* stroke: #696969; */
+  stroke: #696969;
+  opacity: 0.3;
+  /* opacity: 0; */
   stroke-width: 0.5;
+}
+
+.marey-axis-label {
+  font-family: "Roboto", sans-serif;
+  opacity: 0;
+}
+
+.marey-axis-map {
+  opacity: 0;
+}
+
+.continent-label {
+  font-family: "Oswald";
+  font-size: 18px;
+  fill: rgb(150,150,150);
+  font-weight: 300;
 }
