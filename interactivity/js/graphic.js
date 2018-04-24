@@ -44,7 +44,7 @@ window.createGraphic = function(graphicSelector) {
             .duration(500)
             .style("opacity",1)
 
-      d3.select(".title-text")
+      d3.select("#project-title")
         .transition()
           .ease(d3.easeQuadInOut)
           .duration(1500)
@@ -59,13 +59,13 @@ window.createGraphic = function(graphicSelector) {
             .duration(500)
             .style("opacity",0)
 
-      d3.select(".title-text")
+      d3.select("#project-title")
         .transition()
           .ease(d3.easeQuadInOut)
           .duration(1500)
           .style("position","relative")
           // .style("margin-top","0%")
-          .style("top","10vh")
+          .style("top","0vh")
   }
 
   function animateCircles() {
