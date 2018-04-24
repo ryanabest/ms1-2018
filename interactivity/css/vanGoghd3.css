@@ -113,14 +113,21 @@
 	opacity: 0.5;
 }
 
-#vanGoghd3-svg h1 {
+#project-title {
+	width: 100vw;
+	/* margin: 0;
+	padding: 0; */
+}
+
+#project-title h1 {
 	font-family: "Playfair-Display",serif;
 	font-weight: 700;
-	font-size: 170px;
+	font-size: 900%;
 	text-align: center;
 	/* position: fixed; */
 	/* top: 10vh; */
 	margin: auto;
+	/* line-height: 1em; */
 	width: 100%;
 	height: 100%;
 	/* margin-top: 5%; */

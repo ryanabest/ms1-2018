@@ -207,6 +207,21 @@ let data = d3.json(filePath + "locationsGeo.json").then(
              //   .text(yearHoverHtml);
 
              $("div#year-hover-text").html(yearHoverHtml);
+             let pathColor = provPath.node().attributes[1].value;
+             let exhibColor = "#000";
+             try {
+               exhibColor = exhibCircle.node().attributes[3].value;
+             }
+             catch (err) {
+               exhibColor = "#000";
+             }
+             // console.log(exhibColor==='null');
+
+             d3.selectAll("#year-hover-text h1")
+               .style("color",pathColor);
+             d3.selectAll("#year-hover-text p")
+               .style("color",exhibColor);
+
              d3.select("#year-hover-text")
                .style("opacity",1)
                .style("width","auto")
@@ -501,6 +516,17 @@ let data = d3.json(filePath + "locationsGeo.json").then(
                          .attr("id","provenance_path_"+gd.objectNumber)
                          .attr("class",function(d) {
                            if (gd.objectNumber == paintingSelection) {
+                             // Change legend colors to be same as path colors
+                             d3.selectAll(".legend-line")
+                               .style("stroke",vibrantDarkColor)
+                             d3.selectAll(".owner-line")
+                               .style("stroke",vibrantDarkColor)
+                             // d3.selectAll(".owner-text")
+                             //   .style("fill",vibrantDarkColor)
+
+                             d3.selectAll(".exhib-legend-circle")
+                               .style("stroke",vibrantColor)
+
                              return "provenance-path-active"
                            } else {
                              return "provenance-path"

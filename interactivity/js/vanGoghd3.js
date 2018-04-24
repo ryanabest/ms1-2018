@@ -49,7 +49,29 @@ window.vanGoghd3 = function() {
           .attr("src",function(d) {return d.imageSrc})
         .on("click",function() {
           console.log(this.id);
-          highlightSelection(this.id.split("-")[1])
+          highlightSelection(this.id.split("-")[1]);
+          let provPath = d3.selectAll(".provenance-path-active");
+          let exhibCircle = d3.selectAll(".exhibition-circle-active");
+          let pathColor = provPath.node().attributes[1].value;
+          let exhibColor = "#000";
+          try {
+            exhibColor = exhibCircle.node().attributes[3].value;
+          }
+          catch (err) {
+            exhibColor = "#DAA520";
+          }
+          // let
+          // d3.selectAll("#year-hover-text h1")
+          //   .style("color",pathColor);
+          // d3.selectAll("#year-hover-text p")
+          //   .style("color",exhibColor);
+          d3.selectAll(".legend-line")
+            .style("stroke",pathColor)
+          d3.selectAll(".owner-line")
+            .style("stroke",pathColor)
+          d3.selectAll(".exhib-legend-circle")
+            .style("stroke",exhibColor)
+
         })
 
       for (let d=0;d<data.length;d++) {
