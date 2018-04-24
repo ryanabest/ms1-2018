@@ -44,9 +44,14 @@ let svg = d3.select("#map").select("svg")
 let paths = d3.json(filePath + "metObjectsVanGogh.json").then(function(paths) {
   let files = [];
   let promises = [];
+  let objectTitles = [];
 
   // Load JSON file paths into list to create promises
   for (let p=0;p<Object.keys(paths.image).length;p++) {
+    objectTitles.push({
+      "objectNumber" : paths.object_number[p],
+      "title"        : paths.title[p]
+    })
     let JSONPath = filePath + "jsonLINE2" + paths.image[p].split(".")[0] + ".json";
     files.push(JSONPath);
   }
@@ -59,6 +64,7 @@ let paths = d3.json(filePath + "metObjectsVanGogh.json").then(function(paths) {
     let minYear = new Date().getFullYear();
     let maxYear = 0;
     proms.forEach(function(p) {
+      // console.log(p)
       if (p.objects[0].line.year < minYear) {
         minYear = p.objects[0].line.year;
       }
@@ -66,13 +72,28 @@ let paths = d3.json(filePath + "metObjectsVanGogh.json").then(function(paths) {
         maxYear = p.objects[p.objects.length-1].line.year
       }
     })
-    let yearSliderValue = minYear;
+    let yearSliderValue = maxYear;
     let yearSlider = document.getElementById("year-slider");
     yearSlider.setAttribute("min",minYear);
     yearSlider.setAttribute("max",maxYear);
-    yearSlider.setAttribute("value",minYear);
-
+    yearSlider.setAttribute("value",yearSliderValue);
     drawPaths(yearSliderValue,proms);
+    highlightSelection();
+
+    function highlightSelection() {
+      let svg = d3.select("#map").select("svg")
+      svg.selectAll(".marker").style("opacity","0");
+      svg.selectAll(".path").style("opacity","0");
+      for (let p=0;p<proms.length;p++) {
+        objectNumber = proms[p].objectNumber
+        if (objectNumber==paintingSelection) {
+          svg.select("#marker-"+objectNumber)
+             .style("opacity","1");
+          svg.select("#path-"+objectNumber)
+             .style("opacity","0.5");
+        }
+      }
+    }
     // drawMarkers();
 
     // update when slider changes
@@ -82,13 +103,13 @@ let paths = d3.json(filePath + "metObjectsVanGogh.json").then(function(paths) {
 
       d3.select("#slideyear")
         .text(yearSliderValue)
-        // .style("margin-left",y(yearSliderValue)+'vw');
+        .style("left",y(yearSliderValue)+'%');
 
       drawPaths(yearSliderValue,proms)
     }
 
     yearSlider.onchange = function() {
-      let y = d3.scaleLinear().domain([minYear,maxYear]).range([2,88])
+      let y = d3.scaleLinear().domain([minYear,maxYear]).range([6,88])
       yearSliderValue = this.value;
 
       d3.select("#slideyear")
@@ -153,6 +174,7 @@ let paths = d3.json(filePath + "metObjectsVanGogh.json").then(function(paths) {
           for (let a=0;a<m.objects.length;a++) {
             let data = [];
             if (m.objects[a].dataType) {
+              // console.log(m)
             // if (m.objects[a].dataType === 'provenance' /*&& m.objectNumber == 436533*/) {
               let dataPoint = {
                  "x":            map.latLngToLayerPoint(L.latLng(m.objects[a].latLng[1])).x
@@ -164,6 +186,7 @@ let paths = d3.json(filePath + "metObjectsVanGogh.json").then(function(paths) {
                 ,"legs":         m.objects[a].latLng[1].length
                 ,"objectNumber": m.objectNumber
                 ,"color":        vibrantDarkColor
+                ,"colorLight":   vibrantColor
               }
               data.push(dataPoint);
               if (m.objects[a].year <= parseInt(year)) {
@@ -201,13 +224,17 @@ let paths = d3.json(filePath + "metObjectsVanGogh.json").then(function(paths) {
           markerData.push(promData[promData.length-1]);
 
         // Marker
-        // console.log(m.objectNumber)
-        // console.log(promData);
         if (promData.length > 0) {
           // let mapRadius = 10;
-          let markerPoint = map.latLngToLayerPoint(L.latLng(promData[promData.length-1].latLng))
-          // console.log(markerPoint);
+          let markerDatum;
+          let markerPoint = map.latLngToLayerPoint(L.latLng(promData[promData.length-1].latLng));
+          for (let ot=0;ot<objectTitles.length;ot++){
+            if (objectTitles[ot].objectNumber==promData[promData.length-1].objectNumber) {
+              markerDatum = objectTitles[ot]
+            }
+          }
           d3.select("#map").select("svg").append('circle')
+                                         .datum(markerDatum)
                                          .attr("class","marker")
                                          .attr("id","marker-"+promData[promData.length-1].objectNumber)
                                          .attr("cx",markerPoint.x)

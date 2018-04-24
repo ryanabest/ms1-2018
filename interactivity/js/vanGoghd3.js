@@ -4,7 +4,6 @@ window.vanGoghd3 = function() {
     let data = [];
     let width = window.innerWidth;
     let height = window.innerHeight;
-    // console.log(paintings);
 
     let svg = d3.select("#vanGoghd3-svg").select("svg")
                 .attr("width",width)
@@ -27,104 +26,42 @@ window.vanGoghd3 = function() {
       let y = d3.scalePoint()
                 .domain()
       for (let i=0;i<Object.keys(paintings.image).length;i++) {
-        data.push(paintings.object_number[i]);
-        let thumbnailPath = paintings.image[i];
+        let thumbnailPath = paintings.image[i].replace("jpg","png");
         let img = document.createElement("img")
         let imageThumbnail = filePath+'Thumbnails/'+thumbnailPath;
+        data.push({
+          "objectNumber":paintings.object_number[i],
+          "imageSrc":imageThumbnail
+        });
         img.src = imageThumbnail;
-        let pattern = defs.append("svg:pattern")
-                          .attr("id","pattern-"+paintings.object_number[i])
-                          .attr("x","0")
-                          .attr("y","0")
-                          .attr("width","1")
-                          .attr("height","1")
-                          .attr("patternUnits","objectBoundingBox")
-                          .append("svg:image")
-                          .attr("xlink:href",imageThumbnail)
-                          .attr("width",circleRadius*2)
-                          .attr("height",circleRadius*2)
-
-        let menuPattern = defs.append("svg:pattern")
-                          .attr("id","menu-pattern-"+paintings.object_number[i])
-                          .attr("x","0")
-                          .attr("y","0")
-                          .attr("width","1")
-                          .attr("height","1")
-                          .attr("patternUnits","objectBoundingBox")
-                          .append("svg:image")
-                          .attr("xlink:href",imageThumbnail)
-                          .attr("width",menuRadius*2)
-                          .attr("height",menuRadius*2)
       }
     }
 
     function drawCircles() {
-      let data1 = []
-      let data2 = []
+
+      d3.select("#vanGoghd3-svg")
+        .selectAll(".circle")
+        .data(data)
+        .enter().append("img")
+          .attr("class","circle")
+          .attr("id",function(d) {return "circle-"+d.objectNumber})
+          .attr("height",circleRadius*2)
+          .attr("src",function(d) {return d.imageSrc})
+        .on("click",function() {
+          console.log(this.id);
+          highlightSelection(this.id.split("-")[1])
+        })
+
       for (let d=0;d<data.length;d++) {
+        // console.log(data[d].objectNumber);
         if (d<3) {
-          data2.push(data[d]);
+          d3.select("#circle-"+data[d].objectNumber)
+            .style("z-index","2")
         } else {
-          data1.push(data[d]);
+          d3.select("#circle-"+data[d].objectNumber)
+            .style("z-index","1")
         }
       }
-
-      svg.selectAll(".circle1")
-         .data(data1)
-         .enter()
-         .append("circle")
-           .attr("cx",function(d) {return getRandomInt(width-(2*circleRadius),circleRadius)})
-           .attr("cy",function(d) {return getRandomInt(height-(2*circleRadius),circleRadius)})
-           .attr("r",circleRadius)
-           .attr("fill",function(d) {return "url(#pattern-"+d+")"})
-           .attr("class","circle")
-           .attr("id",function(d) {return "circle-"+d})
-        .on("click",function() {
-          console.log(this.id);
-          highlightSelection(this.id.split("-")[1])
-        });
-
-      svg.append("text")
-         .attr("x",width/2)
-         .attr("y",height/4)
-         .attr("text-anchor","middle")
-         .attr("class","title-text")
-         .attr("fill","rgb(10,10,10)")
-         .attr("id","title-text-1")
-         .text("The")
-
-      svg.append("text")
-         .attr("x",width/2)
-         .attr("y",height/2)
-         .attr("text-anchor","middle")
-         .attr("class","title-text")
-         .attr("fill","rgb(10,10,10)")
-         .attr("id","title-text-2")
-         .text("Migration")
-
-      svg.append("text")
-         .attr("x",width/2)
-         .attr("y",3*height/4)
-         .attr("text-anchor","middle")
-         .attr("class","title-text")
-         .attr("fill","rgb(10,10,10)")
-         .attr("id","title-text-3")
-         .text("of  Art")
-
-      svg.selectAll(".circle2")
-         .data(data2)
-         .enter()
-         .append("circle")
-           .attr("cx",function(d) {return getRandomInt(width-(2*circleRadius),circleRadius)})
-           .attr("cy",function(d) {return getRandomInt(height-(2*circleRadius),circleRadius)})
-           .attr("r",circleRadius)
-           .attr("fill",function(d) {return "url(#pattern-"+d+")"})
-           .attr("class","circle")
-           .attr("id",function(d) {return "circle-"+d})
-        .on("click",function() {
-          console.log(this.id);
-          highlightSelection(this.id.split("-")[1])
-        });
     }
 
     function highlightSelection(objectNumber) {
@@ -134,6 +71,17 @@ window.vanGoghd3 = function() {
         paintingSelection = objectNumber;
       }
 
+      d3.select("#vanGoghd3-svg")
+        .selectAll(".circle")
+        .attr("class",function(d) {
+          if (d.objectNumber == paintingSelection) {
+            return "circle is-highlighted"
+          } else {
+            return "circle is-not-highlighted"
+          }
+          // console.log(d.objectNumber)
+        });
+
       let svg = d3.select("#map").select("svg")
       svg.selectAll(".marker").style("opacity","0");
       svg.selectAll(".path").style("opacity","0");
@@ -142,14 +90,22 @@ window.vanGoghd3 = function() {
       svg.select("#path-"+objectNumber)
          .style("opacity","0.5");
 
-      let mareySvg = d3.select("#marey-chart").select("svg");
-      mareySvg.selectAll(".marey-line").style("opacity","0");
-      mareySvg.selectAll(".provenance-path").style("opacity","0");
-      mareySvg.selectAll(".exhibition-circle").style("opacity","0");
+      svg.select("#marker-"+objectNumber)
+         .style("opacity", function(d) {
+           d3.select("#marey-legend")
+             .select("h1")
+             .text(d.title.split(" (")[0])
+           return "1"
+         })
 
-      mareySvg.select("#marey_line_"+objectNumber).style("opacity","1");
-      mareySvg.selectAll(".provenance_path_"+objectNumber).style("opacity","1");
-      mareySvg.selectAll(".exhibition_circle_"+objectNumber).style("opacity","1");
+      let mareySvg = d3.select("#marey-chart").select("svg");
+      mareySvg.selectAll(".marey-line-active").attr("class","marey-line");
+      mareySvg.selectAll(".provenance-path-active").attr("class","provenance-path");
+      mareySvg.selectAll(".exhibition-circle-active").attr("class","exhibition-circle");
+
+      mareySvg.select("#marey_line_"+paintingSelection).attr("class","marey-line-active");
+      mareySvg.selectAll("#provenance_path_"+paintingSelection).attr("class","provenance-path-active provenance_path_"+objectNumber);
+      mareySvg.selectAll("#exhibition_circle_"+paintingSelection).attr("class","exhibition-circle-active exhibition_circle_"+objectNumber);
     }
 
     function animateCircles() {
@@ -160,12 +116,13 @@ window.vanGoghd3 = function() {
           .delay(0)
           .on("start",function repeat() {
             d3.active(this)
-                .attr("cx",function(d) {return getRandomInt(width-(2*circleRadius),circleRadius)})
-                .attr("cy",function(d) {return getRandomInt(height-(2*circleRadius),circleRadius)})
+                .style("left",function(d) {return getRandomInt(width-(3*circleRadius),circleRadius) + "px"})
+                .style("top",function(d) {return getRandomInt(height-(3*circleRadius),circleRadius)+ "px"})
               .transition()
               .ease(d3.easeQuadInOut)
                 .on("start",repeat);
           })
     }
+
   })
 }

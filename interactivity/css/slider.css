@@ -1,8 +1,9 @@
 #slidecontainer {
   width: 70vw;
-  height: 7vh;
+  height: 9vh;
   position: fixed;
-  margin-top: 0;
+  /* padding-top: 5px; */
+  /* margin-top: 10px; */
   margin-left: 15vw;
   top: 105vh;
   display: flex;
@@ -11,79 +12,123 @@
 #slider-buttons {
   width: 20vw;
   background-color: #333333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #slider-buttons p {
+  font-family: "Roboto",sans-serif;
   font-size: 12px;
   margin: 0;
   padding: 5px;
 }
 
 #slider-buttons button {
-  border-radius: 50%;
-  height: 40px;
-  width: 40px;
-  background-color: #e55c69;
   color: #fff;
-  font-size: 16px;
-  /* font-weight: 400; */
-  /* font-family: "Roboto"; */
+}
+
+#slider-buttons button, #slider-buttons-info button {
+  font-family: "Roboto",sans-serif;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 90%;
+  /* padding: 5px; */
+  margin: auto;
+
+  border-bottom: 0.5vh solid;
+	border-bottom-color: rgba(226,12,50, 0.4);
+	display: inline-block;
+	line-height: 0.45;
+}
+
+#slider-buttons button:hover,#slider-buttons-info button:hover {
+  border-bottom: none;
+	line-height: 1.25;
+	background-color: rgba(226,12,50, 0.4);
+	cursor: pointer;
+	/* margin: auto; */
+	transition: background-color 0.5s, border-bottom 0.5s;
 }
 
 #slider {
+  /* padding-top: 18px; */
   background-color: #F0F0F0;
   flex: 1;
   width: 50vw;
 }
 
+#slider-year-axis {
+  width: 100%;
+  /* position: relative;
+  left: 6%; */
+}
+
 
 #year-slider {
-  /* margin-left: 2vw; */
-  /* -webkit-appearance: none; */
+  -webkit-appearance: none;
   width: 88%;
   position: relative;
   left: 6%;
   height: 1vh;
-  border-radius: 5px;
-  background: #d3d3d3;
-  outline: none;
   opacity: 0.7;
-  -webkit-transition: .2s;
-  transition: opacity .2s;
+  top: 0.5vh;
 }
 
 #year-slider:hover {
     opacity: 1;
 }
 
-/*
+
 #year-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 2vh;
-    height: 2vh;
-    border-radius: 50%;
+    width: 0.75vh;
+    height: 3vh;
     background: #e55c69;
     cursor: pointer;
 }
 
 #year-slider::-moz-range-thumb {
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    background: #e55c69;
-    cursor: pointer;
+  width: 0.75vh;
+  height: 3vh;
+  background: #e55c69;
+  cursor: pointer;
 }
-*/
+
 
 #slidecontainer #slideyear {
+  font-family: "Roboto",sans-serif;
+  /* margin: 0; */
+  margin-bottom: 5px;
+  /* padding: 0; */
+  height: 18px;
   color: #e55c69;
   font-weight: 400;
-  font-size: 22px;
+  font-size: 17px;
   margin: 0;
   padding: 0;
   position: relative;
-  /* left: 2vw; */
-  /* margin-left: 5vw; */
+  left: 88%;
+  /* top: 0%; */
   /* text-align: right; */
+}
+
+#slider-year-axis {
+  position: relative;
+  /* top: -0.5vh; */
+}
+
+.tick {
+  font-family: "Roboto",sans-serif;
+  font-size: 11px;
+}
+
+.tick line{
+  visibility:hidden;
+}
+
+.tick text{
+  fill: rgb(200,200,200);
 }

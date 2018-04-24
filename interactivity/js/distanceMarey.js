@@ -63,7 +63,6 @@ let data = d3.json(filePath + "locationsGeo.json").then(
           });
         });
 
-
         // Let's add our Marey axes for every location and year in our data
 
         // set up x scale
@@ -77,6 +76,24 @@ let data = d3.json(filePath + "locationsGeo.json").then(
                   .range([margin.top,height-margin.bottom]); // reverse scale, so we go east to west
 
 
+
+        // show year axis on #slider-year-axis svg
+        let yearSvg = d3.select("#slider-year-axis")
+        // let yearWidth = width;
+        let yearX = d3.scaleLinear()
+                  .domain([d3.min(years),maxYear])
+                  .range([width*0.06,width*0.94])
+                  // .nice();
+
+        let xAxis1 = yearSvg.append("g")
+                        .call(
+                          d3.axisBottom(yearX)
+                            .tickFormat(d3.format("d"))
+                            .tickValues([d3.min(years),1900,1920,1940,1960,1980,2000,d3.max(years)])
+                          )
+                        .attr("transform",`translate(0,0)`)
+                        .select('.domain').remove()
+
         // append svg
         let svg =  d3.select("#marey-chart")
                      .append("svg")
@@ -84,8 +101,6 @@ let data = d3.json(filePath + "locationsGeo.json").then(
                      .attr("height", height)
                      .attr("class", "marey")
                      .attr("id", "marey-svg")
-
-
 
         svg.append("rect")
            .attr("width",width)
@@ -103,8 +118,10 @@ let data = d3.json(filePath + "locationsGeo.json").then(
         //                 .attr("fill","white")
         //                 .select('.domain').remove()
 
-        let mareyYear = 1985;
+        let mareyYear = 2017;
         drawAllMareys(mareyYear);
+        drawYearHovers(mareyYear);
+
 
         let yearSlider = d3.select("#year-slider").on("input",function() {
           mareyYear = this.value;
@@ -112,22 +129,114 @@ let data = d3.json(filePath + "locationsGeo.json").then(
           drawAllMareys(mareyYear);
         });
 
-        let playYears = d3.select("#play").on("click",function() {
-          let yearSlider = d3.select("#year-slider");
-          yearSlider.transition()
-                    .attr("value",2000)
-
-          // console.log()
-          for (let year=yearSlider.property("value");year<=yearSlider.property("max");year++) {
-            console.log(year);
+        function drawYearHovers(mareyYear) {
+          let hoverYears = []
+          for (let y=1885;y<=mareyYear;y++) {
+            hoverYears.push(y);
           }
-          // console.log(yearSlider.property("max"));
-        })
+
+          let strokeWidth = x(2017)-x(2016);
+
+          let g = svg.append("g")
+          g.attr("id","hover-year-g")
+
+          g.selectAll(".hover-year")
+           .data(hoverYears)
+           .enter()
+           .append("line")
+           .attr("y1",0)
+           .attr("x1",function(d) {return x(d)})
+           .attr("y2",height)
+           .attr("x2",function(d) {return x(d)})
+           .attr("id",function(d) {return "hover-year-"+d})
+           .attr("class","hover-year")
+           .style("stroke-width",strokeWidth)
+           .on("mouseenter",function(d) {
+
+             let owners = [];
+             let ownerYears = [];
+             let ownerLocations = [];
+             let provPath = d3.selectAll(".provenance-path-active");
+             let title = d3.select("#map").select("svg").select("#marker-"+provPath.node().id.split("_")[2]).data()[0].title;
+
+             for (let pp=0;pp<provPath.data().length;pp++) {
+               let thisProvPath = provPath.data()[pp]
+               if (thisProvPath.length>0) {
+                 if (d >= thisProvPath[0].year && (d) <= thisProvPath[thisProvPath.length-1].year) {
+                   for (let tpp=0;tpp<thisProvPath.length;tpp++) {
+                     if (thisProvPath[tpp].owner.indexOf("Exhibition - ") === -1 && $.inArray(thisProvPath[tpp].owner, owners) === -1) {
+                       owners.push(thisProvPath[tpp].owner)
+                       if (thisProvPath[tpp].owner !== "Metropolitan Museum of Art") { // The Met has it's own location, so no need to add twice
+                         ownerLocations.push(thisProvPath[tpp].location)
+                       } else {
+                         ownerLocations.push('')
+                       }
+                     }
+                   }
+                 }
+               }
+             }
+
+             let exhibitions = [];
+             let exhibitionLocations = [];
+             let exhibCircle = d3.selectAll(".exhibition-circle-active")
+             for (let ec=0;ec<exhibCircle.data().length;ec++) {
+               let thisExhibCircle = exhibCircle.data()[ec]
+               if (thisExhibCircle.year === d) {
+                 // console.log(thisExhibCircle)
+                 exhibitionLocations.push(thisExhibCircle.location)
+                 if (thisExhibCircle.exhibition.replace("Exhibition -  ","") === "The Metropolitan Museum of Art" && thisExhibCircle.location === "Metropolitan Museum of Art") { // The Met has it's own location, so no need to add twice
+                   exhibitions.push('')
+                 } else (
+                   exhibitions.push(thisExhibCircle.exhibition.replace("Exhibition -  ",""))
+                 )
+               };
+             }
+
+             let yearHoverHtml = ''
+             yearHoverHtml += '<h2>'+d+'</h2>'
+             for (let o=0;o<owners.length;o++) {
+               yearHoverHtml += "<h1>"+owners[o]+"&nbsp;<span id='owner-location'>"+ownerLocations[o]+"</span></h1>"
+             }
+             for (let e=0;e<exhibitions.length;e++) {
+               yearHoverHtml += "<p>"+exhibitionLocations[e]+"&nbsp;<span id='exhibition-name'>"+exhibitions[e]+"</span></p>"
+             }
+
+
+             // d3.select("#year-hover-text")
+             //   .text(yearHoverHtml);
+
+             $("div#year-hover-text").html(yearHoverHtml);
+             d3.select("#year-hover-text")
+               .style("opacity",1)
+               .style("width","auto")
+               .style("max-width","30vw")
+               .style("left",function() {
+                 let left = ''
+                 if (event.clientX/window.innerWidth >= 0.5) {
+                   left = ((event.clientX/window.innerWidth)*100)-15 + "vw"
+
+                 } else {
+                   left = (event.clientX/window.innerWidth)*100 + "vw"
+                 }
+                 return left})
+               .style("top",event.clientY+ 10 + "px")
+               // .style("transform","translate("+event.clientX+","+event.clientY+")")
+           })
+           .on("mouseout",function(d) {
+             d3.select("#year-hover-text")
+               .style("opacity",0)
+               .style("width","0vw")
+           })
+
+        }
 
         function drawCityAxes(svg) {
+          let g = svg.append("g")
+          g.attr("id","marey-axis-g")
 
           // AXIS LINES
-          svg.selectAll(".marey-axis")
+          g.selectAll(".marey-axis")
              .data(locations)
              .enter()
              .append("line")
@@ -139,69 +248,40 @@ let data = d3.json(filePath + "locationsGeo.json").then(
                 .attr("class","marey-axis")
 
           // CONTINENT LABELS
-          svg.append("text")
-             .attr("x",margin.left*0.5)
-             .attr("y",height*0.2)
+          g.append("text")
              .attr("class","continent-label")
-             // .attr("writing-mode","tb-lr")
-             .attr("transform","rotate(270,"+margin.left*0.5+","+height*0.2+")")
+             .attr("text-anchor","start")
+             .attr("transform","translate("+margin.left*0.55+","+y(locations[47].distance)+")rotate(270)")
              .text("North America")
 
-          svg.append("text")
-             .attr("x",margin.left*0.5)
-             .attr("y",height*0.52)
+          g.append("text")
              .attr("class","continent-label")
-             // .attr("writing-mode","tb-lr")
-             .attr("transform","rotate(270,"+margin.left*0.5+","+height*0.52+")")
+             .attr("text-anchor","start")
+             .attr("transform","translate("+margin.left*0.55+","+y(locations[100].distance)+")rotate(270)")
              .text("Europe")
 
-          svg.append("text")
-             .attr("x",margin.left*0.5)
-             .attr("y",height*0.97)
+          g.append("text")
              .attr("class","continent-label")
-             // .attr("writing-mode","tb-lr")
-             .attr("transform","rotate(270,"+margin.left*0.5+","+height*0.97+")")
+             .attr("text-anchor","start")
+             .attr("transform","translate("+margin.left*0.55+","+y(locations[107].distance)+")rotate(270)")
              .text("Asia & Oceania")
 
-          // // LOCATION LABELS THAT WILL BE ANIMATED
-          // svg.selectAll(".marey-axis-label")
-          //    .data(locations)
-          //    .enter()
-          //    .append("text")
-          //       .attr("x",margin.left)
-          //       .attr("y",function(d) {return y(d.distance)})
-          //       .attr("id",function(d) {return "marey-axis-label-"+d.location;})
-          //       .attr("class","marey-axis-label")
-          //       .attr("fill","rgb(175,175,175)")
-          //       .text(function(d) {return d.location})
-          //
-          // // POINTS ON MAP THAT WILL BE ANIMATED
-          // d3.select("#map").select("svg")
-          //                  .selectAll(".marey-axis-map")
-          //                  .data(locations)
-          //                  .enter()
-          //                  .append("circle")
-          //                    .attr("cx",function(d) {
-          //                      let markerPoint = map.latLngToLayerPoint(L.latLng(d.coordinates));
-          //                      return markerPoint.x;
-          //                    })
-          //                    .attr("cy",function(d) {
-          //                      let markerPoint = map.latLngToLayerPoint(L.latLng(d.coordinates));
-          //                      return markerPoint.y;
-          //                    })
-          //                    .attr("fill","rgb(150,150,150)")
-          //                    .attr("r",10)
-          //                    .attr("class","marey-axis-map")
-          //                    .attr("id",function(d) {return "marey-axis-map-"+d.location})
         }
 
         function removeAllMareys() {
           svg.selectAll(".marey-line").remove();
           svg.selectAll(".provenance-path").remove();
           svg.selectAll(".exhibition-circle").remove();
+
+          svg.selectAll(".marey-line-active").remove();
+          svg.selectAll(".provenance-path-active").remove();
+          svg.selectAll(".exhibition-circle-active").remove();
         }
 
         function drawAllMareys(mareyYear) {
+          let pathG  = svg.append("g").attr("id","marey-line-g")
+          let provG  = svg.append("g").attr("id","provenance-path-g")
+          let exhibG = svg.append("g").attr("id","exhibition-circle-g")
           graphData.forEach(function(gd) {
 
             let img = document.createElement('img');
@@ -220,9 +300,11 @@ let data = d3.json(filePath + "locationsGeo.json").then(
               init();
 
               function init() {
-                findYearDistances();
+                let years = findYearDistances();
                 let provenanceDistances = findProvenanceDistances();
-                graphMarey(maxYearDistances,provenanceDistances);
+                let graphDataAllYears = findGraphDataAllYears();
+                // console.log(graphDataAllYears);
+                graphMarey(graphDataAllYears,provenanceDistances);
                 graphExhibitions(exhibitionDistances);
               }
 
@@ -250,7 +332,7 @@ let data = d3.json(filePath + "locationsGeo.json").then(
                            "year":y
                           ,"distance":mareyDistance(firstCoords[0],firstCoords[1],c[0],c[1])
                           ,"location":d.line.cities[1]
-                          ,"exhibiton":d.line.owner[1]
+                          ,"exhibition":d.line.owner[1]
                           ,"objectNumber":gd.objectNumber
                         })
                       }
@@ -265,13 +347,14 @@ let data = d3.json(filePath + "locationsGeo.json").then(
                     }
                   })
                 })
+                return maxYearDistances;
               }
 
               function findProvenanceDistances() {
                 // pull list of each unique owner and range of dates
                 let provenanceDates = [];
                 gd.objects.forEach(function(d) {
-                  if (d.line.dataType === 'provenance' && d.line.year <= mareyYear) {
+                  if ((d.line.dataType === 'provenance' || d.line.dataType === 'returnProvenance') && d.line.year <= mareyYear) {
                     provenanceDates.push({
                        "year" : d.line.year
                       ,"owner" : d.line.owner[1]
@@ -309,7 +392,7 @@ let data = d3.json(filePath + "locationsGeo.json").then(
                 // });
               }
 
-              function graphMarey(maxYearDistances,provenanceDistances) {
+              function findGraphDataAllYears() {
                 let graphDataAllYears = [];
                 for (let y=firstYear;y<=mareyYear;y++) {
 
@@ -342,6 +425,42 @@ let data = d3.json(filePath + "locationsGeo.json").then(
                     })
                   }
                 }
+                return graphDataAllYears;
+              }
+
+              function graphMarey(graphDataAllYears,provenanceDistances) {
+                // let graphDataAllYears = [];
+                // for (let y=firstYear;y<=mareyYear;y++) {
+                //
+                //   let graphDataPrevYears = [];
+                //   let graphDataThisYear = [];
+                //
+                //   maxYearDistances.forEach(function(myd) {
+                //     if (myd.year === y && myd.year <= mareyYear) {
+                //       graphDataThisYear.push(myd);
+                //     } else if (myd.year < y && myd.year <= mareyYear) {
+                //       graphDataPrevYears.push(myd);
+                //     }
+                //   })
+                //
+                //   if (graphDataThisYear.length>0) {
+                //     for (let ty=0;ty<graphDataThisYear.length;ty++) {
+                //       graphDataAllYears.push({
+                //          "year"     : y
+                //         ,"distance" : graphDataThisYear[ty].distance
+                //         ,"location" : graphDataThisYear[ty].location
+                //         ,"owner"    : graphDataThisYear[ty].owner
+                //       })
+                //     }
+                //   } else {
+                //     graphDataAllYears.push({
+                //       "year"     : y
+                //      ,"distance" : graphDataPrevYears[graphDataPrevYears.length-1].distance
+                //      ,"location" : graphDataPrevYears[graphDataPrevYears.length-1].location
+                //      ,"owner"    : graphDataPrevYears[graphDataPrevYears.length-1].owner
+                //     })
+                //   }
+                // }
 
                 // curves - http://bl.ocks.org/d3indepth/b6d4845973089bc1012dec1674d3aff8
                 let line = d3.line()
@@ -351,67 +470,65 @@ let data = d3.json(filePath + "locationsGeo.json").then(
                              // .curve(d3.curveLinear);
 
                  // Create line
-                 svg.append("path")
-                    .datum(graphDataAllYears)
-                    .attr("d",line)
-                    .attr("stroke",vibrantDarkColor)
-                    .attr("class","marey-line")
-                    .attr("id",'marey_line_' + gd.objectNumber)
-                    .style("opacity",function(d) {
-                      if (gd.objectNumber == paintingSelection) {
-                        return "1"
-                      } else {
-                        return "0"
-                      }
-                    })
+                 pathG.append("path")
+                      .datum(graphDataAllYears)
+                      .attr("d",line)
+                      .attr("stroke",vibrantDarkColor)
+                      .attr("class",function(d) {
+                        if (gd.objectNumber == paintingSelection) {
+                          return "marey-line-active"
+                        } else {
+                          return "marey-line"
+                        }
+                      })
+                      .attr("id",'marey_line_' + gd.objectNumber)
 
                 graphProvenance();
 
                 function graphProvenance() {
                   provenanceDistances.forEach(function(pd) {
                     let provGraphDataAllYears = [];
-                    // console.log(pd);
                     for (let gday=0;gday<graphDataAllYears.length;gday++) {
-                      if (graphDataAllYears[gday].year >= pd.year && graphDataAllYears[gday].year <= pd.endYear) {
+                      if ((graphDataAllYears[gday].year >= pd.year && graphDataAllYears[gday].year < pd.endYear && graphDataAllYears[gday].owner.indexOf("Exhibition") !== -1) || (graphDataAllYears[gday].year >= pd.year && graphDataAllYears[gday].year <= pd.endYear && graphDataAllYears[gday].owner === pd.owner)) {
                         provGraphDataAllYears.push(graphDataAllYears[gday]);
                       }
                     }
-                    provGraphDataAllYear = provGraphDataAllYears.splice(-1,1);
-                    svg.append("path")
-                       .datum(provGraphDataAllYears)
-                       .attr("d",line)
-                       .attr("stroke",vibrantDarkColor)
-                       .attr("class","provenance-path provenance_path_"+gd.objectNumber)
-                       .style("opacity",function(d) {
-                         if (gd.objectNumber == paintingSelection) {
-                           return "1"
-                         } else {
-                           return "0"
-                         }
-                       })
+                    // provGraphDataAllYear = provGraphDataAllYears.splice(-1,2);
+                    provG.append("path")
+                         .datum(provGraphDataAllYears)
+                         .attr("d",line)
+                         .attr("stroke",vibrantDarkColor)
+                         .attr("id","provenance_path_"+gd.objectNumber)
+                         .attr("class",function(d) {
+                           if (gd.objectNumber == paintingSelection) {
+                             return "provenance-path-active"
+                           } else {
+                             return "provenance-path"
+                           }
+                         })
                   });
                 }
               }
 
               function graphExhibitions(exhibitionDistances) {
 
-                svg.selectAll(".exhibition_circle")
-                   .data(exhibitionDistances)
-                   .enter()
-                   .append("circle")
-                      .attr("cx",function(d) {return x(d.year);})
-                      .attr("cy",function(d) {return y(d.distance);})
-                      .attr("r",6)
-                      .attr("stroke",vibrantColor)
-                      .attr("stroke-width",2)
-                      .attr("class",function(d) {return "exhibition-circle exhibition_circle_" + d.objectNumber})
-                      .style("opacity",function(d) {
-                        if (d.objectNumber == paintingSelection) {
-                          return "1"
-                        } else {
-                          return "0"
-                        }
-                      })
+                exhibG.selectAll(".exhibition_circle")
+                      .data(exhibitionDistances)
+                      .enter()
+                      .append("circle")
+                        .attr("cx",function(d) {return x(d.year);})
+                        .attr("cy",function(d) {return y(d.distance);})
+                        .attr("r",6)
+                        .attr("stroke",vibrantColor)
+                        .attr("stroke-width",2)
+                        .attr("id",function(d) {return "exhibition_circle_" + d.objectNumber})
+                        .attr("class",function(d) {
+                          if (d.objectNumber == paintingSelection) {
+                            return "exhibition-circle-active"
+                          } else {
+                            return "exhibition-circle"
+                          }
+                        })
               }
             });
           });

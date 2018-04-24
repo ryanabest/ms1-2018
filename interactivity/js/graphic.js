@@ -15,156 +15,110 @@ window.createGraphic = function(graphicSelector) {
       console.log("step0");
       bigTitle();
       animateCircles();
+      hideIntroText();
       hideMap();
       hideMarey();
       hideSlider();
+      allOpaque();
 
     },
     function step1() {
 
       console.log("step1");
+
       stickyTitle();
       menuCircles();
+      hideIntroText();
       hideMap();
-      hideMarey();
-      hideSlider();
-
-    },
-    function step2() {
-
-      console.log("step2");
-      stickyTitle();
-      menuCircles();
-      showMap();
-      hideMarey();
-      showSlider();
-
-    },
-
-    function step3() {
-
-      console.log("step3");
-      stickyTitle();
-      menuCircles();
-      showMap();
-      hideMarey();
-      showSlider();
-
-    },
-
-    function step4() {
-      console.log("step4");
-      stickyTitle();
-      menuCircles();
       showMarey();
+      showSlider();
+      opacityAnimation();
+
     }
   ]
 
   function stickyTitle() {
-    d3.select(".scroll__graphic")
-      .select("svg")
-      .selectAll(".title-text")
-      .transition()
-           .ease(d3.easeQuadInOut)
-           .duration(500)
-           .style("opacity",0)
-
      d3.select("#sticky-title")
        .transition()
             .ease(d3.easeQuadInOut)
             .duration(500)
             .style("opacity",1)
 
+      d3.select(".title-text")
+        .transition()
+          .ease(d3.easeQuadInOut)
+          .duration(1500)
+          .style("position","relative")
+          .style("top","-105vh")
   }
 
   function bigTitle() {
-    d3.select(".scroll__graphic")
-      .select("svg")
-      .selectAll(".title-text")
-      .transition()
-           .ease(d3.easeQuadInOut)
-           .duration(500)
-           .style("opacity",1)
-
-
      d3.select("#sticky-title")
        .transition()
             .ease(d3.easeQuadInOut)
             .duration(500)
             .style("opacity",0)
+
+      d3.select(".title-text")
+        .transition()
+          .ease(d3.easeQuadInOut)
+          .duration(1500)
+          .style("position","relative")
+          // .style("margin-top","0%")
+          .style("top","10vh")
   }
 
   function animateCircles() {
-    // resize svg to full screen
-    d3.select("#svg-chart")
-      .transition()
-      .ease(d3.easeQuadInOut)
-        .duration(2500)
-        .attr("width",width)
-        .style("left","0%")
-
-    d3.selectAll(".title-text")
-      .transition()
-        .ease(d3.easeQuadInOut)
-        .duration(3500)
-        .style("opacity",1)
-
-
     // resize circles and chain transitions to move them around the screen
     d3.selectAll(".circle")
       .transition()
       .ease(d3.easeQuadInOut)
-        .duration(2000)
-        .attr("r",circleRadius)
-        .attr("fill",function(d) {return "url(#pattern-"+d+")"})
-        .attr("cx",circleRadius)
+        .duration(500)
+        .attr("height",circleRadius*2)
         .on("end",function() {
           d3.selectAll(".circle")
             .transition()
-            .ease(d3.easeQuadInOut)
+            // .ease(d3.easeQuadInOut)
               .duration(5000)
-              // .delay(function(d,i) {return 100+i})
+              .delay(0)
               .on("start",function repeat() {
                 d3.active(this)
-                    .attr("cx",function(d) {return getRandomInt(width-(2*circleRadius),circleRadius)})
-                    .attr("cy",function(d) {return getRandomInt(height-(2*circleRadius),circleRadius)})
+                    .style("left",function(d) {return getRandomInt(width-(3*circleRadius),circleRadius) + "px"})
+                    .style("top",function(d) {return getRandomInt(height-(3*circleRadius),circleRadius)+ "px"})
                   .transition()
                   .ease(d3.easeQuadInOut)
                     .on("start",repeat);
-            });}
+              });
+            }
           );
   }
 
   function menuCircles() {
-    // resize svg to be on the right hand side only
-    d3.select("#svg-chart")
-      .transition()
-      .ease(d3.easeQuadInOut)
-        .duration(2500)
-        .attr("width",width*0.05)
-        .style("display","relative")
-        .style("left","95%")
-
-    // make circles smaller then re-do pattern
+    // smaller circles on right hand side
     d3.selectAll(".circle")
       .transition()
         .ease(d3.easeQuadInOut)
-          .duration(2500)
-          .attr("r",menuRadius)
-          .attr("cx",menuRadius)
-          .attr("cy",function(d,i) {return (i+0.5)*(2*menuRadius);})
-        .style("cursor","pointer")
-     .transition()
-       .duration(2500)
-       .ease(d3.easeQuadInOut)
-       .attr("fill",function(d) {return "url(#menu-pattern-"+d+")"})
+          .duration(1500)
+          .attr("height",menuRadius*2)
+          .style("left",width-(menuRadius*2.5)+"px")
+          .style("top",function(d,i) {return (i)*(2*menuRadius)+"px";})
+          .style("cursor","pointer")
+  }
 
-    // make text transparent
-    d3.selectAll(".title-text")
-      .transition()
-        .ease(d3.easeQuadInOut)
-        .duration(1500)
-        .style("opacity",0)
+  function showIntroText() {
+    let intro = d3.select("#intro-text");
+    intro.transition()
+         .ease(d3.easeQuadInOut)
+          .duration(1000)
+          .style("top","6vh");
+  }
+
+  function hideIntroText() {
+    let intro = d3.select("#intro-text");
+    intro.transition()
+         .ease(d3.easeQuadInOut)
+          .duration(1500)
+          .style("top","105vh");
   }
 
   function showMap() {
@@ -172,7 +126,7 @@ window.createGraphic = function(graphicSelector) {
     map.transition()
        .ease(d3.easeQuadInOut)
         .duration(1000)
-        .style("top","4vh");
+        .style("top","6vh");
   }
 
   function hideMap() {
@@ -188,7 +142,7 @@ window.createGraphic = function(graphicSelector) {
     div.transition()
          .ease(d3.easeQuadInOut)
             .duration(1000)
-            .style("top","4vh");
+            .style("top","6vh");
 
   }
 
@@ -217,8 +171,23 @@ window.createGraphic = function(graphicSelector) {
             .style("top","105vh")
   }
 
-  function bigMarey() {
+  function allOpaque() {
+    d3.select("#vanGoghd3-svg")
+      .selectAll(".circle")
+      .attr("class","circle");
+  }
 
+  function opacityAnimation() {
+    d3.select("#vanGoghd3-svg")
+      .selectAll(".circle")
+      .attr("class",function(d) {
+        if (d.objectNumber == paintingSelection) {
+          return "circle is-highlighted"
+        } else {
+          return "circle is-not-highlighted"
+        }
+        // console.log(d.objectNumber)
+      });
   }
 
   // update chart by passing in variable that calls a specific function position
