@@ -116,6 +116,7 @@
 #project-title {
 	width: 100vw;
 	height: 100vh;
+	z-index: 2;
 }
 
 #title-text {
@@ -123,6 +124,7 @@
 	-webkit-box-pack:center;
 	display: -webkit-box;
 	height: 100vh;
+	/* z-index: 2; */
 }
 
 #title-text h1 {
