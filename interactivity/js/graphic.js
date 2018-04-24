@@ -109,7 +109,7 @@ window.createGraphic = function(graphicSelector) {
     let intro = d3.select("#intro-text");
     intro.transition()
          .ease(d3.easeQuadInOut)
-          .duration(1000)
+          .duration(1500)
           .style("top","6vh");
   }
 
@@ -125,7 +125,7 @@ window.createGraphic = function(graphicSelector) {
     let map = d3.select("#map");
     map.transition()
        .ease(d3.easeQuadInOut)
-        .duration(1000)
+        .duration(1500)
         .style("top","6vh");
   }
 
@@ -133,7 +133,7 @@ window.createGraphic = function(graphicSelector) {
     let map = d3.select("#map");
     map.transition()
        .ease(d3.easeQuadInOut)
-        .duration(1000)
+        .duration(1500)
         .style("top","105vh")
   }
 
@@ -141,7 +141,7 @@ window.createGraphic = function(graphicSelector) {
     let div = d3.select("#marey")
     div.transition()
          .ease(d3.easeQuadInOut)
-            .duration(1000)
+            .duration(1500)
             .style("top","6vh");
 
   }
@@ -150,7 +150,7 @@ window.createGraphic = function(graphicSelector) {
     let div = d3.select("#marey")
     div.transition()
          .ease(d3.easeQuadInOut)
-            .duration(1000)
+            .duration(1500)
             .style("top","105vh");
   }
 
@@ -158,7 +158,7 @@ window.createGraphic = function(graphicSelector) {
     let slider = d3.select("#slidecontainer")
     slider.transition()
           .ease(d3.easeQuadInOut)
-            .duration(1000)
+            .duration(1500)
             .style("top","84vh")
   }
 
@@ -167,7 +167,7 @@ window.createGraphic = function(graphicSelector) {
     // slider.style("opacity",0)
     slider.transition()
           .ease(d3.easeQuadInOut)
-            .duration(1000)
+            .duration(1500)
             .style("top","105vh")
   }
 
