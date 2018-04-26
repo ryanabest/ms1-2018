@@ -19,8 +19,8 @@ let data = d3.json(filePath + "locationsGeo.json").then(
       distances.push(mareyDistance(firstCoords[0],firstCoords[1],data.coordinates[l][0],data.coordinates[l][1]));
     }
     // chart variables
-    let width = window.innerWidth*0.5;
-    let height = window.innerHeight*0.8;
+    let width = window.innerWidth*0.71;
+    let height = window.innerHeight*0.85;
     let margin = {top: height*0.05, right: width*0.06, bottom: height*0.05, left: width*0.06};
 
 

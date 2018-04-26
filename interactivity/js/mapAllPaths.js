@@ -3,7 +3,7 @@
 // let map = L.map('map',{zoomControl:false,attributionControl:false}).fitBounds(L.latLngBounds(L.latLng(69,150),L.latLng(-9,-131)));
 
 let map = L.map('map',{
-                       scrollWheelZoom: false
+                       // scrollWheelZoom: false
                        // ,zoomControl: false
                     }).setView([20,0],2); // Load the whole map first
 var CartoDB_PositronNoLabels = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png', {

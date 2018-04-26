@@ -6,7 +6,7 @@ window.createGraphic = function(graphicSelector) {
   let width = window.innerWidth;
   let height = window.innerHeight;
   let circleRadius = 80;
-  let menuRadius = height/36;
+  let menuRadius = (height*0.9)/36;
 
   let steps = [
     function step0() {
@@ -41,8 +41,8 @@ window.createGraphic = function(graphicSelector) {
      d3.select("#sticky-title")
        .transition()
             .ease(d3.easeQuadInOut)
-            .duration(500)
-            .style("opacity",1)
+            .duration(1500)
+            .style("top","0vh")
 
       d3.select("#project-title")
         .transition()
@@ -56,8 +56,8 @@ window.createGraphic = function(graphicSelector) {
      d3.select("#sticky-title")
        .transition()
             .ease(d3.easeQuadInOut)
-            .duration(500)
-            .style("opacity",0)
+            .duration(1500)
+            .style("top","100vh")
 
       d3.select("#project-title")
         .transition()
@@ -91,6 +91,13 @@ window.createGraphic = function(graphicSelector) {
               });
             }
           );
+
+    d3.select('body')
+      .transition()
+        .ease(d3.easeQuadInOut)
+        .duration(500)
+        .style("background-color","#fff")
+
   }
 
   function menuCircles() {
@@ -100,9 +107,16 @@ window.createGraphic = function(graphicSelector) {
         .ease(d3.easeQuadInOut)
           .duration(1500)
           .attr("height",menuRadius*2)
-          .style("left",width-(menuRadius*2.5)+"px")
-          .style("top",function(d,i) {return (i)*(2*menuRadius)+"px";})
+          .style("left",(width*0.975)-menuRadius+"px")
+          .style("top",function(d,i) {return ((i)*(2*menuRadius)+(height*0.08))+"px";})
           .style("cursor","pointer")
+
+  d3.select('body')
+    .transition()
+      .ease(d3.easeQuadInOut)
+      .duration(500)
+      .style("background-color","#f0f0f0")
+
   }
 
   function showIntroText() {
@@ -134,7 +148,7 @@ window.createGraphic = function(graphicSelector) {
     map.transition()
        .ease(d3.easeQuadInOut)
         .duration(1500)
-        .style("top","105vh")
+        .style("top","106vh")
   }
 
   function showMarey() {
@@ -159,7 +173,7 @@ window.createGraphic = function(graphicSelector) {
     slider.transition()
           .ease(d3.easeQuadInOut)
             .duration(1500)
-            .style("top","84vh")
+            .style("top","91vh")
   }
 
   function hideSlider() {
@@ -168,7 +182,7 @@ window.createGraphic = function(graphicSelector) {
     slider.transition()
           .ease(d3.easeQuadInOut)
             .duration(1500)
-            .style("top","105vh")
+            .style("top","191vh")
   }
 
   function allOpaque() {

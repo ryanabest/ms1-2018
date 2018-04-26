@@ -28,9 +28,7 @@
     <script>
       // let filePath = '../assets/' // Local Testing
       let filePath = '/ms1-2018/interactivity/assets/' // GitHub Pages
-
       let paintingSelection = 436524;
-
       function distance(lat1, lon1, lat2, lon2, unit) {
       	let radlat1 = Math.PI * lat1/180
       	let radlat2 = Math.PI * lat2/180
@@ -44,17 +42,12 @@
       	if (unit=="N") { dist = dist * 0.8684 }
       	return dist
       }
-
       function getRandomInt(max,min) {
         return Math.floor(Math.random() * max) + min;
       }
-
     </script>
   </head>
   <body>
-    <div id = 'sticky-title'>
-      <h1>The Migration of Art</h1>
-    </div>
     <div id = 'scroll'>
       <!-- graphic container -->
       <div class='scroll__graphic graphic'>
@@ -79,8 +72,61 @@
         <!-- <hr class = "whitespace" style = "height:60vh"/> -->
         <div class = 'step' data-step='2' id = "step-2">
           <hr class = "whitespace" style = "height:50vh"/>
-          <div class = 'map-text'>
-            <!-- <h2>STEP 3</h2> -->
+          <div id = 'sticky-title'>
+            <script>
+            let mapButtonVar = false;
+            let moreInfoVar  = false;
+            function mapButton() {
+              if (mapButtonVar) {
+                // The map is already showing, so hide it
+                mapButtonVar = false;
+                let map = d3.select("#map");
+                map.transition()
+                   .ease(d3.easeQuadInOut)
+                    .duration(1000)
+                    .style("top","106vh")
+                d3.select("#map-button").text("Show Map")
+              } else {
+                // The map is hidden, so show it
+                mapButtonVar = true;
+                let map = d3.select("#map");
+                map.transition()
+                   .ease(d3.easeQuadInOut)
+                    .duration(1000)
+                    .style("top","6vh");
+                d3.select("#map-button").text("Hide Map")
+              }
+            }
+            function moreInfoButton() {
+              if (moreInfoVar) {
+                // Info is already showing, so hide it
+                moreInfoVar = false;
+                let intro = d3.select("#intro-text");
+                intro.transition()
+                     .ease(d3.easeQuadInOut)
+                      .duration(1000)
+                      .style("top","106vh");
+                d3.select("#more-info-button").text("More Info")
+              } else {
+                moreInfoVar = true;
+                // Intro is hidden, so show it
+                let intro = d3.select("#intro-text");
+                intro.transition()
+                     .ease(d3.easeQuadInOut)
+                      .duration(1000)
+                      .style("top","6vh");
+                d3.select("#more-info-button").text("Hide Info")
+              }
+            }
+            </script>
+            <h1>The Migration of Art</h1>
+            <button id = "map-button" onclick = "mapButton()">
+              Show Map
+            </button>
+            <button id = "more-info-button" onclick = "moreInfoButton()">
+              More Info
+            </button>
+            <hr class = "whitespace" style = "width:60vw;"/>
           </div>
           <div class = "marey" id = "marey">
             <!-- <div id = "marey-explanation">
@@ -131,7 +177,7 @@
           </div>
           <div id = "slidecontainer">
             <link rel="stylesheet" href="css/slider.css" type="text/css" charset="utf-8">
-            <div id = "slider-buttons">
+            <!-- <div id = "slider-buttons">
               <script>
               let mapButtonVar      = false;
               function mapButton() {
@@ -169,11 +215,12 @@
               <button id = "map-button" onclick = "mapButton()">
                 Show Map
               </button>
-            </div>
+            </div> -->
+            <hr class = "whitespace" style = "width:24vw;"/>
             <div id = "slider">
               <p id = "slideyear"><b>2017</b></p>
               <input type="range" class="year-slider" id="year-slider">
-              <svg id = "slider-year-axis" width = "100%" height = "40px"></svg>
+              <svg id = "slider-year-axis" width = "100%"></svg>
             </div>
           </div>
           <!-- <hr class = "whitespace" style = "height:20vh"/> -->
@@ -193,20 +240,6 @@
               Inspired by E.J. Marey's 1885 graphical <a href = "https://www.edwardtufte.com/bboard/q-and-a-fetch-msg?msg_id=0003zP">train schedule,</a> this visualization shows a detailed timeline of movement for each of Van Gogh's paintings within The Met's collection.
               These paths, which approximate the real movement of each painting across the globe, change location when a painting changes hands or when it goes on exhibition - after its last exhibition on record, it returns to the Met.
               Hover over this view to see detailed information on the owners and exhibitions during each year of the painting's journey, or show the map to see this painting's movement in real time.
-              <div id = "slider-buttons-info">
-                <script>
-                function hideInfoButton() {
-                  let intro = d3.select("#intro-text");
-                  intro.transition()
-                       .ease(d3.easeQuadInOut)
-                        .duration(1000)
-                        .style("top","105vh");
-                }
-                </script>
-                <button id = "hide-info-button" onclick = "hideInfoButton()">
-                  Hide Info
-                </button>
-              </div>
           </div>
         </div>
     </div>
@@ -218,21 +251,17 @@
 
     <script>
     // createGraphic('.graphic')
-
     (function() {
       function graphscroll() {
         // select elements using d3 here since this is a d3 library...
         let graphicEl = d3.select("#scroll");
         let graphicVisEl = graphicEl.select(".scroll__graphic");
         var triggerEls = graphicEl.selectAll('.step');
-
         // viewport height
 				var viewportHeight = window.innerHeight
 				var halfViewportHeight = viewportHeight / 2
-
 				// a global function creates and handles all the vis + updates
 				var graphic = createGraphic('.graphic')
-
         // this is it, graph-scroll handles pretty much everything
         // it will automatically add class names to the elements,
         // so you just need to handle the fixed positions with css
@@ -245,7 +274,6 @@
             graphic.update(i);
           })
       }
-
       graphscroll();
     })()
     </script>

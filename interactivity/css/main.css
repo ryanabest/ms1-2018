@@ -9,21 +9,24 @@
   justify-content: center;
 }
 
-#marey {
-  width: 70vw;
-  height: 87vh;
+#marey, #map {
+  width: 95vw;
+  /* height: 94vh; */
   position: fixed;
-  margin-left: 15vw;
-  top: 105vh;
-  background-color: rgba(0,0,0,0);
+  left: 0px;
+  top: 106vh;
+  background-color: #f0f0f0;
 
   display: flex;
   flex-shrink: 0;
+}
 
-  -moz-box-shadow:    0 0 10px 1px #999;
-  -webkit-box-shadow: 0 0 10px 1px #999;
+#marey {
+  height: 94vh;
+}
 
-  /* padding: 0.2vw; */
+#map {
+  height: 85vh;
 }
 
 #marey-explanation {
@@ -38,24 +41,15 @@
   padding: 0;
 }
 
-#slider-buttons-info {
-  height: 18px;
-  position: absolute;
-  bottom: 4%;
-  left: 4%;
-}
-
-#slider-buttons-info button {
-  color: #000;
-}
-
 #marey-legend {
   width: 20vw;
+  /* margin: 0; */
   background-color: rgba(51,51,51,1);
   /* margin: 0.2vw; */
-  padding: 20px;
+  padding: 2vw;
   font-family: "Roboto", sans-serif;
   color: #fff;
+  /* box-sizing: border-box; */
 }
 
 #ownership-demo text {
@@ -74,10 +68,10 @@
 }
 
 #marey-legend h1 {
-  font-family: "Roboto", sans-serif;
-  font-size: 150%;
+  font-family: 'Playfair Display', serif;
+  font-size: 160%;
   left: 0%;
-  font-weight: 400;
+  font-weight: 700;
   line-height: 1em;
   margin-top: 0;
   color: #e55c69;
@@ -92,7 +86,9 @@
 }
 
 #marey-legend h2 {
-  font-size: 18px;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 100%;
 }
 
 #marey-legend p,a {
