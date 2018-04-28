@@ -14,8 +14,8 @@ window.createGraphic = function(graphicSelector) {
 
       console.log("step0");
       bigTitle();
-      animateCircles();
-      hideIntroText();
+      // animateCircles();
+      // hideIntroText();
       hideMap();
       hideMarey();
       hideSlider();
@@ -26,9 +26,23 @@ window.createGraphic = function(graphicSelector) {
 
       console.log("step1");
 
+      bigTitle();
+      // hideTitle();
+      animateCircles();
+      showIntroText();
+      hideMap();
+      hideMarey();
+      hideSlider();
+      allOpaque();
+
+    },
+    function step2() {
+
+      console.log("step2");
+
       stickyTitle();
       menuCircles();
-      hideIntroText();
+      // hideIntroText();
       hideMap();
       showMarey();
       showSlider();
@@ -37,19 +51,22 @@ window.createGraphic = function(graphicSelector) {
     }
   ]
 
+  function hideTitle() {
+    d3.select("#project-title")
+      .transition()
+        .ease(d3.easeQuadInOut)
+        .duration(1500)
+        .style("position","relative")
+        .style("top","-105vh")
+  }
+
   function stickyTitle() {
+    hideTitle();
      d3.select("#sticky-title")
        .transition()
             .ease(d3.easeQuadInOut)
             .duration(1500)
             .style("top","0vh")
-
-      d3.select("#project-title")
-        .transition()
-          .ease(d3.easeQuadInOut)
-          .duration(1500)
-          .style("position","relative")
-          .style("top","-105vh")
   }
 
   function bigTitle() {
@@ -132,7 +149,7 @@ window.createGraphic = function(graphicSelector) {
     intro.transition()
          .ease(d3.easeQuadInOut)
           .duration(1500)
-          .style("top","105vh");
+          .style("top","106vh");
   }
 
   function showMap() {

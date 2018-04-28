@@ -2,6 +2,7 @@
 <html lang = "en">
   <head>
     <meta charset="UTF-8">
+    <title>The Migration of Art</title>
     <link rel="stylesheet" href="css/main.css" type="text/css" charset="utf-8">
     <link rel="stylesheet" href="css/vanGoghd3.css" type="text/css" charset="utf-8">
 
@@ -45,6 +46,9 @@
       function getRandomInt(max,min) {
         return Math.floor(Math.random() * max) + min;
       }
+
+      let minYear;
+      let maxYear;
     </script>
   </head>
   <body>
@@ -53,25 +57,41 @@
       <div class='scroll__graphic graphic'>
         <!-- actual graphic/chart -->
         <div id = 'vanGoghd3-svg' class = 'chart'>
-          <div id = 'project-title'>
-            <div id = "title-text">
-              <h1>The<br>Migration<br>of&nbsp;&nbsp;Art</h1>
-            </div>
-          </div>
         </div>
       </div>
 
         <!-- step/text container -->
       <div id = 'vanGoghd3-intro' class = 'scroll__text'>
         <div class = 'step' data-step='1' id = "step-1">
-          <!-- <hr> -->
-          <!-- <h1><span>&nbsp;The&nbsp;<span></h1>
-          <h1><span>&nbsp;Migration&nbsp;<span></h1>
-          <h1><span>&nbsp;of&nbsp;&nbsp;Art&nbsp;<span></h1> -->
+          <div id = 'project-title'>
+              <h1><span>The</span><br><span>Migration</span><br><span>of&nbsp;&nbsp;Art</span></h1>
+              <!-- <h2>Subtitle</h2> -->
+          </div>
+          <hr class = "whitespace" style = "height:50vh"/>
+          <div id = 'intro-text'>
+            <h3>The Migration of Art</h3>
+            <h1>Exploring Art's History of Movement</h1>
+            <h2>Vincent Van Gogh at <i>The Met</i>, 1885-2017</h2>
+            <!-- <br> -->
+            <p>
+              When we visit a renowned piece of art in a museum's galleries, we may not always consider the path it traveled before arriving at this destination.
+              Prominent artwork can be bought, sold, traded, and put on display across the far reaches of our world - or it can be hidden away in a private collection or in storage.
+              Studying this history of movement can help us understand how the world has interacted with a specific piece of art, giving us clues to its cultural impact and influence on regions, eras, and movements in the broader artistic context.
+            </p>
+            <p>
+              Vincent Van Gogh created hundreds of paintings in his troubled life, and although he would not enjoy the success of his work during his lifetime, his work has been profoundly influential in Western art.
+              The Met has 18 of his masterpiece landscapes, portraits, and still lifes in their collection. In <i>The Migration of Art,</i> we explore how these paintings traversed the globe, unearthing each nook and cranny of its travels through ownership changes and exhibitions.
+              Inspired by E.J. Marey's 1885 graphical <a href = "https://www.edwardtufte.com/bboard/q-and-a-fetch-msg?msg_id=0003zP">train schedule,</a> this visualization shows a detailed timeline of movement for each of Van Gogh's paintings within The Met's collection.
+              These paths, which approximate the real movement of each painting across the globe, change location when a painting changes hands or when it goes on exhibition - after its last exhibition on record, it returns to the Met.
+              Hover over this view to see detailed information on the owners and exhibitions during each year of the painting's journey, or show the map to see this painting's movement in real time.
+          </div>
+        </div>
+        <div class = 'step' data-step='2' id = "step-2">
+          <hr class = "whitespace" style = "height:240vh;"/>
         </div>
         <!-- <hr class = "whitespace" style = "height:60vh"/> -->
-        <div class = 'step' data-step='2' id = "step-2">
-          <hr class = "whitespace" style = "height:50vh"/>
+        <div class = 'step' data-step='3' id = "step-3">
+          <hr class = "whitespace" style = "height:80vh"/>
           <div id = 'sticky-title'>
             <script>
             let mapButtonVar = false;
@@ -85,6 +105,11 @@
                    .ease(d3.easeQuadInOut)
                     .duration(1000)
                     .style("top","106vh")
+                let marey = d3.select("#marey").select("#marey-chart")
+                marey.transition()
+                     .ease(d3.easeQuadInOut)
+                       .duration(1000)
+                       .style("top","6vh")
                 d3.select("#map-button").text("Show Map")
               } else {
                 // The map is hidden, so show it
@@ -94,6 +119,11 @@
                    .ease(d3.easeQuadInOut)
                     .duration(1000)
                     .style("top","6vh");
+                let marey = d3.select("#marey").select("#marey-chart")
+                marey.transition()
+                     .ease(d3.easeQuadInOut)
+                       .duration(1000)
+                       .style("top","106vh")
                 d3.select("#map-button").text("Hide Map")
               }
             }
@@ -123,15 +153,12 @@
             <button id = "map-button" onclick = "mapButton()">
               Show Map
             </button>
-            <button id = "more-info-button" onclick = "moreInfoButton()">
+            <!-- <button id = "more-info-button" onclick = "moreInfoButton()">
               More Info
-            </button>
+            </button> -->
             <hr class = "whitespace" style = "width:60vw;"/>
           </div>
           <div class = "marey" id = "marey">
-            <!-- <div id = "marey-explanation">
-              <h1>THIS IS THE MAREY EXPLANATION DIV</h1>
-            </div> -->
             <div id = "marey-legend">
               <h3>Travel Timeline</h3>
               <h1>Sunflowers</h1>
@@ -145,23 +172,31 @@
               <svg height="15vh" width="100%" id="ownership-demo">
                 <!-- <rect height="15vh" width="100%" style = "fill:#afafaf"></rect> -->
                 <!-- Legend Line -->
-                <line x1="40%" y1="20%" x2="50%" y2="80%" class = "legend-line"></line>
+                <line x1="40%" y1="30%" x2="50%" y2="80%" class = "legend-line"></line>
+                <line x1="20%" y1="40%" x2="30%" y2="30%" class = "legend-line"></line>
                 <!-- Individual Owners -->
-                <line x1="0%" y1="20%" x2="40%" y2="20%" class = "owner-line"></line>
+                <line x1="0%" y1="40%" x2="20%" y2="40%" class = "owner-line"></line>
+                <line x1="30%" y1="30%" x2="40%" y2="30%" class = "owner-line"></line>
                 <line x1="50%" y1="80%" x2="100%" y2="80%" class = "owner-line"></line>
-                <text x="2%" y="60%" class = "owner-text">Individual Owners</text>
-                <line x1="29%" y1="50%" x2="35%" y2="25%" class = "owner-line-callout"></line>
-                <line x1="29%" y1="65%" x2="48%" y2="80%" class = "owner-line-callout"></line>
+                <text x="32%" y="70%" class = "owner-text"  style = "text-anchor:end;">Individual Owners</text>
+                <line x1="28%" y1="60%" x2="35%" y2="35%" class = "owner-line-callout"></line>
+                <line x1="34%" y1="70%" x2="55%" y2="75%" class = "owner-line-callout"></line>
+                <line x1="20%" y1="60%" x2="15%" y2="45%" class = "owner-line-callout"></line>
+
+                <!-- Ownership Change -->
+                <text x="25%" y="7%" class = "owner-text">Ownership Changes</text>
+                <line x1="27%" y1="13%" x2="27%" y2="25%" class = "owner-line-callout"></line>
+                <line x1="45%" y1="13%" x2="45%" y2="40%" class = "owner-line-callout"></line>
 
                 <!-- Exhibitions -->
-                <circle cx="75%" cy="80%" r="6" fill="none" stroke-width="2" class = "exhib-legend-circle"></circle>
-                <circle cx="95%" cy="80%" r="6" fill="none" stroke-width="2" class = "exhib-legend-circle"></circle>
-                <text x="85%" y="50%" style="fill:#fff;text-anchor:middle;">Exhibitions</text>
-                <line x1="77%" y1="70%" x2="80%" y2="55%" style="stroke:#afafaf;stroke-width:1;stroke-dasharray:2;"></line>
-                <line x1="93%" y1="70%" x2="90%" y2="55%" style="stroke:#afafaf;stroke-width:1;stroke-dasharray:2;"></line>
+                <circle cx="75%" cy="80%" r="8" fill="none" stroke-width="2" class = "exhib-legend-circle"></circle>
+                <circle cx="95%" cy="80%" r="8" fill="none" stroke-width="2" class = "exhib-legend-circle"></circle>
+                <text x="78%" y="50%" class = "owner-text">Exhibitions</text>
+                <line x1="77%" y1="70%" x2="80%" y2="55%" class = "owner-line-callout"></line>
+                <line x1="93%" y1="70%" x2="90%" y2="55%" class = "owner-line-callout"></line>
 
               </svg>
-              <p>This example painting had two individual owners and went on two exhibitions across two distinct locations in the time span shown.</p>
+              <p>This example painting had three individual owners and went on two exhibitions across three distinct locations in the time span shown.</p>
             </div>
             <div id = "marey-chart">
             </div>
@@ -177,45 +212,18 @@
           </div>
           <div id = "slidecontainer">
             <link rel="stylesheet" href="css/slider.css" type="text/css" charset="utf-8">
-            <!-- <div id = "slider-buttons">
+            <div id = "slider-buttons">
               <script>
-              let mapButtonVar      = false;
-              function mapButton() {
-                if (mapButtonVar) {
-                  // The map is already showing, so hide it
-                  mapButtonVar = false;
-                  let map = d3.select("#map");
-                  map.transition()
-                     .ease(d3.easeQuadInOut)
-                      .duration(1000)
-                      .style("top","105vh")
-                  d3.select("#map-button").text("Show Map")
-                } else {
-                  // The map is hidden, so show it
-                  mapButtonVar = true;
-                  let map = d3.select("#map");
-                  map.transition()
-                     .ease(d3.easeQuadInOut)
-                      .duration(1000)
-                      .style("top","6vh");
-                  d3.select("#map-button").text("Hide Map")
-                }
-              }
-              function moreInfoButton() {
-                let intro = d3.select("#intro-text");
-                intro.transition()
-                     .ease(d3.easeQuadInOut)
-                      .duration(1000)
-                      .style("top","6vh");
+              function playYears() {
+                console.log(minYear);
+                $('#year-slider').val(1991);
+                $('#year-slider').trigger("input");
+                d3.select("#year-slider").dispatch("input");
+                // $('#year-slider').slider('refresh');
               }
               </script>
-              <button id = "more-info-button" onclick = "moreInfoButton()">
-                More Info
-              </button>
-              <button id = "map-button" onclick = "mapButton()">
-                Show Map
-              </button>
-            </div> -->
+              <button id = "play-years" onclick = "playYears()">Play</button>
+            </div>
             <hr class = "whitespace" style = "width:24vw;"/>
             <div id = "slider">
               <p id = "slideyear"><b>2017</b></p>
@@ -224,22 +232,6 @@
             </div>
           </div>
           <!-- <hr class = "whitespace" style = "height:20vh"/> -->
-          </div>
-          <div id = 'intro-text'>
-            <h1>Exploring Art's History of Movement</h1>
-            <h2>Vincent Van Gogh at <i>The Met</i>, 1885-2017</h2>
-            <!-- <br> -->
-            <p>
-              When we visit a renowned piece of art in a museum's galleries, we may not always consider the path it traveled before arriving at this destination.
-              Prominent artwork can be bought, sold, traded, and put on display across the far reaches of our world - or it can be hidden away in a private collection or in storage.
-              Studying this history of movement can help us understand how the world has interacted with a specific piece of art, giving us clues to its cultural impact and influence on regions, eras, and movements in the broader artistic context.
-            </p>
-            <p>
-              Vincent Van Gogh created hundreds of paintings in his troubled life, and although he would not enjoy the success of his work during his lifetime, his work has been profoundly influential in Western art.
-              The Met has 18 of his masterpiece landscapes, portraits, and still lifes in their collection. In <i>The Migration of Art,</i> we explore how these paintings traversed the globe, unearthing each nook and cranny of its travels through ownership changes and exhibitions.
-              Inspired by E.J. Marey's 1885 graphical <a href = "https://www.edwardtufte.com/bboard/q-and-a-fetch-msg?msg_id=0003zP">train schedule,</a> this visualization shows a detailed timeline of movement for each of Van Gogh's paintings within The Met's collection.
-              These paths, which approximate the real movement of each painting across the globe, change location when a painting changes hands or when it goes on exhibition - after its last exhibition on record, it returns to the Met.
-              Hover over this view to see detailed information on the owners and exhibitions during each year of the painting's journey, or show the map to see this painting's movement in real time.
           </div>
         </div>
     </div>
@@ -250,7 +242,7 @@
     <script src="js/graph-scroll.js"></script>
 
     <script>
-    // createGraphic('.graphic')
+    // createGraphic('.graphi2c')
     (function() {
       function graphscroll() {
         // select elements using d3 here since this is a d3 library...
@@ -269,7 +261,7 @@
           .container(graphicEl)
           .graph(graphicVisEl)
           .sections(triggerEls)
-          .offset(viewportHeight*0.8)
+          .offset(viewportHeight*0.9)
           .on('active', function(i) {
             graphic.update(i);
           })

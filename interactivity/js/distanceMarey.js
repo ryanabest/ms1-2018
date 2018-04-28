@@ -82,7 +82,7 @@ let data = d3.json(filePath + "locationsGeo.json").then(
         // let yearWidth = width;
         let yearX = d3.scaleLinear()
                   .domain([d3.min(years),maxYear])
-                  .range([width*0.06,width*0.94])
+                  .range([margin.left,width-margin.right])
                   // .nice();
 
         let xAxis1 = yearSvg.append("g")
@@ -121,8 +121,6 @@ let data = d3.json(filePath + "locationsGeo.json").then(
         let mareyYear = 2017;
         drawAllMareys(mareyYear);
         drawYearHovers(mareyYear);
-
-
         let yearSlider = d3.select("#year-slider").on("input",function() {
           mareyYear = this.value;
           removeAllMareys();
@@ -159,17 +157,32 @@ let data = d3.json(filePath + "locationsGeo.json").then(
              let provPath = d3.selectAll(".provenance-path-active");
              let title = d3.select("#map").select("svg").select("#marker-"+provPath.node().id.split("_")[2]).data()[0].title;
 
+             let allLocations = [];
+             let allLocationsProvOrExhib = [];
+
              for (let pp=0;pp<provPath.data().length;pp++) {
                let thisProvPath = provPath.data()[pp]
+
                if (thisProvPath.length>0) {
-                 if (d >= thisProvPath[0].year && (d) <= thisProvPath[thisProvPath.length-1].year) {
+                 let startYear = thisProvPath[0].year;
+                 let endYear = thisProvPath[thisProvPath.length-1].year;
+                 if (d >= startYear && (d) <= endYear) {
+                   // console.log(thisProvPath);
                    for (let tpp=0;tpp<thisProvPath.length;tpp++) {
+                     if (thisProvPath[tpp].year === d) {
+                       if (thisProvPath[tpp].location !== "Metropolitan Museum of Art") {
+                         allLocations.push(thisProvPath[tpp].location);
+                       } else {
+                         allLocations.push("New York");
+                       }
+                       allLocationsProvOrExhib.push(thisProvPath[tpp].owner);
+                     }
                      if (thisProvPath[tpp].owner.indexOf("Exhibition - ") === -1 && $.inArray(thisProvPath[tpp].owner, owners) === -1) {
                        owners.push(thisProvPath[tpp].owner)
                        if (thisProvPath[tpp].owner !== "Metropolitan Museum of Art") { // The Met has it's own location, so no need to add twice
                          ownerLocations.push(thisProvPath[tpp].location)
                        } else {
-                         ownerLocations.push('')
+                         ownerLocations.push('New York')
                        }
                      }
                    }
@@ -184,22 +197,40 @@ let data = d3.json(filePath + "locationsGeo.json").then(
                let thisExhibCircle = exhibCircle.data()[ec]
                if (thisExhibCircle.year === d) {
                  // console.log(thisExhibCircle)
-                 exhibitionLocations.push(thisExhibCircle.location)
                  if (thisExhibCircle.exhibition.replace("Exhibition -  ","") === "The Metropolitan Museum of Art" && thisExhibCircle.location === "Metropolitan Museum of Art") { // The Met has it's own location, so no need to add twice
-                   exhibitions.push('')
-                 } else (
-                   exhibitions.push(thisExhibCircle.exhibition.replace("Exhibition -  ",""))
-                 )
+                   exhibitionLocations.push('New York')
+                 } else {
+                   exhibitionLocations.push(thisExhibCircle.location);
+                 }
+                 exhibitions.push(thisExhibCircle.exhibition.replace("Exhibition -  ",""));
                };
              }
 
+             // console.log(owners);
+             let lastKnown = '<h2>Last Known Location:<br><b>' + allLocations[allLocations.length-1] + "</b><br>"
+             if (allLocationsProvOrExhib[allLocationsProvOrExhib.length-1].indexOf("Exhibition - ") === -1) {
+               lastKnown += "<span> (acquisition by " + allLocationsProvOrExhib[allLocationsProvOrExhib.length-1] + ")</span>"
+             } else {
+               lastKnown += "<span> (" + allLocationsProvOrExhib[allLocationsProvOrExhib.length-1] + ")</span>"
+             }
+             lastKnown += "</h3>"
+
+             // console.log(lastKnown);
+             // console.log(allLocations[allLocations.length-1]);
+             // console.log(allLocationsProvOrExhib[allLocationsProvOrExhib.length-1]);
+
              let yearHoverHtml = ''
-             yearHoverHtml += '<h2>'+d+'</h2>'
+             yearHoverHtml += '<h3>'+d+'</h3>'
+             yearHoverHtml += lastKnown + "<br>"
+             yearHoverHtml += "<h4>Current Owner:</h4>"
              for (let o=0;o<owners.length;o++) {
-               yearHoverHtml += "<h1>"+owners[o]+"&nbsp;<span id='owner-location'>"+ownerLocations[o]+"</span></h1>"
+               yearHoverHtml += "<h1>"+owners[o]+"&#x2c;&nbsp;<span id='owner-location'>"+ownerLocations[o]+"</span></h1>"
+             }
+             if (exhibitions.length>0) {
+               yearHoverHtml += "<h4>Exhibitions:</h4>"
              }
              for (let e=0;e<exhibitions.length;e++) {
-               yearHoverHtml += "<p>"+exhibitionLocations[e]+"&nbsp;<span id='exhibition-name'>"+exhibitions[e]+"</span></p>"
+               yearHoverHtml += "<p>"+exhibitions[e]+"&#x2c;&nbsp;<span id='exhibition-name'>"+exhibitionLocations[e]+"</span></p>"
              }
 
 
@@ -235,8 +266,27 @@ let data = d3.json(filePath + "locationsGeo.json").then(
                    left = (event.clientX/window.innerWidth)*100 + "vw"
                  }
                  return left})
-               .style("top",event.clientY+ 10 + "px")
-               // .style("transform","translate("+event.clientX+","+event.clientY+")")
+               .style("top",function() {
+                 let top = ''
+                 // console.log((event.clientY/window.innerHeight)*100 + "vw")
+                 if (event.clientY/window.innerHeight >= 0.5) {
+                   top = "auto"
+                 } else {
+                   top = (event.clientY/window.innerHeight)*100 + "vh"
+                 }
+                 return top
+               })
+              .style("bottom",function() {
+                let bottom = ''
+                // console.log((event.clientY/window.innerHeight)*100 + "vw")
+                if (event.clientY/window.innerHeight >= 0.5) {
+                  bottom = 100-((event.clientY/window.innerHeight)*100) + "vh"
+                } else {
+                  bottom = "auto"
+                }
+                return bottom
+              })
+             // .style("transform","translate("+(event.clientX/window.innerWidth)*100 + "vw"+","+(event.clientY/window.innerHeight)*100 + "vw"+")")
            })
            .on("mouseout",function(d) {
              d3.select("#year-hover-text")
@@ -521,6 +571,8 @@ let data = d3.json(filePath + "locationsGeo.json").then(
                                .style("stroke",vibrantDarkColor)
                              d3.selectAll(".owner-line")
                                .style("stroke",vibrantDarkColor)
+                             d3.select("#marey-legend").select("h1")
+                               .style("color",vibrantDarkColor)
                              // d3.selectAll(".owner-text")
                              //   .style("fill",vibrantDarkColor)
 

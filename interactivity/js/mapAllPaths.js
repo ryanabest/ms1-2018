@@ -61,8 +61,8 @@ let paths = d3.json(filePath + "metObjectsVanGogh.json").then(function(paths) {
 
   // Then load all JSON files, THEN draw pahts once they're loaded:
   Promise.all(promises).then(function(proms) {
-    let minYear = new Date().getFullYear();
-    let maxYear = 0;
+    minYear = new Date().getFullYear();
+    maxYear = 0;
     proms.forEach(function(p) {
       // console.log(p)
       if (p.objects[0].line.year < minYear) {
@@ -104,17 +104,6 @@ let paths = d3.json(filePath + "metObjectsVanGogh.json").then(function(paths) {
       d3.select("#slideyear")
         .text(yearSliderValue)
         .style("left",y(yearSliderValue)+'%');
-
-      drawPaths(yearSliderValue,proms)
-    }
-
-    yearSlider.onchange = function() {
-      let y = d3.scaleLinear().domain([minYear,maxYear]).range([6,88])
-      yearSliderValue = this.value;
-
-      d3.select("#slideyear")
-        .text(yearSliderValue)
-        // .style("margin-left",y(yearSliderValue)+'vw');
 
       drawPaths(yearSliderValue,proms)
     }

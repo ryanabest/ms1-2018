@@ -10,8 +10,7 @@
 }
 
 #marey, #map {
-  width: 95vw;
-  /* height: 94vh; */
+  z-index: 3;
   position: fixed;
   left: 0px;
   top: 106vh;
@@ -23,38 +22,39 @@
 
 #marey {
   height: 94vh;
+  width: 95vw;
 }
 
 #map {
-  height: 85vh;
-}
-
-#marey-explanation {
-  position: fixed;
-  width: 60vw;
-  height: 71vh;
-  margin-left: 5vw;
-  margin-top: 8vh;
-  background-color: rgba(0,0,0,0.9);
-  border-radius: 50px;
-  z-index: 2;
-  padding: 0;
+  height: 82vh;
+  width: 70vw;
+  left: 24vw;
+  margin: 10px;
 }
 
 #marey-legend {
+  -moz-box-shadow:    0 0 10px 1px #999;
+  -webkit-box-shadow: 0 0 10px 1px #999;
   width: 20vw;
-  /* margin: 0; */
-  background-color: rgba(51,51,51,1);
+  margin: 10px;
+  /* background-color: rgba(51,51,51,1); */
   /* margin: 0.2vw; */
   padding: 2vw;
   font-family: "Roboto", sans-serif;
-  color: #fff;
   /* box-sizing: border-box; */
+}
+
+#marey-chart {
+  /* margin: 5px;
+  -moz-box-shadow:    0 0 10px 1px #999;
+  -webkit-box-shadow: 0 0 10px 1px #999; */
+  flex: 1;
 }
 
 #ownership-demo text {
   font-family: "Roboto", sans-serif;
   font-size: 65%;
+  fill: #000;
   /* font-weight: 300; */
 }
 
@@ -74,10 +74,10 @@
   font-weight: 700;
   line-height: 1em;
   margin-top: 0;
-  color: #e55c69;
+  color: #696969;
 }
 
-#marey-legend h3 {
+#marey-legend h3, #intro-text h3 {
   font-size: 12px;
   color: rgb(150,150,150);
   margin-bottom: 0px;
@@ -89,20 +89,17 @@
   font-family: 'Playfair Display', serif;
   font-weight: 700;
   font-size: 100%;
+  color: #696969;
 }
 
 #marey-legend p,a {
-  color: #e7e7e7;
+  color: #000000;
   padding: 0%;
   text-decoration: none;
 }
 
 #marey-legend p {
-  font-size: 65%;
-}
-
-#marey-chart {
-  flex: 1;
+  font-size: 75%;
 }
 
 .smallmult-line {
@@ -165,27 +162,53 @@
 }
 
 #year-hover-text {
-  font-family: "Roboto", sans-serif;
   opacity: 0;
   width: 0vw;
-  position: fixed;
+  position: absolute;
   background-color: rgba(240,240,240,0.8);
   z-index: 5;
-  /* -moz-box-shadow:    0 0 10px 1px #999;
-  -webkit-box-shadow: 0 0 10px 1px #999; */
+  -moz-box-shadow:    0 0 10px 1px #999;
+  -webkit-box-shadow: 0 0 10px 1px #999;
   max-width: 30vw;
+  /* padding-top: 0px; */
   padding: 10px;
 }
 
 /* Year */
+#year-hover-text h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 160%;
+  /* color: #000; */
+  margin: 0px;
+}
+
 #year-hover-text h2 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 400;
   font-size: 100%;
+  /* color: #000; */
+  margin-bottom: 1;
+}
+
+#year-hover-text h4 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 400;
+  font-size: 90%;
   /* color: #000; */
   margin: 1;
 }
 
+#year-hover-text h2 span {
+  font-family: 'Roboto', serif;
+  font-size: 80%;
+  /* color: #000; */
+  font-style: italic;
+  color: #696969;
+}
+
 /* Owner */
 #year-hover-text h1 {
+  font-family: 'Roboto', serif;
   font-size: 90%;
   /* color: #000; */
   margin: 1;
@@ -193,11 +216,12 @@
 
 #owner-location {
   font-style: italic;
-  font-size: 85%;
+  /* font-size: 85%; */
 }
 
 /* exhibitions */
 #year-hover-text p {
+  font-family: 'Roboto', serif;
   font-size: 80%;
   /* color: #000; */
   margin: 0.5;
@@ -205,7 +229,7 @@
 
 #exhibition-name {
   font-style: italic;
-  font-size: 75%;
+  /* font-size: 75%; */
 }
 
 .continent-label {
@@ -225,7 +249,7 @@
 
 .owner-line {
   stroke:#e55c69;
-  stroke-width:5;
+  stroke-width:8;
 }
 
 .owner-text {

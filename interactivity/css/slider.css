@@ -2,6 +2,7 @@
   width: 95vw;
   height: 9vh;
   position: fixed;
+  z-index: 3;
   left: 0;
   /* padding-top: 5px; */
   /* margin-top: 10px; */
@@ -24,15 +25,12 @@
   /* padding-top: 18px; */
   background-color: #F0F0F0;
   flex: 1;
-  width: 50vw;
 }
 
 #slider-year-axis {
-  width: 100%;
-  /* position: relative;
-  left: 6%; */
+  width: 88%;
+  position: relative;
 }
-
 
 #year-slider {
   -webkit-appearance: none;
@@ -76,11 +74,6 @@
   padding: 0;
   position: relative;
   left: 88%;
-}
-
-#slider-year-axis {
-  position: relative;
-  /* top: -0.5vh; */
 }
 
 .tick {

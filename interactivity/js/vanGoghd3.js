@@ -71,6 +71,8 @@ window.vanGoghd3 = function() {
             .style("stroke",pathColor)
           d3.selectAll(".exhib-legend-circle")
             .style("stroke",exhibColor)
+          d3.selectAll("#marey-legend").selectAll("h1")
+            .style("color",pathColor)
 
         })
 
