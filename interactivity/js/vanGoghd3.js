@@ -73,6 +73,8 @@ window.vanGoghd3 = function() {
             .style("stroke",exhibColor)
           d3.selectAll("#marey-legend").selectAll("h1")
             .style("color",pathColor)
+          // d3.select("#slideyear")
+          //   .style("color",pathColor)
 
         })
 
@@ -89,11 +91,7 @@ window.vanGoghd3 = function() {
     }
 
     function highlightSelection(objectNumber) {
-      if (paintingSelection===objectNumber) {
-        paintingSelection = 0;
-      } else {
-        paintingSelection = objectNumber;
-      }
+      paintingSelection = objectNumber;
 
       d3.select("#vanGoghd3-svg")
         .selectAll(".circle")

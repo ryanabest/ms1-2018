@@ -42,9 +42,12 @@ window.createGraphic = function(graphicSelector) {
 
       stickyTitle();
       menuCircles();
-      // hideIntroText();
-      hideMap();
       showMarey();
+      if (d3.select("#timeline-button").attr("class") === 'active') {
+        hideMap();
+      } else {
+        showMap();
+      }
       showSlider();
       opacityAnimation();
 
@@ -190,7 +193,7 @@ window.createGraphic = function(graphicSelector) {
     slider.transition()
           .ease(d3.easeQuadInOut)
             .duration(1500)
-            .style("top","91vh")
+            .style("top","90vh")
   }
 
   function hideSlider() {
@@ -199,7 +202,7 @@ window.createGraphic = function(graphicSelector) {
     slider.transition()
           .ease(d3.easeQuadInOut)
             .duration(1500)
-            .style("top","191vh")
+            .style("top","190vh")
   }
 
   function allOpaque() {

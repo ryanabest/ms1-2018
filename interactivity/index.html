@@ -94,64 +94,73 @@
           <hr class = "whitespace" style = "height:80vh"/>
           <div id = 'sticky-title'>
             <script>
-            let mapButtonVar = false;
-            let moreInfoVar  = false;
-            function mapButton() {
-              if (mapButtonVar) {
-                // The map is already showing, so hide it
-                mapButtonVar = false;
-                let map = d3.select("#map");
-                map.transition()
+            function timelineButton () {
+              let mapButtonSelect = d3.select("#map-button");
+              let timelineButtonSelect = d3.select("#timeline-button");
+              mapButtonSelect.attr("class","");
+              timelineButtonSelect.attr("class","active");
+
+              // Hide map, show timeline
+              let map = d3.select("#map");
+              map.transition()
+                 .ease(d3.easeQuadInOut)
+                 .delay(100)
+                  .duration(1000)
+                  .style("top","106vh")
+              let marey = d3.select("#marey").select("#marey-chart")
+              marey.transition()
                    .ease(d3.easeQuadInOut)
-                    .duration(1000)
-                    .style("top","106vh")
-                let marey = d3.select("#marey").select("#marey-chart")
-                marey.transition()
-                     .ease(d3.easeQuadInOut)
-                       .duration(1000)
-                       .style("top","6vh")
-                d3.select("#map-button").text("Show Map")
-              } else {
-                // The map is hidden, so show it
-                mapButtonVar = true;
-                let map = d3.select("#map");
-                map.transition()
-                   .ease(d3.easeQuadInOut)
-                    .duration(1000)
-                    .style("top","6vh");
-                let marey = d3.select("#marey").select("#marey-chart")
-                marey.transition()
-                     .ease(d3.easeQuadInOut)
-                       .duration(1000)
-                       .style("top","106vh")
-                d3.select("#map-button").text("Hide Map")
-              }
+                     .delay(100)
+                     .duration(1000)
+                     .style("top","6vh")
+              d3.select("#marey").select("#marey-legend").select("h3")
+                .text("Travel Timeline")
+
+              // Stop any map animations and push everything back to maxYear
+              clearInterval(animateFunction);
+              $('#year-slider').val(maxYear);
+              $('#year-slider').trigger("input");
+              d3.select("#year-slider").dispatch("input");
+
+              // Hide map animation pane, show line legend pane
+              d3.select("#line-graph-legend")
+              .style("display","inline-block")
+              d3.select("#map-animation")
+              .style("display","none")
             }
-            function moreInfoButton() {
-              if (moreInfoVar) {
-                // Info is already showing, so hide it
-                moreInfoVar = false;
-                let intro = d3.select("#intro-text");
-                intro.transition()
-                     .ease(d3.easeQuadInOut)
-                      .duration(1000)
-                      .style("top","106vh");
-                d3.select("#more-info-button").text("More Info")
-              } else {
-                moreInfoVar = true;
-                // Intro is hidden, so show it
-                let intro = d3.select("#intro-text");
-                intro.transition()
-                     .ease(d3.easeQuadInOut)
-                      .duration(1000)
-                      .style("top","6vh");
-                d3.select("#more-info-button").text("Hide Info")
-              }
+            function mapButton() {
+              let mapButtonSelect = d3.select("#map-button");
+              let timelineButtonSelect = d3.select("#timeline-button");
+              mapButtonSelect.attr("class","active");
+              timelineButtonSelect.attr("class","");
+
+              // Hide timeline, show map
+              let map = d3.select("#map");
+              map.transition()
+                 .ease(d3.easeQuadInOut)
+                  .duration(1000)
+                  .style("top","6vh");
+              let marey = d3.select("#marey").select("#marey-chart")
+              marey.transition()
+                   .ease(d3.easeQuadInOut)
+                     .duration(1000)
+                     .style("top","106vh")
+              d3.select("#marey").select("#marey-legend").select("h3")
+                .text("Travel Map")
+
+              // Hide map animation pane, show line legend pane
+              d3.select("#line-graph-legend")
+                .style("display","none")
+              d3.select("#map-animation")
+                .style("display","inline-block")
             }
             </script>
             <h1>The Migration of Art</h1>
+            <button id = "timeline-button" class = "active" onclick = "timelineButton()">
+              Travel Timeline
+            </button>
             <button id = "map-button" onclick = "mapButton()">
-              Show Map
+              Travel Map
             </button>
             <!-- <button id = "more-info-button" onclick = "moreInfoButton()">
               More Info
@@ -167,36 +176,78 @@
               <p>Inspried by E.J. Marey's 1885 graphical <a href = "https://www.edwardtufte.com/bboard/q-and-a-fetch-msg?msg_id=0003zP">train schedule,</a> this visualization shows the path traveled by a select painting from its creation until 2017.
                 Every location visited by at least one painting in this collection is represented by a horizontal line, arranged from East (top) to West (bottom). Each painting has a separate path with these shared axes - use the menu on the righthand side to change paintings. A painting's path will travel to a new location in a year when a new owner acquires that piece or when it goes on exhibition.</p>
               <hr>
-              <h2>Legend</h2>
-              <!-- <span style="color:#DAA520;background-color:rgba(0,0,0,0)">exhibitions</span> by circles: -->
-              <svg height="15vh" width="100%" id="ownership-demo">
-                <!-- <rect height="15vh" width="100%" style = "fill:#afafaf"></rect> -->
-                <!-- Legend Line -->
-                <line x1="40%" y1="30%" x2="50%" y2="80%" class = "legend-line"></line>
-                <line x1="20%" y1="40%" x2="30%" y2="30%" class = "legend-line"></line>
-                <!-- Individual Owners -->
-                <line x1="0%" y1="40%" x2="20%" y2="40%" class = "owner-line"></line>
-                <line x1="30%" y1="30%" x2="40%" y2="30%" class = "owner-line"></line>
-                <line x1="50%" y1="80%" x2="100%" y2="80%" class = "owner-line"></line>
-                <text x="32%" y="70%" class = "owner-text"  style = "text-anchor:end;">Individual Owners</text>
-                <line x1="28%" y1="60%" x2="35%" y2="35%" class = "owner-line-callout"></line>
-                <line x1="34%" y1="70%" x2="55%" y2="75%" class = "owner-line-callout"></line>
-                <line x1="20%" y1="60%" x2="15%" y2="45%" class = "owner-line-callout"></line>
+              <div id = "line-graph-legend">
+                <h2>Legend</h2>
+                <!-- <span style="color:#DAA520;background-color:rgba(0,0,0,0)">exhibitions</span> by circles: -->
+                <svg height="15vh" width="100%" id="ownership-demo">
+                  <!-- <rect height="15vh" width="100%" style = "fill:#afafaf"></rect> -->
+                  <!-- Legend Line -->
+                  <line x1="40%" y1="30%" x2="50%" y2="80%" class = "legend-line"></line>
+                  <line x1="20%" y1="40%" x2="30%" y2="30%" class = "legend-line"></line>
+                  <!-- Individual Owners -->
+                  <line x1="0%" y1="40%" x2="20%" y2="40%" class = "owner-line"></line>
+                  <line x1="30%" y1="30%" x2="40%" y2="30%" class = "owner-line"></line>
+                  <line x1="50%" y1="80%" x2="100%" y2="80%" class = "owner-line"></line>
+                  <text x="32%" y="70%" class = "owner-text"  style = "text-anchor:end;">Individual Owners</text>
+                  <line x1="28%" y1="60%" x2="35%" y2="35%" class = "owner-line-callout"></line>
+                  <line x1="34%" y1="70%" x2="55%" y2="75%" class = "owner-line-callout"></line>
+                  <line x1="20%" y1="60%" x2="15%" y2="45%" class = "owner-line-callout"></line>
 
-                <!-- Ownership Change -->
-                <text x="25%" y="7%" class = "owner-text">Ownership Changes</text>
-                <line x1="27%" y1="13%" x2="27%" y2="25%" class = "owner-line-callout"></line>
-                <line x1="45%" y1="13%" x2="45%" y2="40%" class = "owner-line-callout"></line>
+                  <!-- Ownership Change -->
+                  <text x="25%" y="7%" class = "owner-text">Ownership Changes</text>
+                  <line x1="27%" y1="13%" x2="27%" y2="25%" class = "owner-line-callout"></line>
+                  <line x1="45%" y1="13%" x2="45%" y2="40%" class = "owner-line-callout"></line>
 
-                <!-- Exhibitions -->
-                <circle cx="75%" cy="80%" r="8" fill="none" stroke-width="2" class = "exhib-legend-circle"></circle>
-                <circle cx="95%" cy="80%" r="8" fill="none" stroke-width="2" class = "exhib-legend-circle"></circle>
-                <text x="78%" y="50%" class = "owner-text">Exhibitions</text>
-                <line x1="77%" y1="70%" x2="80%" y2="55%" class = "owner-line-callout"></line>
-                <line x1="93%" y1="70%" x2="90%" y2="55%" class = "owner-line-callout"></line>
+                  <!-- Exhibitions -->
+                  <circle cx="75%" cy="80%" r="8" fill="none" stroke-width="2" class = "exhib-legend-circle"></circle>
+                  <circle cx="95%" cy="80%" r="8" fill="none" stroke-width="2" class = "exhib-legend-circle"></circle>
+                  <text x="78%" y="50%" class = "owner-text">Exhibitions</text>
+                  <line x1="77%" y1="70%" x2="80%" y2="55%" class = "owner-line-callout"></line>
+                  <line x1="93%" y1="70%" x2="90%" y2="55%" class = "owner-line-callout"></line>
 
-              </svg>
-              <p>This example painting had three individual owners and went on two exhibitions across three distinct locations in the time span shown.</p>
+                </svg>
+                <p>This example painting had three individual owners and went on two exhibitions across three distinct locations in the time span shown.</p>
+              </div>
+              <div id = "map-animation">
+                <h2>Animate</h2>
+                <script>
+                let animateFunction
+                function playYears() {
+                  clearInterval(animateFunction);
+                  // console.log(maxYear);
+                  let animateYear;
+                  if (parseInt(document.getElementById("year-slider").value)===maxYear) {
+                    animateYear = minYear
+                  } else {
+                    animateYear = parseInt(document.getElementById("year-slider").value)
+                  }
+                  function myLoop() {
+                    animateFunction = setTimeout(function() {
+                      $('#year-slider').val(animateYear);
+                      $('#year-slider').trigger("input");
+                      // d3.select("#year-slider").dispatch("input");
+                      animateYear ++;
+                      if (animateYear <= maxYear) {
+                        myLoop();
+                      }
+                    },100)
+                  }
+                  myLoop();
+                }
+                function pauseYears() {
+                  clearInterval(animateFunction);
+                }
+                function resetYears() {
+                  clearInterval(animateFunction);
+                  $('#year-slider').val(maxYear);
+                  $('#year-slider').trigger("input");
+                  d3.select("#year-slider").dispatch("input");
+                }
+                </script>
+                <button id = "play-years" onclick = "playYears()">&#9654;</button>
+                <button id = "pause-years" onclick = "pauseYears()"><b>||</b></button>
+                <button id = "reset-years" onclick = "resetYears()"><b>↻</b></button>
+              </div>
             </div>
             <div id = "marey-chart">
             </div>
@@ -207,24 +258,11 @@
             </div>
           </div>
           <div id = 'map'>
-            <link rel="stylesheet" href="css/map.css" type="text/css" charset="utf-8">
             <script src="js/mapAllPaths.js"></script>
           </div>
           <div id = "slidecontainer">
             <link rel="stylesheet" href="css/slider.css" type="text/css" charset="utf-8">
-            <div id = "slider-buttons">
-              <script>
-              function playYears() {
-                console.log(minYear);
-                $('#year-slider').val(1991);
-                $('#year-slider').trigger("input");
-                d3.select("#year-slider").dispatch("input");
-                // $('#year-slider').slider('refresh');
-              }
-              </script>
-              <button id = "play-years" onclick = "playYears()">Play</button>
-            </div>
-            <hr class = "whitespace" style = "width:24vw;"/>
+            <!-- <hr class = "whitespace" style = "width:24vw;"/> -->
             <div id = "slider">
               <p id = "slideyear"><b>2017</b></p>
               <input type="range" class="year-slider" id="year-slider">

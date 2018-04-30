@@ -222,12 +222,21 @@ let data = d3.json(filePath + "locationsGeo.json").then(
              let yearHoverHtml = ''
              yearHoverHtml += '<h3>'+d+'</h3>'
              yearHoverHtml += lastKnown + "<br>"
-             yearHoverHtml += "<h4>Current Owner:</h4>"
+             if (owners.length > 1) {
+               yearHoverHtml += "<h4>Owners:</h4>"
+             } else {
+               yearHoverHtml += "<h4>Owner:</h4>"
+             }
+
              for (let o=0;o<owners.length;o++) {
                yearHoverHtml += "<h1>"+owners[o]+"&#x2c;&nbsp;<span id='owner-location'>"+ownerLocations[o]+"</span></h1>"
              }
              if (exhibitions.length>0) {
-               yearHoverHtml += "<h4>Exhibitions:</h4>"
+               if (exhibitions.length>1) {
+                 yearHoverHtml += "<h4>Exhibitions:</h4>"
+               } else {
+                 yearHoverHtml += "<h4>Exhibition:</h4>"
+               }
              }
              for (let e=0;e<exhibitions.length;e++) {
                yearHoverHtml += "<p>"+exhibitions[e]+"&#x2c;&nbsp;<span id='exhibition-name'>"+exhibitionLocations[e]+"</span></p>"
@@ -573,8 +582,8 @@ let data = d3.json(filePath + "locationsGeo.json").then(
                                .style("stroke",vibrantDarkColor)
                              d3.select("#marey-legend").select("h1")
                                .style("color",vibrantDarkColor)
-                             // d3.selectAll(".owner-text")
-                             //   .style("fill",vibrantDarkColor)
+                             // d3.select("#slideyear")
+                             //   .style("color",vibrantDarkColor)
 
                              d3.selectAll(".exhib-legend-circle")
                                .style("stroke",vibrantColor)

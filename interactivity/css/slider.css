@@ -1,17 +1,17 @@
 #slidecontainer {
-  width: 95vw;
+  width: 71vw;
   height: 9vh;
   position: fixed;
   z-index: 3;
-  left: 0;
+  left: 24vw;
   /* padding-top: 5px; */
   /* margin-top: 10px; */
   /* margin-left: 15vw; */
-  top: 191vh;
+  top: 190vh;
   display: flex;
 }
 
-/* #slider-buttons {
+/* #map-animation {
   height: 100%;
   width: 30vw;
   background-color: #333333;
@@ -20,6 +20,14 @@
   justify-content: center;
   box-sizing: border-box;
 } */
+
+#line-graph-legend {
+  display: inline-block;
+}
+
+#map-animation {
+  display: none;
+}
 
 #slider {
   /* padding-top: 18px; */
@@ -52,23 +60,26 @@
     appearance: none;
     width: 0.75vh;
     height: 3vh;
-    background: #e55c69;
+    background: #696969;
     cursor: pointer;
 }
 
 #year-slider::-moz-range-thumb {
   width: 0.75vh;
   height: 3vh;
-  background: #e55c69;
+  background: #696969;
   cursor: pointer;
 }
 
 
 #slidecontainer #slideyear {
+  font-size: 1.2vw;
+  text-align: right;
   font-family: "Roboto",sans-serif;
   margin-bottom: 5px;
-  height: 18px;
-  color: #e55c69;
+  /* height: 3vh; */
+  width: 5vw;
+  color: #696969;
   font-weight: 400;
   margin: 0;
   padding: 0;
@@ -76,15 +87,12 @@
   left: 88%;
 }
 
-.tick {
-  font-family: "Roboto",sans-serif;
-  font-size: 11px;
-}
-
 .tick line{
   visibility:hidden;
 }
 
 .tick text{
-  fill: rgb(200,200,200);
+  fill: rgb(160,160,160);
+  font-size: 0.7vw;
+
 }
