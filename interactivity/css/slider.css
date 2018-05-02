@@ -36,7 +36,7 @@
 }
 
 #slider-year-axis {
-  width: 88%;
+  /* width: 88%; */
   position: relative;
 }
 
@@ -94,5 +94,39 @@
 .tick text{
   fill: rgb(160,160,160);
   font-size: 0.7vw;
+}
+
+#map-animation {
+  position: absolute;
+  left: 1vw;
+  top: 0.5vw;
+}
+
+.button {
+  /* border: 0; */
+  background: transparent;
+  box-sizing: border-box;
+  width: 2vw;
+  height: 2vw;
+
+  border-color: transparent transparent transparent #DCDCDC;
+  transition: 100ms all ease;
+  cursor: pointer;
 
 }
+
+.button:hover {
+  border-color: transparent transparent transparent #696969;
+}
+
+.button.play {
+  border-style: solid;
+  border-width: 1vw 0vw 1vw 1.5vw;
+}
+
+.button.pause {
+  border-style: double;
+  border-width: 0vw 0 0vw 1.5vw;
+}
+
+/* https://css-tricks.com/making-pure-css-playpause-button/ */

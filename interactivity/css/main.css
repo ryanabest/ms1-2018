@@ -9,7 +9,7 @@
   justify-content: center;
 }
 
-#marey, #map {
+#marey, #map, #more-info {
   z-index: 3;
   position: fixed;
   left: 0px;
@@ -20,24 +20,35 @@
   flex-shrink: 0;
 }
 
+#more-info {
+  height: 93vh;
+  width: 95vw;
+  z-index: 4;
+}
+
+#more-info-box {
+  margin: auto;
+}
+
 #marey {
   height: 93vh;
   width: 95vw;
 }
 
 #map {
-  height: 82vh;
-  width: 70vw;
+  height: 84vh;
+  width: 71vw;
   left: 24vw;
-  margin: 10px;
+  /* margin: 10px; */
 }
 
 #marey-legend {
-  -moz-box-shadow:    0 0 10px 1px #999;
-  -webkit-box-shadow: 0 0 10px 1px #999;
+  /* -moz-box-shadow:    0 0 10px 1px #999;
+  -webkit-box-shadow: 0 0 10px 1px #999; */
   width: 20vw;
-  margin: 10px;
-  /* background-color: rgba(51,51,51,1); */
+  height: 100%;
+  /* margin: 10px; */
+  background-color: rgba(220,220,220,1);
   /* margin: 0.2vw; */
   padding: 2vw;
   font-family: "Roboto", sans-serif;
@@ -77,7 +88,7 @@
   color: #696969;
 }
 
-#marey-legend h3, #intro-text h3 {
+#marey-legend h3, #intro-text h3, #more-info-box h3 {
   font-size: 0.6vw;
   color: rgb(150,150,150);
   margin-bottom: 0px;
@@ -163,15 +174,23 @@
 
 #year-hover-text {
   opacity: 0;
-  width: 0vw;
   position: absolute;
-  background-color: rgba(240,240,240,0.8);
+  background-color: rgba(240,240,240,0.95);
   z-index: 5;
   -moz-box-shadow:    0 0 10px 1px #999;
   -webkit-box-shadow: 0 0 10px 1px #999;
-  max-width: 30vw;
-  /* padding-top: 0px; */
+  /* max-width: 30vw; */
+  width: 20vw;
   padding: 10px;
+}
+
+#year-hover-text table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+#year-hover-text td {
+  vertical-align: top;
 }
 
 /* Year */
@@ -208,28 +227,32 @@
 
 /* Owner */
 #year-hover-text h1 {
+  -webkit-margin-before:0em;
+  -webkit-margin-after:0.05em;
   font-family: 'Roboto', serif;
   font-size: .8vw;
   /* color: #000; */
-  margin: 1;
+  /* margin: 1; */
 }
 
 #owner-location {
   font-style: italic;
-  /* font-size: 85%; */
+  /* font-size: 80%; */
 }
 
 /* exhibitions */
 #year-hover-text p {
+  -webkit-margin-before:0em;
+  -webkit-margin-after:0.05em;
   font-family: 'Roboto', serif;
-  font-size: .7vw;
+  font-size: .8vw;
   /* color: #000; */
-  margin: 0.5;
+  /* margin: 0.5; */
 }
 
-#exhibition-name {
+#exhibition-location {
   font-style: italic;
-  /* font-size: 75%; */
+  /* font-size: 80%; */
 }
 
 .continent-label {
@@ -272,21 +295,6 @@
   fill:none;
 }
 
-#map-animation button {
-  font-family: "Roboto", sans-serif;
-  border: none;
-  border-radius: 100%;
-  height: 5vh;
-  width:  5vh;
-  font-size: 2vh;
-  text-align: center;
-  margin: auto;
-  cursor: pointer;
-  color: #333333;
-}
-
-#map-animation button:active {
-  background-color: #333333;
-  color: #f0f0f0;
-  color:
+#map-p {
+  display: none;
 }

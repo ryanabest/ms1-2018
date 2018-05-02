@@ -79,6 +79,7 @@ let data = d3.json(filePath + "locationsGeo.json").then(
 
         // show year axis on #slider-year-axis svg
         let yearSvg = d3.select("#slider-year-axis")
+        yearSvg.attr("width",width)
         // let yearWidth = width;
         let yearX = d3.scaleLinear()
                   .domain([d3.min(years),maxYear])
@@ -125,7 +126,12 @@ let data = d3.json(filePath + "locationsGeo.json").then(
           mareyYear = this.value;
           removeAllMareys();
           drawAllMareys(mareyYear);
+          drawYearHovers(mareyYear);
         });
+
+        // function removeAllYearHovers() {
+        //   d3.select("#marey-chart").select("svg").select("year-hover-g")
+        // }
 
         function drawYearHovers(mareyYear) {
           let hoverYears = []
@@ -220,27 +226,30 @@ let data = d3.json(filePath + "locationsGeo.json").then(
              // console.log(allLocationsProvOrExhib[allLocationsProvOrExhib.length-1]);
 
              let yearHoverHtml = ''
-             yearHoverHtml += '<h3>'+d+'</h3>'
-             yearHoverHtml += lastKnown + "<br>"
+             // yearHoverHtml += '<h3>'+d+'</h3>'
+             yearHoverHtml += lastKnown + ""
+             yearHoverHtml += "<table><col width = 60%><col width=40%>"
              if (owners.length > 1) {
-               yearHoverHtml += "<h4>Owners:</h4>"
+               yearHoverHtml += "<tr><td><h1 style='text-decoration:underline;'>Owners:</h1></td></tr>"
              } else {
-               yearHoverHtml += "<h4>Owner:</h4>"
+               yearHoverHtml += "<tr><td><h1 style='text-decoration:underline;'>Owner:</h1></td></tr>"
              }
-
              for (let o=0;o<owners.length;o++) {
-               yearHoverHtml += "<h1>"+owners[o]+"&#x2c;&nbsp;<span id='owner-location'>"+ownerLocations[o]+"</span></h1>"
+               yearHoverHtml += "<tr><td><h1>"+owners[o].replace(",","")+"</h1></td><td><h1><span id = 'owner-location'>"+ownerLocations[o]+"</span></h1></td></tr>"
              }
              if (exhibitions.length>0) {
                if (exhibitions.length>1) {
-                 yearHoverHtml += "<h4>Exhibitions:</h4>"
+                 yearHoverHtml += "<tr><td><p style='text-decoration:underline;'>Exhibitions:</p></td></tr>"
                } else {
-                 yearHoverHtml += "<h4>Exhibition:</h4>"
+                 yearHoverHtml += "<tr><td><p style='text-decoration:underline;'>Exhibition:</p></td></tr>"
                }
              }
              for (let e=0;e<exhibitions.length;e++) {
-               yearHoverHtml += "<p>"+exhibitions[e]+"&#x2c;&nbsp;<span id='exhibition-name'>"+exhibitionLocations[e]+"</span></p>"
+               yearHoverHtml += "<tr><td><p>"+exhibitions[e].replace("The Metropolitan Museum of Art","Metropolitan Museum of Art")+"</p></td><td><p><span id='exhibition-location'>"+exhibitionLocations[e]+"</span></p></td></tr>"
              }
+             yearHoverHtml += '</table>'
+
+             // yearHoverHtml += "<table><tr><td><h1 style = 'font-size:0.7vw;height:1vh;'><span id = 'owner-location'>Owners</span></h1></td><td><p style = 'font-size:0.7vw;height:1vh;'><span id='exhibition-location'>Exhibitions</span></p></td></tr></table>"
 
 
              // d3.select("#year-hover-text")
@@ -264,12 +273,11 @@ let data = d3.json(filePath + "locationsGeo.json").then(
 
              d3.select("#year-hover-text")
                .style("opacity",1)
-               .style("width","auto")
-               .style("max-width","30vw")
+               .style("width","20vw")
                .style("left",function() {
                  let left = ''
                  if (event.clientX/window.innerWidth >= 0.5) {
-                   left = ((event.clientX/window.innerWidth)*100)-15 + "vw"
+                   left = ((event.clientX/window.innerWidth)*100)-21 + "vw"
 
                  } else {
                    left = (event.clientX/window.innerWidth)*100 + "vw"
@@ -296,11 +304,22 @@ let data = d3.json(filePath + "locationsGeo.json").then(
                 return bottom
               })
              // .style("transform","translate("+(event.clientX/window.innerWidth)*100 + "vw"+","+(event.clientY/window.innerHeight)*100 + "vw"+")")
+             let y = d3.scaleLinear().domain([minYear,maxYear]).range([2,88])
+             d3.select("#slidecontainer").select("#slider").select("#slideyear")
+               .text(d)
+               .style("left",y(d)+'%');
            })
            .on("mouseout",function(d) {
              d3.select("#year-hover-text")
                .style("opacity",0)
                .style("width","0vw")
+
+             let yearSlider = d3.select("#year-slider")
+             // console.log(yearSlider.node().value);
+             let y = d3.scaleLinear().domain([minYear,maxYear]).range([2,88])
+             d3.select("#slidecontainer").select("#slider").select("#slideyear")
+               .text(yearSlider.node().value)
+               .style("left",y(yearSlider.node().value)+'%');
            })
 
         }
@@ -343,13 +362,14 @@ let data = d3.json(filePath + "locationsGeo.json").then(
         }
 
         function removeAllMareys() {
-          svg.selectAll(".marey-line").remove();
-          svg.selectAll(".provenance-path").remove();
-          svg.selectAll(".exhibition-circle").remove();
+          svg.selectAll("#marey-line-g").remove();
+          svg.selectAll("#provenance-path-g").remove();
+          svg.selectAll("#exhibition-circle-g").remove();
+          svg.selectAll("#hover-year-g").remove();
 
-          svg.selectAll(".marey-line-active").remove();
-          svg.selectAll(".provenance-path-active").remove();
-          svg.selectAll(".exhibition-circle-active").remove();
+          // svg.selectAll(".marey-line-active").remove();
+          // svg.selectAll(".provenance-path-active").remove();
+          // svg.selectAll(".exhibition-circle-active").remove();
         }
 
         function drawAllMareys(mareyYear) {

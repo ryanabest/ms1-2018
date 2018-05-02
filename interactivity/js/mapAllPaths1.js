@@ -1,10 +1,14 @@
 // let sliderYear = 0;
 // mapboxgl.accessToken = 'pk.eyJ1IjoicnlhbmFiZXN0IiwiYSI6ImNqOTdzdWRpcjBhNnMzMmxzcHMyemxkMm0ifQ.ot3NoRC2w8zCbVOCkv2e_w';
 // let map = L.map('map',{zoomControl:false,attributionControl:false}).fitBounds(L.latLngBounds(L.latLng(69,150),L.latLng(-9,-131)));
+
 let map = L.map('map',{
-                       zoomControl:false
-                      ,attributionControl:false
-                    }).setView([30,0],2); // Load the whole map first
+                       // scrollWheelZoom: false
+                       zoomControl: false
+                       ,attributionControl:false
+                       ,easeLinearity:1
+                       ,zoomSnap:0
+                    }).setView([0,0],3); // Load the whole map first
 var CartoDB_PositronNoLabels = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png', {
 	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
 	subdomains: 'abcd',
@@ -15,17 +19,43 @@ var CartoDB_PositronNoLabels = L.tileLayer('https://cartodb-basemaps-{s}.global.
 svgLayer = L.svg();
 svgLayer.addTo(map);
 
+// let width = window.innerWidth*0.9;
+// let height = window.innerHeight*0.8;
+//
+// // console.log(width);
+// d3.select("#map").style("width",width+"px").style("height",height+"px")
+
+/*
+d3.csv(filePath + "SubwayLocations.csv").then(function(locs) {
+  locs.forEach(function(l) {
+    l.Coords = (l.Coords.replace("[","").replace("]","").split(", "))
+    l.Coords[0] = parseFloat(l.Coords[0]);
+    l.Coords[1] = parseFloat(l.Coords[1]);
+    // L.marker(l.Coords).addTo(map);
+    L.marker(l.Coords).addTo(map)
+     .bindPopup(l.City + ' - ' + l.Objects)
+  })
+})
+*/
+
+
 let svg = d3.select("#map").select("svg")
      ,g = svg.append("g").attr("class", "leaflet-zoom-hide")
      // ,defs = svg.append("svg:defs");
 
+// let paths = $.getJSON(filePath + 'metObjectsVanGogh.json', function(paths) {
 let paths = d3.json(filePath + "metObjectsVanGogh.json").then(function(paths) {
   let files = [];
   let promises = [];
+  let objectTitles = [];
 
   // Load JSON file paths into list to create promises
   for (let p=0;p<Object.keys(paths.image).length;p++) {
-    let JSONPath = filePath + "jsonLINE" + paths.image[p].split(".")[0] + ".json";
+    objectTitles.push({
+      "objectNumber" : paths.object_number[p],
+      "title"        : paths.title[p]
+    })
+    let JSONPath = filePath + "jsonLINE2" + paths.image[p].split(".")[0] + ".json";
     files.push(JSONPath);
   }
   files.forEach(function(url){
@@ -34,87 +64,131 @@ let paths = d3.json(filePath + "metObjectsVanGogh.json").then(function(paths) {
 
   // Then load all JSON files, THEN draw pahts once they're loaded:
   Promise.all(promises).then(function(proms) {
-    let minYear = proms[0].objects[0].line.year;
-    let maxYear = proms[0].objects[proms[0].objects.length-1].line.year;
-    let yearSliderValue = minYear;
-
+    minYear = new Date().getFullYear();
+    maxYear = 0;
+    proms.forEach(function(p) {
+      // console.log(p)
+      if (p.objects[0].line.year < minYear) {
+        minYear = p.objects[0].line.year;
+      }
+      if (p.objects[p.objects.length-1].line.year > maxYear) {
+        maxYear = p.objects[p.objects.length-1].line.year
+      }
+    })
+    let yearSliderValue = maxYear;
     let yearSlider = document.getElementById("year-slider");
     yearSlider.setAttribute("min",minYear);
     yearSlider.setAttribute("max",maxYear);
-    yearSlider.setAttribute("value",minYear);
+    yearSlider.setAttribute("value",yearSliderValue);
+    drawPaths(yearSliderValue,proms);
+    highlightSelection();
 
-    let allData = [];
-    proms.forEach(function(m){ // I am now working on each painting path
-      // Load thumbnail images from assets folder for vibrant color tail
-      let promData = [];
-      let img = document.createElement('img');
-      imageThumbnail = filePath + "Thumbnails/" + m.imageName
-      // let circleRadius = 7.5;
-      // let pattern = defs.append("svg:pattern")
-      //                   .attr("id","circleThumb-"+m.objectNumber)
-      //                   .attr("x","0")
-      //                   .attr("y","0")
-      //                   .attr("width","1")
-      //                   .attr("height","1")
-      //                   .attr("patternUnits","objectBoundingBox")
-      //                   .append("svg:image")
-      //                   .attr("xlink:href",imageThumbnail)
-      //                   .attr("width",circleRadius*2)
-      //                   .attr("height",circleRadius*2)
-      img.src = imageThumbnail;
-      vibrantColor = Vibrant.from(img).getPalette(function(err,palette) {
-        let vibrantColor     = "rgb("+Math.floor(palette['Vibrant']['r'])+","+Math.floor(palette['Vibrant']['g'])+","+Math.floor(palette['Vibrant']['b'])+")";
-        let vibrantDarkColor = "rgb("+Math.floor(palette['DarkVibrant']['r'])+","+Math.floor(palette['DarkVibrant']['g'])+","+Math.floor(palette['DarkVibrant']['b'])+")";
+    function highlightSelection() {
+      let svg = d3.select("#map").select("svg")
+      svg.selectAll(".marker").style("opacity","0");
+      svg.selectAll(".path").style("opacity","0");
+      for (let p=0;p<proms.length;p++) {
+        objectNumber = proms[p].objectNumber
+        if (objectNumber==paintingSelection) {
+          svg.select("#marker-"+objectNumber)
+             .style("opacity","1");
+          svg.select("#path-"+objectNumber)
+             .style("opacity","0.5");
+        }
+      }
+    }
+    // drawMarkers();
+
+    // update when slider changes
+    yearSlider.oninput = function() {
+      let y = d3.scaleLinear().domain([minYear,maxYear]).range([2,88])
+      yearSliderValue = this.value;
+
+      d3.select("#slideyear")
+        .text(yearSliderValue)
+        .style("left",y(yearSliderValue)+'%');
+
+      drawPaths(yearSliderValue,proms)
+    }
+
+    map.on("viewreset", reset);
+    map.on("zoomend", reset);
 
 
-        m.objects.forEach(function(d) {
-          d.year = d.line.year
-         ,d.latLng = d.line.coordinates
-         ,d.cities = d.line.cities
-         ,d.owner = d.line.owner
-         ,d.changeFlag = d.line.changeFlag[0]
-         ,d.dataType = d.line.dataType
-         ,d.objectNumber = d.objectNumber
-        })
+     //  ~~ FUNCTIONS ~~ //
+    function reset() {
+      drawPaths(yearSliderValue,proms);
+    }
 
-        // let marker = svg.append('circle')
-        //                  // .data(data)
-        //                  .attr("class","marker")
-        //                  .attr("id","marker-"+m.objectNumber)
-        //                  .attr("cx",0)
-        //                  .attr("cy",0)
-        //                  .attr("r",circleRadius)
-        //                  // .attr("fill","url(#circleThumb-"+m.objectNumber+")")
-        //                  .attr("fill",vibrantColor)
+    function drawPaths(year,promises) {
+      d3.select("#map").select("svg").selectAll(".path").remove();
+      d3.select("#map").select("svg").selectAll(".marker").remove();
+      let markerData = [];
 
-        for (let a=0;a<m.objects.length;a++) {
-          let data = [];
-          for (let b=0;b<m.objects[a].dataType.length;b++) {
-            // if (m.objects[a].dataType[b]) {
-            if (m.objects[a].dataType[b] === 'provenance') {
-              if (typeof m.objects[a].latLng[b] !== 'undefined') {
-                let dataPoint = {
-                   "x":      map.latLngToLayerPoint(L.latLng(m.objects[a].latLng[b])).x
-                  ,"y":      map.latLngToLayerPoint(L.latLng(m.objects[a].latLng[b])).y
-                  ,"latLng": m.objects[a].latLng[b]
-                  ,"year":   m.objects[a].year
-                  ,"city":   m.objects[a].cities[b]
-                  ,"owner":  m.objects[a].owner[b]
-                  ,"legs":   m.objects[a].latLng[b].length
-                }
-                data.push(dataPoint)
+      promises.forEach(function(m){ // I am now working on each painting path
+        // Load thumbnail images from assets folder for vibrant color tail
+        // console.log(m.)
+        let mapRadius = 10;
+        let img = document.createElement('img');
+        imageThumbnail = filePath + "Thumbnails/" + m.imageName
+        img.src = imageThumbnail;
+        let pattern = svg.append("svg:pattern")
+                          .attr("id","map-pattern-"+m.objectNumber)
+                          .attr("x","0")
+                          .attr("y","0")
+                          .attr("width","1")
+                          .attr("height","1")
+                          .attr("patternUnits","objectBoundingBox")
+                          .append("svg:image")
+                          .attr("xlink:href",imageThumbnail)
+                          .attr("width",mapRadius*2)
+                          .attr("height",mapRadius*2)
+        vibrantColor = Vibrant.from(img).getPalette(function(err,palette) {
+          let vibrantColor      = "rgb("+Math.floor(palette['Vibrant']['r'])+","+Math.floor(palette['Vibrant']['g'])+","+Math.floor(palette['Vibrant']['b'])+")";
+          let vibrantDarkColor  = "rgb("+Math.floor(palette['DarkVibrant']['r'])+","+Math.floor(palette['DarkVibrant']['g'])+","+Math.floor(palette['DarkVibrant']['b'])+")";
+          // if (typeOf)
+          // let vibrantLightColor = "rgb("+Math.floor(palette['LightVibrant']['r'])+","+Math.floor(palette['LightVibrant']['g'])+","+Math.floor(palette['LightVibrant']['b'])+")";
+
+          // console.log(m.objectNumber);
+          // console.log(palette);
+
+          let promData = [];
+          m.objects.forEach(function(d) {
+            d.year = d.line.year
+           ,d.latLng = d.line.coordinates
+           ,d.cities = d.line.cities
+           ,d.owner = d.line.owner
+           // ,d.changeFlag = d.line.changeFlag[0]
+           ,d.dataType = d.line.dataType
+           ,d.objectNumber = d.objectNumber
+          })
+
+          for (let a=0;a<m.objects.length;a++) {
+            let data = [];
+            if (m.objects[a].dataType) {
+              // console.log(m)
+            // if (m.objects[a].dataType === 'provenance' /*&& m.objectNumber == 436533*/) {
+              let dataPoint = {
+                 "x":            map.latLngToLayerPoint(L.latLng(m.objects[a].latLng[1])).x
+                ,"y":            map.latLngToLayerPoint(L.latLng(m.objects[a].latLng[1])).y
+                ,"latLng":       m.objects[a].latLng[1]
+                ,"year":         m.objects[a].year
+                ,"city":         m.objects[a].cities[1]
+                ,"owner":        m.objects[a].owner[1]
+                ,"legs":         m.objects[a].latLng[1].length
+                ,"objectNumber": m.objectNumber
+                ,"color":        vibrantDarkColor
+                ,"colorLight":   vibrantColor
+              }
+              data.push(dataPoint);
+              if (m.objects[a].year <= parseInt(year)) {
+                promData.push(dataPoint)
               }
             }
+
+
           }
 
-          allData.push({
-             'objectNumber': m.objectNumber
-            ,'year'        : m.objects[a].year
-            ,'index'       : a
-            ,'data'        : data
-            ,'vibColor'    : vibrantColor
-            ,'darkColor'   : vibrantDarkColor
-          })
           let lineFunction = d3.line()
                                .x(function(d) {return d.x})
                                .y(function(d) {return d.y})
@@ -123,85 +197,57 @@ let paths = d3.json(filePath + "metObjectsVanGogh.json").then(function(paths) {
 
                          // .attr("stroke-dasharray","0,1000000000")
 
-          if (data.length>0) {
+          let paths = d3.select("#map").select("svg")
+                        .append('path')
+                        .data(promData)
+                        .attr('d',lineFunction(promData))
+                        .attr("class","path")
+                        .attr("id","path-"+m.objectNumber)
+                        .attr("stroke",vibrantDarkColor)
+                        .style("opacity",function(d) {
+                          if (d.objectNumber == paintingSelection) {
+                            return "0.5";
+                          } else {
+                            return "0";
+                          }
+                        })
 
-            let paths = svg.append('path')
-                           .data(data)
-                           .attr('d',lineFunction(data))
-                           .attr("class","path")
-                           .attr("id","path-"+m.objectNumber+"-"+m.objects[a].year)
-                           .attr("stroke",vibrantDarkColor)
+          // console.log(promData[promData.length-1]);
+          markerData.push(promData[promData.length-1]);
 
-          }
-        }
-      }) // closes vibrantColor
-    }) // closes for each painting loop
-    map.on("viewreset", reset);
-    map.on("zoomend", reset);
-
-    function reset() {
-      // console.log(allData);
-      for (let pr=0;pr<allData.length;pr++) { // for each path (one for every year)
-        if (allData[pr].data.length > 0) { // avoid those paths where the painting does not yet exist
-
-          for (let prd=0;prd<allData[pr]['data'].length;prd++) {
-            allData[pr]['data'][prd].x = map.latLngToLayerPoint(allData[pr]['data'][prd]['latLng']).x; // reset x and y coordinates in the data based on current map composition
-            allData[pr]['data'][prd].y = map.latLngToLayerPoint(allData[pr]['data'][prd]['latLng']).y;
-
-            if (allData[pr].data[prd].year <= parseInt(yearSliderValue)) {
-              let markerPoint = map.latLngToLayerPoint(L.latLng(allData[pr].data[prd].latLng))
-              let markerReset = d3.select('#marker-'+allData[pr].objectNumber); // select individual marker for this # in loop
-              markerReset.attr("cx",markerPoint.x).attr("cy",markerPoint.y);
+        // Marker
+        if (promData.length > 0) {
+          // let mapRadius = 10;
+          let markerDatum;
+          let markerPoint = map.latLngToLayerPoint(L.latLng(promData[promData.length-1].latLng));
+          for (let ot=0;ot<objectTitles.length;ot++){
+            if (objectTitles[ot].objectNumber==promData[promData.length-1].objectNumber) {
+              markerDatum = objectTitles[ot]
             }
           }
-
-          let lineFunction = d3.line() // create new line formula to turn these new x and y coordinates into the format needed for path svg type
-                               .x(function(d) {return d.x})
-                               .y(function(d) {return d.y})
-                               .curve(d3.curveCatmullRom);
-
-          let pathReset = d3.select('#path-'+allData[pr].objectNumber+"-"+allData[pr].data[0].year); // select individual path for this # in loop
-          pathReset.attr('d',lineFunction(allData[pr]['data'])) // reset path location
-
+          d3.select("#map").select("svg").append('circle')
+                                         .datum(markerDatum)
+                                         .attr("class","marker")
+                                         .attr("id","marker-"+promData[promData.length-1].objectNumber)
+                                         .attr("cx",markerPoint.x)
+                                         .attr("cy",markerPoint.y)
+                                         .attr("fill",function(d) {return "url(#map-pattern-"+promData[promData.length-1].objectNumber+")"})
+                                         .attr("r",mapRadius)
+                                         .style("opacity",function(d) {
+                                           if (promData[promData.length-1].objectNumber == paintingSelection) {
+                                             return "1";
+                                           } else {
+                                             return "0";
+                                           }
+                                         })
+                                         // .style("opacity",1)
         }
-      }
+        }) // closes vibrantColor
+      }) // closes painting loop
+
     }
 
-    function opacityYear(year) {
-      let circleRadius = 10;
-      d3.select("#map").select("svg").selectAll(".marker").remove();
-      for (let pr=0;pr<allData.length;pr++) {
-        if (allData[pr].data.length > 0) { // avoid those paths where the painting does not yet exist
-          if (allData[pr].data[0].year <= parseInt(year)) {
-            d3.select('#path-'+allData[pr].objectNumber+"-"+allData[pr].data[0].year).style("opacity",0.5);
-          } else {
-            d3.select('#path-'+allData[pr].objectNumber+"-"+allData[pr].data[0].year).style("opacity","0");
-          }
-        }
 
-        if (allData[pr].year === parseInt(year)) {
-          if (allData[pr].data.length > 0) {
-            let markerPoint = map.latLngToLayerPoint(L.latLng(allData[pr].data[allData[pr].data.length-1].latLng))
-            d3.select("#map").select("svg").append('circle')
-                                           .attr("class","marker")
-                                           .attr("id","marker-"+allData[pr].objectNumber)
-                                           .attr("cx",markerPoint.x)
-                                           .attr("cy",markerPoint.y)
-                                           .attr("fill",allData[pr].darkColor)
-                                           .attr("r",circleRadius)
-                                           .style("opacity",1)
-            // d3.select('#marker-'+allData[pr].objectNumber).style("opacity","0.5");
-            // d3.select('#marker-'+allData[pr].objectNumber).attr("cx",markerPoint.x).attr("cy",markerPoint.y);
-          }
-        }
-      }
-    }
-
-    // update opacity when slider changes
-    yearSlider.oninput = function() {
-      yearSliderValue = this.value;
-      opacityYear(yearSliderValue);
-    }
   }) // closes promise THEN
 }) // closes first d3.JSON call
 

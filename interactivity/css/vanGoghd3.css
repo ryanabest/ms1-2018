@@ -90,9 +90,10 @@
 	font-weight: 500;
 	position: fixed;
 	left: 0;
-	top: 100px;
+	top: 0vh;
+	opacity: 0;
 	height: 6vh;
-	display: flex;
+	display: none;
 }
 
 #sticky-title h1 {
@@ -183,58 +184,73 @@ div#sticky-title button.inactive:hover {
 } */
 
 
-#intro-text {
+#intro-text, #more-info-box {
 	position: relative;
 	box-sizing: border-box;
   width: 50vw;
-  height: 70vh;
 	text-align: left;
-  /* position: fixed; */
   margin-left: 25vw;
-  /* top: 106vh; */
   background-color: #FFF;
   -moz-box-shadow:    0 0 10px 1px #999;
   -webkit-box-shadow: 0 0 10px 1px #999;
 	padding: 3%;
 	font-family: "Roboto",sans-serif;
 	z-index: 2;
-  /* padding: 0.2vw; */
 }
 
-#intro-text button {
+#intro-text {
+	height: 50vh
+}
+
+#more-info-box {
+	height: 70vh;
+}
+
+#intro-text button, #more-info-box button {
 	/* font-size: 150%; */
 	border: none;
 	/* position: fixed; */
 	margin-left: 95%;
 }
 
-#intro-text button:hover {
+#intro-text button:hover,#more-info-box button:hover {
 	cursor: pointer;
 }
 
-#intro-text h1 {
+#intro-text h1, #more-info-box h1 {
 	margin-top: 0px;
+	margin-bottom: 0px;
 	color: #000;
 	font-size: 2vw;
 	/* font-weight: 300; */
 }
 
-#intro-text h2 {
+#intro-text h2, #more-info-box h2 {
+	margin-top: 0px;
 	font-size: 1.3vw;
 }
 
-#intro-text p {
-	font-size: 0.8vw;
+#more-info-box p {
+	font-size: 0.9vw;
 }
 
-#intro-text a {
+#intro-text h4, #more-info-box h4 {
+	font-size: 2vw;
+}
+
+#intro-text h4 {
+	/* font-family: "Playfair-Display",serif; */
+	font-weight: 400;
+}
+
+#intro-text a, #more-info-box a {
   /* font-size: 1vw; */
   color: #000;
   /* padding: 0%; */
   /* text-decoration: none; */
 }
 
-#intro-text a, #marey-legend a {
+#intro-text a, #marey-legend a, #more-info-box a {
 	border-bottom: 0.5vh solid;
 	border-bottom-color: rgba(226,12,50, 0.2);
 	display: inline-block;
@@ -242,7 +258,7 @@ div#sticky-title button.inactive:hover {
 	text-decoration: none;
 }
 
-#intro-text a:hover, #marey-legend a:hover {
+#intro-text a:hover, #marey-legend a:hover, #more-info-box a:hover {
 	border-bottom: none;
 	line-height: 1.25;
 	background-color: rgba(226,12,50, 0.1);

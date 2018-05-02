@@ -19,6 +19,7 @@ window.createGraphic = function(graphicSelector) {
       hideMap();
       hideMarey();
       hideSlider();
+      hideInfo();
       allOpaque();
 
     },
@@ -29,10 +30,10 @@ window.createGraphic = function(graphicSelector) {
       bigTitle();
       // hideTitle();
       animateCircles();
-      showIntroText();
       hideMap();
       hideMarey();
       hideSlider();
+      hideInfo();
       allOpaque();
 
     },
@@ -47,6 +48,11 @@ window.createGraphic = function(graphicSelector) {
         hideMap();
       } else {
         showMap();
+      }
+      if (d3.select("#more-info-button").attr("class") === 'active') {
+        showInfo();
+      } else {
+        hideInfo();
       }
       showSlider();
       opacityAnimation();
@@ -69,7 +75,8 @@ window.createGraphic = function(graphicSelector) {
        .transition()
             .ease(d3.easeQuadInOut)
             .duration(1500)
-            .style("top","0vh")
+            .style("display","flex")
+            .style("opacity","1")
   }
 
   function bigTitle() {
@@ -77,7 +84,8 @@ window.createGraphic = function(graphicSelector) {
        .transition()
             .ease(d3.easeQuadInOut)
             .duration(1500)
-            .style("top","100vh")
+            .style("display","none")
+            .style("opacity","0")
 
       d3.select("#project-title")
         .transition()
@@ -139,16 +147,16 @@ window.createGraphic = function(graphicSelector) {
 
   }
 
-  function showIntroText() {
-    let intro = d3.select("#intro-text");
+  function showInfo() {
+    let intro = d3.select("#more-info");
     intro.transition()
          .ease(d3.easeQuadInOut)
           .duration(1500)
           .style("top","6vh");
   }
 
-  function hideIntroText() {
-    let intro = d3.select("#intro-text");
+  function hideInfo() {
+    let intro = d3.select("#more-info");
     intro.transition()
          .ease(d3.easeQuadInOut)
           .duration(1500)

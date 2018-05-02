@@ -4,7 +4,10 @@
 
 let map = L.map('map',{
                        // scrollWheelZoom: false
-                       // ,zoomControl: false
+                       zoomControl: false
+                       ,attributionControl:false
+                       ,easeLinearity:1
+                       ,zoomSnap:0
                     }).setView([20,0],2); // Load the whole map first
 var CartoDB_PositronNoLabels = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png', {
 	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
@@ -221,6 +224,10 @@ let paths = d3.json(filePath + "metObjectsVanGogh.json").then(function(paths) {
             if (objectTitles[ot].objectNumber==promData[promData.length-1].objectNumber) {
               markerDatum = objectTitles[ot]
             }
+          }
+          if (promData[promData.length-1].objectNumber == paintingSelection) {
+            // console.log(map.layerPointToLatLng(markerPoint));
+            // map.setView(map.layerPointToLatLng(markerPoint),3)
           }
           d3.select("#map").select("svg").append('circle')
                                          .datum(markerDatum)
