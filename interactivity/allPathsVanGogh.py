@@ -405,8 +405,8 @@ provenanceList = pd.merge(provenanceList,locationsGeo,on='location',how='left')
 
 # print(provenanceList[['location','coordinates']].nunique())
 # print(provenanceList['location'].value_counts())
-print(provenanceList)
-'''
+# print(provenanceList)
+
 currentYear = now.year
 minYear = min(vanGoghProvenance['object_year'])
 
@@ -702,4 +702,3 @@ for index in vanGoghProvenance.index.values:
     fp.close()
     print("added " + jsonExportName)
     print("--- %s seconds ---" % (time.time() - start_time))
-'''
