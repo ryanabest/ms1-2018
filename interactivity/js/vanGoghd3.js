@@ -19,7 +19,7 @@ window.vanGoghd3 = function() {
     function init() {
       loadCircles();
       drawCircles();
-      animateCircles();
+      setTimeout(function() { animateCircles(); },500);
     }
 
     function loadCircles() {
@@ -145,6 +145,21 @@ window.vanGoghd3 = function() {
                 .on("start",repeat);
           })
     }
+
+    // function animateCircles() {
+    //   d3.selectAll(".circle")
+    //     .transition()
+    //     // .ease(d3.easeQuadInOut)
+    //       .duration(5000)
+    //       .delay(0)
+    //       .on("start",function repeat() {
+    //         d3.active(this)
+    //             .style("transform",function(d) {return "translate("+getRandomInt(width-(3*circleRadius),circleRadius) + "px," +getRandomInt(width-(3*circleRadius),circleRadius) + "px)"})
+    //           .transition()
+    //           .ease(d3.easeQuadInOut)
+    //             .on("start",repeat);
+    //       })
+    // }
 
   })
 }

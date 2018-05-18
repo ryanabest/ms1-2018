@@ -642,7 +642,5 @@ let data = d3.json(filePath + "locationsGeo.json").then(
         }
       });
     });
-
-
   }
 )
