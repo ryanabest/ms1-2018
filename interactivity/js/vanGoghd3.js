@@ -19,7 +19,10 @@ window.vanGoghd3 = function() {
     function init() {
       loadCircles();
       drawCircles();
-      setTimeout(function() { animateCircles(); },500);
+
+      // $(function() {
+      //   animateCircles();
+      // });
     }
 
     function loadCircles() {
@@ -77,6 +80,7 @@ window.vanGoghd3 = function() {
           //   .style("color",pathColor)
 
         })
+        .on("load",animateCircles())
 
       for (let d=0;d<data.length;d++) {
         // console.log(data[d].objectNumber);
