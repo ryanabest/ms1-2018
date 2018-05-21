@@ -19,6 +19,7 @@ window.vanGoghd3 = function() {
     function init() {
       loadCircles();
       drawCircles();
+      // animateCircles();
 
       // $(function() {
       //   animateCircles();
@@ -63,11 +64,6 @@ window.vanGoghd3 = function() {
           catch (err) {
             exhibColor = "#DAA520";
           }
-          // let
-          // d3.selectAll("#year-hover-text h1")
-          //   .style("color",pathColor);
-          // d3.selectAll("#year-hover-text p")
-          //   .style("color",exhibColor);
           d3.selectAll(".legend-line")
             .style("stroke",pathColor)
           d3.selectAll(".owner-line")
@@ -76,11 +72,11 @@ window.vanGoghd3 = function() {
             .style("stroke",exhibColor)
           d3.selectAll("#marey-legend").selectAll("h1")
             .style("color",pathColor)
-          // d3.select("#slideyear")
-          //   .style("color",pathColor)
 
         })
-        .on("load",animateCircles())
+        .on("load",function() {
+          animateCircle(this.id)
+        })
 
       for (let d=0;d<data.length;d++) {
         // console.log(data[d].objectNumber);
@@ -132,6 +128,21 @@ window.vanGoghd3 = function() {
       mareySvg.select("#marey_line_"+paintingSelection).attr("class","marey-line-active");
       mareySvg.selectAll("#provenance_path_"+paintingSelection).attr("class","provenance-path-active provenance_path_"+objectNumber);
       mareySvg.selectAll("#exhibition_circle_"+paintingSelection).attr("class","exhibition-circle-active exhibition_circle_"+objectNumber);
+    }
+
+    function animateCircle(circleID) {
+      d3.select("#"+circleID).transition()
+      .ease(d3.easeQuadInOut)
+        .duration(5000)
+        .delay(0)
+        .on("start",function repeat() {
+          d3.active(this)
+              .style("left",function(d) {return getRandomInt(width-(3*circleRadius),circleRadius) + "px"})
+              .style("top",function(d) {return getRandomInt(height-(3*circleRadius),circleRadius)+ "px"})
+            .transition()
+            .ease(d3.easeQuadInOut)
+              .on("start",repeat);
+        })
     }
 
     function animateCircles() {
