@@ -46,8 +46,9 @@ window.vanGoghd3 = function() {
           .attr("id",function(d) {return "circle-"+d.objectNumber})
           .attr("height",circleRadius*2)
           .attr("src",function(d) {return d.imageSrc})
+          .style("display","none")
         .on("click",function() {
-          console.log(this.id);
+          // console.log(this.id);
           highlightSelection(this.id.split("-")[1]);
           let provPath = d3.selectAll(".provenance-path-active");
           let exhibCircle = d3.selectAll(".exhibition-circle-active");
@@ -70,7 +71,8 @@ window.vanGoghd3 = function() {
 
         })
         .on("load",function() {
-          animateCircle(this.id)
+          showCircle(this.id);
+          animateCircle(this.id);
         })
 
       for (let d=0;d<data.length;d++) {
@@ -127,7 +129,7 @@ window.vanGoghd3 = function() {
 
     function animateCircle(circleID) {
       d3.select("#"+circleID).transition()
-      .ease(d3.easeQuadInOut)
+      // .ease(d3.easeQuadInOut)
         .duration(5000)
         .delay(0)
         .on("start",function repeat() {
@@ -135,8 +137,29 @@ window.vanGoghd3 = function() {
               .style("left",function(d) {return getRandomInt(width-(3*circleRadius),circleRadius) + "px"})
               .style("top",function(d) {return getRandomInt(height-(3*circleRadius),circleRadius)+ "px"})
             .transition()
-            .ease(d3.easeQuadInOut)
+            // .ease(d3.easeQuadInOut)
               .on("start",repeat);
+        })
+    }
+
+    function showCircle(circleID) {
+      d3.select("#"+circleID)
+      .transition()
+      .duration(500)
+        .style("display","inline-block")
+    }
+
+    function animateCircles() {
+      d3.selectAll(".circle").transition()
+        .duration(5000)
+        .delay(500)
+        .on("start",function repeat() {
+          d3.active(this)
+              .style("left",function(d) {return getRandomInt(width-(3*circleRadius),circleRadius) + "px"})
+              .style("top",function(d) {return getRandomInt(height-(3*circleRadius),circleRadius)+ "px"})
+            .transition()
+            .duration(5000)
+            .on("start",repeat);
         })
     }
 
