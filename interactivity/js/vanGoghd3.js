@@ -47,6 +47,7 @@ window.vanGoghd3 = function() {
           .attr("height",circleRadius*2)
           .attr("src",function(d) {return d.imageSrc})
           .style("display","none")
+          .style("top",(-3)*circleRadius+"px")
         .on("click",function() {
           // console.log(this.id);
           highlightSelection(this.id.split("-")[1]);

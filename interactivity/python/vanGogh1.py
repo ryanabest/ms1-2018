@@ -381,7 +381,7 @@ for l in range(len(locationsList)):
     # # seach google geocoding api to pull LatLng for that location
     coordinates = []
     displayCoordinates = []
-    googleAPIKey = '***REMOVED***'
+    googleAPIKey = 'AIzaSyClejN5Zy--nDKo4SbWM2S2eWyufkMnyEs'
     googleGeocodeBaseURL = 'https://maps.googleapis.com/maps/api/geocode/json?address='
     exhibitionLocationURL = locationsList[l]
     responseURL = googleGeocodeBaseURL+exhibitionLocationURL+'&key='+googleAPIKey
